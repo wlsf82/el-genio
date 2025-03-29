@@ -1,0 +1,175 @@
+/* Main container styling */
+.test-case-form {
+  background-color: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  padding: 24px;
+  max-width: 800px;
+  margin: 0 auto;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+}
+
+/* Headings */
+.test-case-form h3 {
+  color: #1a1a1a;
+  font-size: 1.5rem;
+  margin-top: 0;
+  margin-bottom: 20px;
+  font-weight: 600;
+  border-bottom: 2px solid #f0f0f0;
+  padding-bottom: 12px;
+}
+
+.test-case-form h4 {
+  color: #333;
+  font-size: 1.2rem;
+  margin: 20px 0 16px;
+  font-weight: 500;
+}
+
+/* Form groups */
+.form-group {
+  margin-bottom: 20px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 500;
+  color: #555;
+}
+
+/* Input styling */
+.test-case-form input[type="text"],
+.test-case-form select {
+  width: 100%;
+  padding: 10px 14px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-size: 14px;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  background-color: #fcfcfc;
+}
+
+.test-case-form input[type="text"]:focus,
+.test-case-form select:focus {
+  outline: none;
+  border-color: #4a90e2;
+  box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.1);
+}
+
+/* Steps list */
+.steps-list {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 20px 0;
+}
+
+.step-item {
+  background-color: #f8f9fa;
+  border-radius: 6px;
+  padding: 12px 16px;
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  font-family: 'Monaco', 'Consolas', monospace;
+  font-size: 14px;
+  color: #333;
+  border-left: 3px solid #4a90e2;
+}
+
+.step-item span {
+  margin-right: 4px;
+}
+
+.no-steps {
+  color: #888;
+  font-style: italic;
+  margin: 12px 0;
+  padding: 12px;
+  background-color: #f8f9fa;
+  border-radius: 6px;
+  text-align: center;
+}
+
+/* Step form */
+.step-form {
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  padding: 16px;
+  margin-bottom: 20px;
+}
+
+.step-input-group {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
+}
+
+@media (min-width: 768px) {
+  .step-input-group {
+    grid-template-columns: 1fr 1fr 1fr auto;
+  }
+}
+
+/* Buttons */
+.test-case-form button {
+  cursor: pointer;
+  transition: all 0.2s;
+  font-weight: 500;
+  border: none;
+  border-radius: 6px;
+}
+
+.add-step-button {
+  background-color: #5a67d8;
+  color: white;
+  padding: 10px 16px;
+}
+
+.add-step-button:hover:not(:disabled) {
+  background-color: #4c56c5;
+}
+
+.remove-step-button {
+  background-color: transparent;
+  color: #e53e3e;
+  font-size: 16px;
+  padding: 4px 8px;
+  margin-left: auto;
+}
+
+.remove-step-button:hover {
+  color: #c53030;
+  background-color: rgba(229, 62, 62, 0.1);
+}
+
+.add-test-case-button {
+  background-color: #38a169;
+  color: white;
+  padding: 12px 20px;
+  width: 100%;
+  font-size: 16px;
+  margin-top: 10px;
+}
+
+.add-test-case-button:hover:not(:disabled) {
+  background-color: #2f855a;
+}
+
+/* Disabled state */
+.test-case-form button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  background-color: #a0aec0;
+}
+
+/* Helper classes for transitions */
+.test-case-form .fade-in {
+  animation: fadeIn 0.3s ease-in;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+} 

@@ -1,0 +1,240 @@
+/* TestSuitesList.css - Modern styling for test suites component */
+
+.test-suites-list {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 1.5rem;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+}
+
+.test-suites-list h2 {
+  color: #2c3e50;
+  font-size: 1.8rem;
+  margin-bottom: 1.5rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid #eaeaea;
+}
+
+/* Status messages */
+.loading, .error-message, .no-test-suites {
+  text-align: center;
+  padding: 2rem;
+  border-radius: 8px;
+  background-color: #f8f9fa;
+  margin: 1rem 0;
+}
+
+.loading {
+  color: #4a6fa5;
+}
+
+.error-message {
+  color: #e74c3c;
+  background-color: #fdf0ef;
+  border-left: 4px solid #e74c3c;
+}
+
+.no-test-suites {
+  color: #7f8c8d;
+  font-style: italic;
+}
+
+/* Test suite cards */
+.test-suite-card {
+  background-color: white;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  margin-bottom: 1.5rem;
+  overflow: hidden;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.test-suite-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
+}
+
+.test-suite-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.2rem 1.5rem;
+  background-color: #f8f9fa;
+  border-bottom: 1px solid #eee;
+}
+
+.test-suite-header h3 {
+  color: #2c3e50;
+  margin: 0;
+  font-size: 1.3rem;
+}
+
+.test-suite-actions {
+  display: flex;
+  gap: 0.8rem;
+}
+
+/* Buttons */
+.test-suite-actions button {
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 6px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.run-button {
+  background-color: #3498db;
+  color: white;
+}
+
+.run-button:hover:not(:disabled) {
+  background-color: #2980b9;
+}
+
+.run-button:disabled {
+  background-color: #95a5a6;
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+.delete-button {
+  background-color: #e74c3c;
+  color: white;
+}
+
+.delete-button:hover {
+  background-color: #c0392b;
+}
+
+/* Test results */
+.test-results {
+  padding: 1.2rem 1.5rem;
+  border-left: 4px solid #ddd;
+  margin: 0.8rem 1.5rem;
+  border-radius: 4px;
+  background-color: #f8f9fa;
+}
+
+.test-results.success {
+  border-left-color: #2ecc71;
+  background-color: #f0faf4;
+}
+
+.test-results.failure {
+  border-left-color: #e74c3c;
+  background-color: #fdf0ef;
+}
+
+.test-results h4 {
+  margin-top: 0;
+  color: #2c3e50;
+}
+
+.test-results pre {
+  background-color: #f1f2f6;
+  padding: 1rem;
+  border-radius: 4px;
+  overflow-x: auto;
+  font-size: 0.9rem;
+}
+
+/* Test cases */
+.test-cases {
+  padding: 1.2rem 1.5rem;
+}
+
+.test-cases h4 {
+  color: #2c3e50;
+  margin-top: 0;
+  margin-bottom: 1rem;
+}
+
+.test-case {
+  padding: 0.8rem 1rem;
+  margin-bottom: 1rem;
+  border-radius: 6px;
+  background-color: #f8f9fa;
+  list-style-type: none;
+}
+
+.test-case h5 {
+  margin-top: 0;
+  margin-bottom: 0.5rem;
+  color: #3498db;
+}
+
+.steps {
+  list-style-type: none;
+  padding-left: 1rem;
+  margin: 0.5rem 0;
+  font-family: 'Courier New', monospace;
+  font-size: 0.9rem;
+  color: #34495e;
+}
+
+.steps li {
+  padding: 0.2rem 0;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .test-suite-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  .test-suite-actions {
+    margin-top: 1rem;
+    width: 100%;
+  }
+  
+  .test-suite-actions button {
+    flex: 1;
+  }
+} 
+
+/* Individual test case styles */
+.test-case-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.run-test-case-button {
+  padding: 4px 8px;
+  background-color: #4caf50;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.8rem;
+}
+
+.run-test-case-button:hover {
+  background-color: #388e3c;
+}
+
+.run-test-case-button:disabled {
+  background-color: #cccccc;
+  cursor: not-allowed;
+}
+
+.test-case-result {
+  margin: 8px 0;
+  padding: 8px;
+  border-radius: 4px;
+  font-size: 0.9rem;
+}
+
+.test-case-result.success {
+  background-color: rgba(76, 175, 80, 0.1);
+  border: 1px solid #4caf50;
+}
+
+.test-case-result.failure {
+  background-color: rgba(244, 67, 54, 0.1);
+  border: 1px solid #f44336;
+} 

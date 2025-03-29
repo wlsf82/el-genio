@@ -1,0 +1,11 @@
+.DS_Store
+
+node_modules/
+client/node_modules/
+server/node_modules/
+
+server/cypress.env.json
+server/cypress/downloads/
+server/cypress/screenshots/
+server/cypress/videos/
+server/cypress/e2e/
