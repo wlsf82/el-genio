@@ -20,7 +20,20 @@ function TestCaseForm({ onAddTestCase }) {
     { value: 'uncheck', hasSelector: false, hasValue: false },
     { value: 'select', hasSelector: false, hasValue: true },
     { value: 'wait', hasSelector: false, hasValue: true },
-    { value: 'should', hasSelector: false, hasValue: true }
+    { value: 'should', hasSelector: false, hasValue: true, hasShouldOptions: true }
+  ];
+
+  const SHOULD_OPTIONS = [
+    'be.visible',
+    'not.be.visible',
+    'exist',
+    'not.exist',
+    'be.enabled',
+    'not.be.enabled',
+    'be.disabled',
+    'not.be.disabled',
+    'be.focused',
+    'not.be.focused'
   ];
 
   const handleAddStep = () => {
@@ -144,16 +157,30 @@ function TestCaseForm({ onAddTestCase }) {
               <input
                 type="text"
                 value={currentStep.selector}
-                onChange={(e) => setCurrentStep({...currentStep, selector: e.target.value})}
+                onChange={(e) => setCurrentStep({ ...currentStep, selector: e.target.value })}
                 placeholder="Selector (e.g., #button, .class)"
               />
             )}
 
-            {selectedCommand?.hasValue && (
+            {selectedCommand?.hasShouldOptions && (
+              <select
+                value={currentStep.value}
+                onChange={(e) => setCurrentStep({ ...currentStep, value: e.target.value })}
+              >
+                <option value="">Select an assertion</option>
+                {SHOULD_OPTIONS.map(option => (
+                  <option key={option} value={option}>
+                    {option}
+                  </option>
+                ))}
+              </select>
+            )}
+
+            {selectedCommand?.hasValue && !selectedCommand?.hasShouldOptions && (
               <input
                 type="text"
                 value={currentStep.value}
-                onChange={(e) => setCurrentStep({...currentStep, value: e.target.value})}
+                onChange={(e) => setCurrentStep({ ...currentStep, value: e.target.value })}
                 placeholder="Value"
               />
             )}

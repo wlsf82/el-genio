@@ -188,7 +188,7 @@ describe('${name.replace(/'/g, "\\'")}', () => {
     cy.wait(${parseInt(step.value) || 0});`;
       } else if (step.command === 'should') {
         testFileContent += `
-    cy.get('${step.selector.replace(/'/g, "\\'")}').should('${step.value.replace(/'/g, "\\'")}');`;
+    cy.get('${step.selector.replace(/'/g, "\\'")}').should('${step.value}');`;
       }
     });
 
