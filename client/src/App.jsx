@@ -17,14 +17,14 @@ function App() {
       <header>
         <h1>Low-Code Cypress Test Builder</h1>
         <nav>
-          <button 
-            className={activeView === 'create' ? 'active' : ''} 
+          <button
+            className={activeView === 'create' ? 'active' : ''}
             onClick={() => setActiveView('create')}
           >
             Create Test
           </button>
-          <button 
-            className={activeView === 'list' ? 'active' : ''} 
+          <button
+            className={activeView === 'list' ? 'active' : ''}
             onClick={() => setActiveView('list')}
           >
             View Tests
@@ -43,4 +43,4 @@ function App() {
   );
 }
 
-export default App; 
+export default App;

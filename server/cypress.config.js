@@ -9,4 +9,4 @@ module.exports = defineConfig({
     supportFile: false,
     fixturesFolder: false,
   },
-}); 
+});

@@ -184,16 +184,16 @@
     flex-direction: column;
     align-items: flex-start;
   }
-  
+
   .test-suite-actions {
     margin-top: 1rem;
     width: 100%;
   }
-  
+
   .test-suite-actions button {
     flex: 1;
   }
-} 
+}
 
 /* Individual test case styles */
 .test-case-header {
@@ -265,4 +265,4 @@
 .close-button:focus {
   outline: none; /* Remove default focus outline */
   box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.5); /* Add a focus ring */
-} 
+}

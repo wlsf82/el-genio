@@ -28,24 +28,24 @@ function TestCaseForm({ onAddTestCase }) {
     if (!currentStep.command) {
       return;
     }
-    
+
     const selectedCommand = CYPRESS_COMMANDS.find(cmd => cmd.value === currentStep.command);
-    
+
     if (selectedCommand.hasSelector && !currentStep.selector) {
       return;
     }
-    
+
     if (selectedCommand.hasValue && !currentStep.value) {
       return;
     }
-    
+
     const newStep = { ...currentStep };
-    
+
     // Mark "should" commands as chained to previous step
     if (newStep.command === 'should') {
       newStep.isChained = true;
     }
-    
+
     setSteps([...steps, newStep]);
     setCurrentStep({
       command: '',
@@ -70,12 +70,12 @@ function TestCaseForm({ onAddTestCase }) {
     if (!description.trim() || steps.length === 0) {
       return;
     }
-    
+
     onAddTestCase({
       description,
       steps
     });
-    
+
     // Reset form
     setDescription('');
     setSteps([]);
@@ -86,7 +86,7 @@ function TestCaseForm({ onAddTestCase }) {
   return (
     <div className="test-case-form">
       <h3>Add New Test Case</h3>
-      
+
       <div className="form-group">
         <label htmlFor="description">Test Description:</label>
         <input
@@ -97,10 +97,10 @@ function TestCaseForm({ onAddTestCase }) {
           placeholder="Enter test case description"
         />
       </div>
-      
+
       <div className="steps-section">
         <h4>Steps</h4>
-        
+
         {steps.length > 0 ? (
           <ul className="steps-list">
             {steps.map((step, index) => (
@@ -112,9 +112,9 @@ function TestCaseForm({ onAddTestCase }) {
                 )}
                 {step.selector && <span>({step.selector})</span>}
                 {step.value && <span>({step.value})</span>}
-                <button 
-                  type="button" 
-                  className="remove-step-button" 
+                <button
+                  type="button"
+                  className="remove-step-button"
                   onClick={() => handleRemoveStep(index)}
                 >
                   ✕
@@ -125,11 +125,11 @@ function TestCaseForm({ onAddTestCase }) {
         ) : (
           <p className="no-steps">No steps added yet.</p>
         )}
-        
+
         <div className="step-form">
           <div className="step-input-group">
-            <select 
-              value={currentStep.command} 
+            <select
+              value={currentStep.command}
               onChange={handleCommandChange}
             >
               <option value="">Select a command</option>
@@ -139,7 +139,7 @@ function TestCaseForm({ onAddTestCase }) {
                 </option>
               ))}
             </select>
-            
+
             {selectedCommand?.hasSelector && (
               <input
                 type="text"
@@ -148,7 +148,7 @@ function TestCaseForm({ onAddTestCase }) {
                 placeholder="Selector (e.g., #button, .class)"
               />
             )}
-            
+
             {selectedCommand?.hasValue && (
               <input
                 type="text"
@@ -157,10 +157,10 @@ function TestCaseForm({ onAddTestCase }) {
                 placeholder="Value"
               />
             )}
-            
-            <button 
-              type="button" 
-              className="add-step-button" 
+
+            <button
+              type="button"
+              className="add-step-button"
               onClick={handleAddStep}
               disabled={!currentStep.command}
             >
@@ -169,10 +169,10 @@ function TestCaseForm({ onAddTestCase }) {
           </div>
         </div>
       </div>
-      
-      <button 
-        type="button" 
-        className="add-test-case-button" 
+
+      <button
+        type="button"
+        className="add-test-case-button"
         onClick={handleAddTestCase}
         disabled={!description.trim() || steps.length === 0}
       >
@@ -182,4 +182,4 @@ function TestCaseForm({ onAddTestCase }) {
   );
 }
 
-export default TestCaseForm; 
+export default TestCaseForm;

@@ -32,18 +32,18 @@ app.get('/api/test-suites/:id', (req, res) => {
 app.post('/api/test-suites', async (req, res) => {
   try {
     const { name, testCases } = req.body;
-    
+
     if (!name || !testCases || !Array.isArray(testCases) || testCases.length === 0) {
       return res.status(400).json({ message: 'Invalid test suite data' });
     }
-    
+
     const id = uuidv4();
     const newSuite = { id, name, testCases, createdAt: new Date() };
     testSuites[id] = newSuite;
-    
+
     // Generate Cypress test file
     await generateCypressTestFile(newSuite);
-    
+
     res.status(201).json(newSuite);
   } catch (error) {
     console.error('Error creating test suite:', error);
@@ -54,22 +54,22 @@ app.post('/api/test-suites', async (req, res) => {
 app.delete('/api/test-suites/:id', async (req, res) => {
   const id = req.params.id;
   const suite = testSuites[id];
-  
+
   if (!suite) {
     return res.status(404).json({ message: 'Test suite not found' });
   }
-  
+
   try {
     // Delete the corresponding Cypress test file
     const filename = `${suite.name.toLowerCase().replace(/\s+/g, '_')}_${id}.cy.js`;
     const filePath = path.join(__dirname, 'cypress', 'e2e', filename);
-    
+
     try {
       await fs.unlink(filePath);
     } catch (err) {
       console.warn(`Could not delete file ${filePath}:`, err);
     }
-    
+
     delete testSuites[id];
     res.status(204).end();
   } catch (error) {
@@ -81,45 +81,45 @@ app.delete('/api/test-suites/:id', async (req, res) => {
 app.post('/api/test-suites/:id/run', async (req, res) => {
   const id = req.params.id;
   const suite = testSuites[id];
-  
+
   if (!suite) {
     return res.status(404).json({ message: 'Test suite not found' });
   }
-  
+
   try {
     const configFilePath = path.join(__dirname, './', 'cypress.config.js');
-    
+
     // Get the path to the existing test file
     const filename = `${suite.name.toLowerCase().replace(/\s+/g, '_')}_${id}.cy.js`;
     const specFilePath = path.join(__dirname, 'cypress', 'e2e', filename);
-    
+
     // Verify the file exists
     try {
       await fs.access(specFilePath);
     } catch (err) {
       console.error(`Test file not found: ${specFilePath}`);
-      return res.status(500).json({ 
-        message: 'Test file not found', 
+      return res.status(500).json({
+        message: 'Test file not found',
         error: err.message,
         success: false
       });
     }
-    
+
     let cypressOptions = {
       browser: 'chrome',
       headed: false,
       configFile: configFilePath,
       spec: specFilePath
     };
-    
+
     console.log(`Running Cypress test with spec: ${specFilePath}`);
     const results = await cypress.run(cypressOptions);
-    
+
     // Simplified result
     const response = {
       success: results.totalFailed === 0,
-      message: results.totalFailed === 0 
-        ? 'All tests passed!' 
+      message: results.totalFailed === 0
+        ? 'All tests passed!'
         : `${results.totalFailed} test(s) failed.`,
       details: {
         totalTests: results.totalTests,
@@ -129,12 +129,12 @@ app.post('/api/test-suites/:id/run', async (req, res) => {
         totalSkipped: results.totalSkipped
       }
     };
-    
+
     res.json(response);
   } catch (error) {
     console.error('Error running test suite:', error);
-    res.status(500).json({ 
-      message: 'Failed to run test suite', 
+    res.status(500).json({
+      message: 'Failed to run test suite',
       error: error.message,
       success: false
     });
@@ -144,7 +144,7 @@ app.post('/api/test-suites/:id/run', async (req, res) => {
 // Function to generate Cypress test file with filtering capability
 async function generateCypressTestFile(testSuite) {
   const { id, name, testCases } = testSuite;
-  
+
   let testFileContent = `
 // Auto-generated Cypress test file
 // Test Suite: ${name}
@@ -211,87 +211,87 @@ describe('${name.replace(/'/g, "\\'")}', () => {
 
   // Write file
   await fs.writeFile(filePath, testFileContent);
-  
+
   return filename;
 }
 
 // Function to parse Cypress test file and extract test cases
 async function parseCypressTestFile(fileContent) {
   const testCases = [];
-  
+
   // Extract 'it' blocks which represent test cases
   const testRegex = /it\(['"](.+?)['"]\s*,\s*\(\)\s*=>\s*\{([\s\S]+?)\}\s*\)\s*;/g;
   let testMatch;
-  
+
   while ((testMatch = testRegex.exec(fileContent)) !== null) {
     const description = testMatch[1];
     const testBody = testMatch[2];
     const steps = [];
-    
+
     // Extract steps from the test body
     // Visit command
     const visitMatches = testBody.matchAll(/cy\.visit\(['"](.+?)['"]\)/g);
     for (const match of visitMatches) {
       steps.push({ command: 'visit', value: match[1] });
     }
-    
+
     // Get command
     const getMatches = testBody.matchAll(/cy\.get\(['"](.+?)['"]\)(?!\.)/g);
     for (const match of getMatches) {
       steps.push({ command: 'get', selector: match[1] });
     }
-    
+
     // Contains command
     const containsMatches = testBody.matchAll(/cy\.contains\(['"](.+?)['"],\s*['"](.+?)['"]\)/g);
     for (const match of containsMatches) {
       steps.push({ command: 'contains', selector: match[1], value: match[2] });
     }
-    
+
     // Click command
     const clickMatches = testBody.matchAll(/cy\.get\(['"](.+?)['"]\)\.click\(\)/g);
     for (const match of clickMatches) {
       steps.push({ command: 'click', selector: match[1] });
     }
-    
+
     // Type command
     const typeMatches = testBody.matchAll(/cy\.get\(['"](.+?)['"]\)\.type\(['"](.+?)['"]\)/g);
     for (const match of typeMatches) {
       steps.push({ command: 'type', selector: match[1], value: match[2] });
     }
-    
+
     // Check command
     const checkMatches = testBody.matchAll(/cy\.get\(['"](.+?)['"]\)\.check\(\)/g);
     for (const match of checkMatches) {
       steps.push({ command: 'check', selector: match[1] });
     }
-    
+
     // Uncheck command
     const uncheckMatches = testBody.matchAll(/cy\.get\(['"](.+?)['"]\)\.uncheck\(\)/g);
     for (const match of uncheckMatches) {
       steps.push({ command: 'uncheck', selector: match[1] });
     }
-    
+
     // Select command
     const selectMatches = testBody.matchAll(/cy\.get\(['"](.+?)['"]\)\.select\(['"](.+?)['"]\)/g);
     for (const match of selectMatches) {
       steps.push({ command: 'select', selector: match[1], value: match[2] });
     }
-    
+
     // Wait command
     const waitMatches = testBody.matchAll(/cy\.wait\((\d+)\)/g);
     for (const match of waitMatches) {
       steps.push({ command: 'wait', value: parseInt(match[1]) });
     }
-    
+
     // Should command
     const shouldMatches = testBody.matchAll(/cy\.get\(['"](.+?)['"]\)\.should\(['"](.+?)['"]\)/g);
     for (const match of shouldMatches) {
       steps.push({ command: 'should', selector: match[1], value: match[2] });
     }
-    
+
     testCases.push({ description, steps });
   }
-  
+
   return testCases;
 }
 
@@ -301,27 +301,27 @@ async function loadExistingTestSuites() {
     const cypressE2ePath = path.join(__dirname, 'cypress', 'e2e');
     const files = await fs.readdir(cypressE2ePath);
     const testFiles = files.filter(file => file.endsWith('.cy.js'));
-    
+
     for (const file of testFiles) {
       // Extract ID from filename (assumes format name_id.cy.js)
       const idMatch = file.match(/_([0-9a-f-]+)\.cy\.js$/);
       if (idMatch && idMatch[1]) {
         const id = idMatch[1];
-        
+
         // If this test suite is not already in memory, load basic info
         if (!testSuites[id]) {
           const fileContent = await fs.readFile(path.join(cypressE2ePath, file), 'utf8');
-          
+
           // Extract test suite name from comment or describe block
           let name = 'Unknown Test Suite';
           const nameMatch = fileContent.match(/Test Suite: (.*?)$|describe\('(.*?)'/m);
           if (nameMatch) {
             name = nameMatch[1] || nameMatch[2];
           }
-          
+
           // Parse test cases from file content
           const testCases = await parseCypressTestFile(fileContent);
-          
+
           // Create test suite object with parsed test cases
           testSuites[id] = {
             id,
@@ -329,7 +329,7 @@ async function loadExistingTestSuites() {
             createdAt: new Date(),
             testCases
           };
-          
+
           console.log(`Loaded existing test suite: ${name} (${id}) with ${testCases.length} test cases`);
         }
       }
@@ -342,11 +342,11 @@ async function loadExistingTestSuites() {
 // Start server
 app.listen(PORT, async () => {
   console.log(`Server running on port ${PORT}`);
-  
+
   // Create cypress/e2e directory if it doesn't exist
   const cypressE2ePath = path.join(__dirname, 'cypress', 'e2e');
   await fs.mkdir(cypressE2ePath, { recursive: true });
-  
+
   // Load existing test suites from disk
   await loadExistingTestSuites();
-}); 
+});

@@ -20,7 +20,7 @@ function TestSuitesList({ testSuites: propTestSuites }) {
   const fetchTestSuites = async () => {
     setIsLoading(true);
     setError(null);
-    
+
     try {
       const response = await axios.get('/api/test-suites');
       setTestSuites(response.data);
@@ -34,7 +34,7 @@ function TestSuitesList({ testSuites: propTestSuites }) {
   const runTest = async (testSuiteId) => {
     setRunningTests({ ...runningTests, [testSuiteId]: true });
     setError(null);
-    
+
     try {
       const response = await axios.post(`/api/test-suites/${testSuiteId}/run`, {});
       setTestResults({
@@ -52,10 +52,10 @@ function TestSuitesList({ testSuites: propTestSuites }) {
     if (!window.confirm('Are you sure you want to delete this test suite?')) {
       return;
     }
-    
+
     setIsLoading(true);
     setError(null);
-    
+
     try {
       await axios.delete(`/api/test-suites/${testSuiteId}`);
       setTestSuites(testSuites.filter(suite => suite.id !== testSuiteId));
@@ -81,36 +81,36 @@ function TestSuitesList({ testSuites: propTestSuites }) {
   return (
     <div className="test-suites-list">
       <h2>Your Test Suites</h2>
-      
+
       {error && <div className="error-message">{error}</div>}
-      
+
       {testSuites.map(suite => (
         <div key={suite.id} className="test-suite-card">
           <div className="test-suite-header">
             <h3>{suite.name}</h3>
             <div className="test-suite-actions">
-              <button 
-                className="run-button" 
+              <button
+                className="run-button"
                 onClick={() => runTest(suite.id)}
                 disabled={runningTests[suite.id]}
               >
                 {runningTests[suite.id] ? 'Running...' : 'Run All Tests'}
               </button>
-              <button 
-                className="delete-button" 
+              <button
+                className="delete-button"
                 onClick={() => deleteTestSuite(suite.id)}
               >
                 Delete
               </button>
             </div>
           </div>
-          
+
           {testResults[suite.id] && (
             <div className={`test-results ${testResults[suite.id].success ? 'success' : 'failure'}`}>
               <div className="test-results-header">
                 <h4>Test Results</h4>
-                <button 
-                  className="close-button" 
+                <button
+                  className="close-button"
                   onClick={() => setTestResults(prevResults => {
                     const newResults = { ...prevResults };
                     delete newResults[suite.id]; // Remove the results for this suite
@@ -126,7 +126,7 @@ function TestSuitesList({ testSuites: propTestSuites }) {
               )}
             </div>
           )}
-          
+
           <div className="test-cases">
             <h4>Test Cases:</h4>
             <ul>
@@ -135,7 +135,7 @@ function TestSuitesList({ testSuites: propTestSuites }) {
                   <div className="test-case-header">
                     <h5>{testCase.description}</h5>
                   </div>
-                  
+
                   <ul className="steps">
                     {testCase.steps.map((step, stepIndex) => (
                       <li key={stepIndex}>
@@ -155,4 +155,4 @@ function TestSuitesList({ testSuites: propTestSuites }) {
   );
 }
 
-export default TestSuitesList; 
+export default TestSuitesList;
