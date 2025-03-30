@@ -117,7 +117,7 @@ function TestSuitesList({ testSuites: propTestSuites }) {
                     return newResults;
                   })}
                 >
-                  X
+                  ✕
                 </button>
               </div>
               <p>{testResults[suite.id].message}</p>
