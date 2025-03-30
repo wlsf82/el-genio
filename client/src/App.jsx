@@ -5,7 +5,7 @@ import './App.css';
 
 function App() {
   const [testSuites, setTestSuites] = useState([]);
-  const [activeView, setActiveView] = useState('create'); // 'create' or 'list'
+  const [activeView, setActiveView] = useState('list'); // 'create' or 'list'
 
   const handleTestSuiteCreated = (newTestSuite) => {
     setTestSuites([...testSuites, newTestSuite]);
