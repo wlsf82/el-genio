@@ -107,7 +107,19 @@ function TestSuitesList({ testSuites: propTestSuites }) {
           
           {testResults[suite.id] && (
             <div className={`test-results ${testResults[suite.id].success ? 'success' : 'failure'}`}>
-              <h4>Test Results</h4>
+              <div className="test-results-header">
+                <h4>Test Results</h4>
+                <button 
+                  className="close-button" 
+                  onClick={() => setTestResults(prevResults => {
+                    const newResults = { ...prevResults };
+                    delete newResults[suite.id]; // Remove the results for this suite
+                    return newResults;
+                  })}
+                >
+                  X
+                </button>
+              </div>
               <p>{testResults[suite.id].message}</p>
               {testResults[suite.id].details && (
                 <pre>{JSON.stringify(testResults[suite.id].details, null, 2)}</pre>
