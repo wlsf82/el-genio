@@ -159,36 +159,49 @@ describe('${name.replace(/'/g, "\\'")}', () => {
 
     // Add test steps
     testCase.steps.forEach((step, index) => {
-      if (step.command === 'visit') {
-        testFileContent += `
+      switch (step.command) {
+        case 'visit':
+          testFileContent += `
     cy.visit('${step.value.replace(/'/g, "\\'")}');`;
-      } else if (step.command === 'get') {
-        testFileContent += `
+          break;
+        case 'get':
+          testFileContent += `
     cy.get('${step.selector.replace(/'/g, "\\'")}')`;
-      } else if (step.command === 'contains') {
-        testFileContent += `
+          break;
+        case 'contains':
+          testFileContent += `
     cy.contains('${step.selector.replace(/'/g, "\\'")}', '${step.value.replace(/'/g, "\\'")}')`;
-      } else if (['click', 'type', 'check', 'uncheck', 'select'].includes(step.command)) {
-        // Chain these commands to the previous command
-        testFileContent = testFileContent.trimEnd();
-        if (step.command === 'click') {
+          break;
+        case 'click':
+          testFileContent = testFileContent.trimEnd();
           testFileContent += `.click();`;
-        } else if (step.command === 'type') {
+          break;
+        case 'type':
+          testFileContent = testFileContent.trimEnd();
           testFileContent += `.type('${step.value.replace(/'/g, "\\'")}');`;
-        } else if (step.command === 'check') {
+          break;
+        case 'check':
+          testFileContent = testFileContent.trimEnd();
           testFileContent += `.check();`;
-        } else if (step.command === 'uncheck') {
+          break;
+        case 'uncheck':
+          testFileContent = testFileContent.trimEnd();
           testFileContent += `.uncheck();`;
-        } else if (step.command === 'select') {
+          break;
+        case 'select':
+          testFileContent = testFileContent.trimEnd();
           testFileContent += `.select('${step.value.replace(/'/g, "\\'")}');`;
-        }
-      } else if (step.command === 'wait') {
-        testFileContent += `
+          break;
+        case 'wait':
+          testFileContent += `
     cy.wait(${parseInt(step.value) || 0});`;
-      } else if (step.command === 'should') {
-        // Chain the 'should' assertion to the previous command
-        testFileContent = testFileContent.trimEnd();
-        testFileContent += `.should('${step.value}');`;
+          break;
+        case 'should':
+          testFileContent = testFileContent.trimEnd();
+          testFileContent += `.should('${step.value}');`;
+          break;
+        default:
+          console.warn(`Unknown command: ${step.command}`);
       }
     });
 
