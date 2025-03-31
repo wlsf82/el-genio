@@ -164,10 +164,10 @@ describe('${name.replace(/'/g, "\\'")}', () => {
     cy.visit('${step.value.replace(/'/g, "\\'")}');`;
       } else if (step.command === 'get') {
         testFileContent += `
-    cy.get('${step.selector.replace(/'/g, "\\'")}');`;
+    cy.get('${step.selector.replace(/'/g, "\\'")}')`;
       } else if (step.command === 'contains') {
         testFileContent += `
-    cy.contains('${step.selector.replace(/'/g, "\\'")}', '${step.value.replace(/'/g, "\\'")}');`;
+    cy.contains('${step.selector.replace(/'/g, "\\'")}', '${step.value.replace(/'/g, "\\'")}')`;
       } else if (step.command === 'click') {
         testFileContent += `
     cy.get('${step.selector.replace(/'/g, "\\'")}').click();`;
@@ -187,8 +187,9 @@ describe('${name.replace(/'/g, "\\'")}', () => {
         testFileContent += `
     cy.wait(${parseInt(step.value) || 0});`;
       } else if (step.command === 'should') {
-        testFileContent += `
-    cy.get('${step.selector.replace(/'/g, "\\'")}').should('${step.value}');`;
+        // Chain the 'should' assertion to the previous command
+        testFileContent = testFileContent.trimEnd();
+        testFileContent += `.should('${step.value}');`;
       }
     });
 
