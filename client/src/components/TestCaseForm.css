@@ -51,6 +51,10 @@
   background-color: #fcfcfc;
 }
 
+.test-case-form input[type="text"] {
+  width: 85%;
+}
+
 .test-case-form input[type="text"]:focus,
 .test-case-form select:focus {
   outline: none;
