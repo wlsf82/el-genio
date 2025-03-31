@@ -9,6 +9,7 @@ function TestSuitesList({ testSuites: propTestSuites }) {
   const [error, setError] = useState(null);
   const [runningTests, setRunningTests] = useState({});
   const [testResults, setTestResults] = useState({});
+  const [isAnyTestRunning, setIsAnyTestRunning] = useState(false); // New state
 
   useEffect(() => {
     if (propTestSuites?.length > 0) {
@@ -34,6 +35,7 @@ function TestSuitesList({ testSuites: propTestSuites }) {
 
   const runTest = async (testSuiteId) => {
     setRunningTests({ ...runningTests, [testSuiteId]: true });
+    setIsAnyTestRunning(true); // Set global running state
     setError(null);
 
     try {
@@ -46,6 +48,7 @@ function TestSuitesList({ testSuites: propTestSuites }) {
       setError('Failed to run test: ' + (err.response?.data?.message || err.message));
     } finally {
       setRunningTests({ ...runningTests, [testSuiteId]: false });
+      setIsAnyTestRunning(false); // Reset global running state
     }
   };
 
@@ -93,7 +96,7 @@ function TestSuitesList({ testSuites: propTestSuites }) {
               <button
                 className="run-button"
                 onClick={() => runTest(suite.id)}
-                disabled={runningTests[suite.id]}
+                disabled={runningTests[suite.id] || isAnyTestRunning} // Disable if any test is running
               >
                 <Play size={16} /> {runningTests[suite.id] ? 'Running...' : 'Run'}
               </button>
