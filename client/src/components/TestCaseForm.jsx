@@ -106,6 +106,10 @@ function TestCaseForm({ onAddTestCase }) {
         return 'check';
       case 'uncheck':
         return 'uncheck';
+      case 'select':
+        return `select '${step.value}'`;
+      case 'blur':
+        return 'blur';
       case 'type':
         return `type '${step.value}'`;
       case 'should':
