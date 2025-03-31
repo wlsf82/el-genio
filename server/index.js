@@ -158,7 +158,7 @@ describe('${name.replace(/'/g, "\\'")}', () => {
   it('${testCase.description.replace(/'/g, "\\'")}', () => {`;
 
     // Add test steps
-    testCase.steps.forEach(step => {
+    testCase.steps.forEach((step, index) => {
       if (step.command === 'visit') {
         testFileContent += `
     cy.visit('${step.value.replace(/'/g, "\\'")}');`;
@@ -168,21 +168,20 @@ describe('${name.replace(/'/g, "\\'")}', () => {
       } else if (step.command === 'contains') {
         testFileContent += `
     cy.contains('${step.selector.replace(/'/g, "\\'")}', '${step.value.replace(/'/g, "\\'")}')`;
-      } else if (step.command === 'click') {
-        testFileContent += `
-    cy.get('${step.selector.replace(/'/g, "\\'")}').click();`;
-      } else if (step.command === 'type') {
-        testFileContent += `
-    cy.get('${step.selector.replace(/'/g, "\\'")}').type('${step.value.replace(/'/g, "\\'")}');`;
-      } else if (step.command === 'check') {
-        testFileContent += `
-    cy.get('${step.selector.replace(/'/g, "\\'")}').check();`;
-      } else if (step.command === 'uncheck') {
-        testFileContent += `
-    cy.get('${step.selector.replace(/'/g, "\\'")}').uncheck();`;
-      } else if (step.command === 'select') {
-        testFileContent += `
-    cy.get('${step.selector.replace(/'/g, "\\'")}').select('${step.value.replace(/'/g, "\\'")}');`;
+      } else if (['click', 'type', 'check', 'uncheck', 'select'].includes(step.command)) {
+        // Chain these commands to the previous command
+        testFileContent = testFileContent.trimEnd();
+        if (step.command === 'click') {
+          testFileContent += `.click();`;
+        } else if (step.command === 'type') {
+          testFileContent += `.type('${step.value.replace(/'/g, "\\'")}');`;
+        } else if (step.command === 'check') {
+          testFileContent += `.check();`;
+        } else if (step.command === 'uncheck') {
+          testFileContent += `.uncheck();`;
+        } else if (step.command === 'select') {
+          testFileContent += `.select('${step.value.replace(/'/g, "\\'")}');`;
+        }
       } else if (step.command === 'wait') {
         testFileContent += `
     cy.wait(${parseInt(step.value) || 0});`;
