@@ -111,6 +111,7 @@ function TestSuitesList({ testSuites: propTestSuites }) {
               <button
                 className="delete-button"
                 onClick={() => deleteTestSuite(suite.id)}
+                disabled={runningTests[suite.id]}
               >
                 <Trash size={16} /> Delete
               </button>
