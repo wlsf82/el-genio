@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import './TestSuitesList.css';
-import { Play, Trash, X } from 'lucide-react'; // Import icons
+import { Play, Trash, X, ChevronDown, ChevronUp } from 'lucide-react'; // Import icons
 
 function TestSuitesList({ testSuites: propTestSuites }) {
   const [testSuites, setTestSuites] = useState(propTestSuites || []);
@@ -9,7 +9,8 @@ function TestSuitesList({ testSuites: propTestSuites }) {
   const [error, setError] = useState(null);
   const [runningTests, setRunningTests] = useState({});
   const [testResults, setTestResults] = useState({});
-  const [isAnyTestRunning, setIsAnyTestRunning] = useState(false); // New state
+  const [isAnyTestRunning, setIsAnyTestRunning] = useState(false);
+  const [expandedSuites, setExpandedSuites] = useState({}); // Track expanded state for each suite
 
   useEffect(() => {
     if (propTestSuites?.length > 0) {
@@ -18,6 +19,13 @@ function TestSuitesList({ testSuites: propTestSuites }) {
       fetchTestSuites();
     }
   }, [propTestSuites]);
+
+  const toggleSuiteExpansion = (suiteId) => {
+    setExpandedSuites((prev) => ({
+      ...prev,
+      [suiteId]: !prev[suiteId],
+    }));
+  };
 
   const fetchTestSuites = async () => {
     setIsLoading(true);
@@ -35,20 +43,20 @@ function TestSuitesList({ testSuites: propTestSuites }) {
 
   const runTest = async (testSuiteId) => {
     setRunningTests({ ...runningTests, [testSuiteId]: true });
-    setIsAnyTestRunning(true); // Set global running state
+    setIsAnyTestRunning(true);
     setError(null);
 
     try {
       const response = await axios.post(`/api/test-suites/${testSuiteId}/run`, {});
       setTestResults({
         ...testResults,
-        [testSuiteId]: response.data
+        [testSuiteId]: response.data,
       });
     } catch (err) {
       setError('Failed to run test: ' + (err.response?.data?.message || err.message));
     } finally {
       setRunningTests({ ...runningTests, [testSuiteId]: false });
-      setIsAnyTestRunning(false); // Reset global running state
+      setIsAnyTestRunning(false);
     }
   };
 
@@ -62,7 +70,7 @@ function TestSuitesList({ testSuites: propTestSuites }) {
 
     try {
       await axios.delete(`/api/test-suites/${testSuiteId}`);
-      setTestSuites(testSuites.filter(suite => suite.id !== testSuiteId));
+      setTestSuites(testSuites.filter((suite) => suite.id !== testSuiteId));
     } catch (err) {
       setError('Failed to delete test suite: ' + (err.response?.data?.message || err.message));
     } finally {
@@ -88,7 +96,7 @@ function TestSuitesList({ testSuites: propTestSuites }) {
 
       {error && <div className="error-message">{error}</div>}
 
-      {testSuites.map(suite => (
+      {testSuites.map((suite) => (
         <div key={suite.id} className="test-suite-card">
           <div className="test-suite-header">
             <h3>{suite.name}</h3>
@@ -96,7 +104,7 @@ function TestSuitesList({ testSuites: propTestSuites }) {
               <button
                 className="run-button"
                 onClick={() => runTest(suite.id)}
-                disabled={runningTests[suite.id] || isAnyTestRunning} // Disable if any test is running
+                disabled={runningTests[suite.id] || isAnyTestRunning}
               >
                 <Play size={16} /> {runningTests[suite.id] ? 'Running...' : 'Run'}
               </button>
@@ -105,6 +113,12 @@ function TestSuitesList({ testSuites: propTestSuites }) {
                 onClick={() => deleteTestSuite(suite.id)}
               >
                 <Trash size={16} /> Delete
+              </button>
+              <button
+                className="toggle-button"
+                onClick={() => toggleSuiteExpansion(suite.id)}
+              >
+                {expandedSuites[suite.id] ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
               </button>
             </div>
           </div>
@@ -115,11 +129,13 @@ function TestSuitesList({ testSuites: propTestSuites }) {
                 <h4>Test Results</h4>
                 <button
                   className="close-button"
-                  onClick={() => setTestResults(prevResults => {
-                    const newResults = { ...prevResults };
-                    delete newResults[suite.id]; // Remove the results for this suite
-                    return newResults;
-                  })}
+                  onClick={() =>
+                    setTestResults((prevResults) => {
+                      const newResults = { ...prevResults };
+                      delete newResults[suite.id];
+                      return newResults;
+                    })
+                  }
                 >
                   <X size={16} />
                 </button>
@@ -159,18 +175,20 @@ function TestSuitesList({ testSuites: propTestSuites }) {
             </div>
           )}
 
-          <div className="test-cases">
-            <h4>Test cases:</h4>
-            <ul>
-              {suite.testCases.map((testCase, index) => (
-                <li key={index} className="test-case">
-                  <div className="test-case-header">
-                    <h5>{testCase.description}</h5>
-                  </div>
-                </li>
-              ))}
-            </ul>
-          </div>
+          {expandedSuites[suite.id] && (
+            <div className="test-cases">
+              <h4>Test cases:</h4>
+              <ul>
+                {suite.testCases.map((testCase, index) => (
+                  <li key={index} className="test-case">
+                    <div className="test-case-header">
+                      <h5>{testCase.description}</h5>
+                    </div>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
         </div>
       ))}
     </div>

@@ -310,3 +310,20 @@
   outline: none;
   box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.5);
 }
+
+/* Toggle button style */
+.toggle-button {
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.4rem;
+  border-radius: 4px;
+  transition: background-color 0.2s;
+}
+
+.toggle-button:hover {
+  background-color: #f0f0f0;
+}
