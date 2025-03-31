@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import TestCaseForm from './TestCaseForm';
 import axios from 'axios';
 import './TestSuiteForm.css';
@@ -8,6 +8,11 @@ function TestSuiteForm({ onTestSuiteCreated }) {
   const [testCases, setTestCases] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [isFormValid, setIsFormValid] = useState(false);
+
+  useEffect(() => {
+    setIsFormValid(suiteName.trim() !== '' && testCases.length > 0);
+  }, [suiteName, testCases]);
 
   const handleAddTestCase = (testCase) => {
     setTestCases([...testCases, testCase]);
@@ -19,16 +24,6 @@ function TestSuiteForm({ onTestSuiteCreated }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    if (!suiteName.trim()) {
-      setError('Test suite name is required');
-      return;
-    }
-
-    if (testCases.length === 0) {
-      setError('At least one test case is required');
-      return;
-    }
 
     setIsLoading(true);
     setError(null);
@@ -46,7 +41,6 @@ function TestSuiteForm({ onTestSuiteCreated }) {
         ...testSuite
       });
 
-      // Reset form
       setSuiteName('');
       setTestCases([]);
 
@@ -132,7 +126,7 @@ function TestSuiteForm({ onTestSuiteCreated }) {
           <button
             type="submit"
             className="submit-button"
-            disabled={isLoading}
+            disabled={!isFormValid || isLoading}
           >
             {isLoading ? 'Creating...' : 'Create test suite'}
           </button>
