@@ -135,16 +135,6 @@ function TestSuitesList({ testSuites: propTestSuites }) {
                   <div className="test-case-header">
                     <h5>{testCase.description}</h5>
                   </div>
-
-                  <ul className="steps">
-                    {testCase.steps.map((step, stepIndex) => (
-                      <li key={stepIndex}>
-                        cy.{step.command}
-                        {step.selector && `(${step.selector})`}
-                        {step.value && step.command !== 'visit' ? `.${step.value}` : step.value ? `('${step.value}')` : ''}
-                      </li>
-                    ))}
-                  </ul>
                 </li>
               ))}
             </ul>
