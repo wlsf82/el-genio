@@ -95,6 +95,29 @@ function TestCaseForm({ onAddTestCase }) {
     setSteps([]);
   };
 
+  const getStepDescription = (step) => {
+    switch (step.command) {
+      case 'visit':
+        return `visit '${step.value}'`;
+      case 'get':
+        return `get element with selector '${step.selector}'`;
+      case 'contains':
+        return `get element with selector '${step.selector}' which contains '${step.value}'`;
+      case 'click':
+        return 'click';
+      case 'check':
+        return 'check';
+      case 'uncheck':
+        return 'uncheck';
+      case 'type':
+        return `type '${step.value}'`;
+      case 'should':
+        return `asserts it should '${step.value}'`;
+      default:
+        return step.command;
+    }
+  };
+
   const selectedCommand = CYPRESS_COMMANDS.find(cmd => cmd.value === currentStep.command);
 
   return (
@@ -119,13 +142,7 @@ function TestCaseForm({ onAddTestCase }) {
           <ul className="steps-list">
             {steps.map((step, index) => (
               <li key={index} className="step-item">
-                {step.isChained ? (
-                  <span>.{step.command}</span>
-                ) : (
-                  <span>cy.{step.command}</span>
-                )}
-                {step.selector && <span>({step.selector})</span>}
-                {step.value && <span>({step.value})</span>}
+                <span>{getStepDescription(step)}</span>
                 <button
                   type="button"
                   className="remove-step-button"

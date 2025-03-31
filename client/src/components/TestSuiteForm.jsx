@@ -57,6 +57,29 @@ function TestSuiteForm({ onTestSuiteCreated }) {
     }
   };
 
+  const getStepDescription = (step) => {
+    switch (step.command) {
+      case 'visit':
+        return `visit '${step.value}'`;
+      case 'get':
+        return `get element with selector '${step.selector}'`;
+      case 'contains':
+        return `get element with selector '${step.selector}' which contains '${step.value}'`;
+      case 'click':
+        return 'click';
+      case 'check':
+        return 'check';
+      case 'uncheck':
+        return 'uncheck';
+      case 'type':
+        return `type '${step.value}'`;
+      case 'should':
+        return `asserts it should '${step.value}'`;
+      default:
+        return step.command;
+    }
+  };
+
   return (
     <div className="test-suite-form">
       <h2>Create test suite</h2>
@@ -85,7 +108,7 @@ function TestSuiteForm({ onTestSuiteCreated }) {
                 <ul>
                   {testCase.steps.map((step, stepIndex) => (
                     <li key={stepIndex}>
-                      {step.command} {step.selector && `- ${step.selector}`} {step.value && `- "${step.value}"`}
+                      {getStepDescription(step)}
                     </li>
                   ))}
                 </ul>
