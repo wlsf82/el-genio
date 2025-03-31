@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { X } from 'lucide-react'; // Import the close icon
 import './TestCaseForm.css';
 
 function TestCaseForm({ onAddTestCase }) {
@@ -130,7 +131,7 @@ function TestCaseForm({ onAddTestCase }) {
                   className="remove-step-button"
                   onClick={() => handleRemoveStep(index)}
                 >
-                  ✕
+                  <X size={16} />
                 </button>
               </li>
             ))}

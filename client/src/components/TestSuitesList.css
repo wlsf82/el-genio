@@ -76,6 +76,10 @@
 
 /* Buttons */
 .test-suite-actions button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem; /* Adds spacing between the icon and text */
   padding: 0.5rem 1rem;
   border: none;
   border-radius: 6px;
@@ -286,21 +290,23 @@
 
 /* Close button style */
 .close-button {
-  padding: 0.4rem 0.8rem;
-  background-color: #e0e0e0; /* Light gray background */
-  color: #34495e; /* Dark text color */
+  padding: 0.4rem;
+  background-color: transparent;
+  color: #34495e;
   border: none;
   border-radius: 4px;
   cursor: pointer;
-  font-size: 0.9rem;
   transition: background-color 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .close-button:hover {
-  background-color: #d5d5d5; /* Darker gray on hover */
+  background-color: #f0f0f0;
 }
 
 .close-button:focus {
-  outline: none; /* Remove default focus outline */
-  box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.5); /* Add a focus ring */
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.5);
 }

@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { Eye, PlusCircle } from 'lucide-react'; // Import icons
 import TestSuiteForm from './components/TestSuiteForm';
 import TestSuitesList from './components/TestSuitesList';
 import './App.css';
@@ -21,13 +22,13 @@ function App() {
             className={activeView === 'create' ? 'active' : ''}
             onClick={() => setActiveView('create')}
           >
-            Create test
+            <PlusCircle size={16} /> Create test
           </button>
           <button
             className={activeView === 'list' ? 'active' : ''}
             onClick={() => setActiveView('list')}
           >
-            View tests
+            <Eye size={16} /> View tests
           </button>
         </nav>
       </header>

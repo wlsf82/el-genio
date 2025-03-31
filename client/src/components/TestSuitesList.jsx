@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import './TestSuitesList.css';
+import { Play, Trash, X } from 'lucide-react'; // Import icons
 
 function TestSuitesList({ testSuites: propTestSuites }) {
   const [testSuites, setTestSuites] = useState(propTestSuites || []);
@@ -94,13 +95,13 @@ function TestSuitesList({ testSuites: propTestSuites }) {
                 onClick={() => runTest(suite.id)}
                 disabled={runningTests[suite.id]}
               >
-                {runningTests[suite.id] ? 'Running...' : 'Run'}
+                <Play size={16} /> {runningTests[suite.id] ? 'Running...' : 'Run'}
               </button>
               <button
                 className="delete-button"
                 onClick={() => deleteTestSuite(suite.id)}
               >
-                Delete
+                <Trash size={16} /> Delete
               </button>
             </div>
           </div>
@@ -117,7 +118,7 @@ function TestSuitesList({ testSuites: propTestSuites }) {
                     return newResults;
                   })}
                 >
-                  ✕
+                  <X size={16} />
                 </button>
               </div>
               <p>{testResults[suite.id].message}</p>
