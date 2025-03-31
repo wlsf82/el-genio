@@ -128,8 +128,8 @@ app.post('/api/test-suites/:id/run', async (req, res) => {
     const response = {
       success: results.totalFailed === 0,
       message: results.totalFailed === 0
-        ? 'All tests passed!'
-        : `${results.totalFailed} test(s) failed.`,
+        ? 'All tests passed! ✅'
+        : `${results.totalFailed} test(s) failed. ❌`,
       details: {
         totalTests: results.totalTests,
         totalPassed: results.totalPassed,
