@@ -4,6 +4,7 @@ const fs = require('fs').promises;
 const { v4: uuidv4 } = require('uuid');
 const cors = require('cors');
 const cypress = require('cypress');
+const archiver = require('archiver'); // Import archiver
 
 const app = express();
 const PORT = process.env.PORT || 3003;
@@ -130,6 +131,11 @@ app.post('/api/test-suites/:id/run', async (req, res) => {
       }
     };
 
+    // Include screenshots link if tests failed
+    if (results.totalFailed > 0) {
+      response.screenshotsLink = `${req.protocol}://${req.get('host')}/cypress/screenshots/download`;
+    }
+
     res.json(response);
   } catch (error) {
     console.error('Error running test suite:', error);
@@ -139,6 +145,35 @@ app.post('/api/test-suites/:id/run', async (req, res) => {
       success: false
     });
   }
+});
+
+// Serve Cypress screenshots folder
+app.use('/cypress/screenshots', express.static(path.join(__dirname, 'cypress', 'screenshots')));
+
+// Route to download the entire screenshots directory as a zip file
+app.get('/cypress/screenshots/download', async (req, res) => {
+  const screenshotsDir = path.join(__dirname, 'cypress', 'screenshots');
+
+  // Check if the screenshots directory exists
+  try {
+    await fs.access(screenshotsDir);
+  } catch (err) {
+    return res.status(404).json({ message: 'Screenshots directory not found' });
+  }
+
+  // Set headers for the response
+  res.setHeader('Content-Type', 'application/zip');
+  res.setHeader('Content-Disposition', 'attachment; filename=screenshots.zip');
+
+  // Create a zip archive and pipe it to the response
+  const archive = archiver('zip', { zlib: { level: 9 } });
+  archive.pipe(res);
+
+  // Add the screenshots directory to the archive
+  archive.directory(screenshotsDir, false);
+
+  // Finalize the archive
+  archive.finalize();
 });
 
 // Function to generate Cypress test file with filtering capability

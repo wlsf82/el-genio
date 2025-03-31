@@ -12,6 +12,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "archiver": "^7.0.1",
     "cors": "^2.8.5",
     "cypress": "^14.2.1",
     "express": "^4.18.2",

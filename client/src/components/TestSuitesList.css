@@ -140,6 +140,21 @@
   font-size: 0.9rem;
 }
 
+.test-results-failure {
+  margin-top: 1rem;
+  padding: 1rem;
+  border-radius: 4px;
+}
+
+.screenshots-link a {
+  color: #007bff;
+  text-decoration: none;
+}
+
+.screenshots-link a:hover {
+  text-decoration: underline;
+}
+
 /* Test cases */
 .test-cases {
   padding: 1.2rem 1.5rem;

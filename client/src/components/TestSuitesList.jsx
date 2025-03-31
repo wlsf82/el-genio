@@ -124,6 +124,27 @@ function TestSuitesList({ testSuites: propTestSuites }) {
               {testResults[suite.id].details && (
                 <pre>{JSON.stringify(testResults[suite.id].details, null, 2)}</pre>
               )}
+              {!testResults[suite.id].success && (
+                <div className="test-results-failure">
+                  {testResults[suite.id].stackTrace && (
+                    <div className="stack-trace">
+                      <h5>Stack Trace:</h5>
+                      <pre>{testResults[suite.id].stackTrace}</pre>
+                    </div>
+                  )}
+                  {testResults[suite.id].screenshotsLink && (
+                    <div className="screenshots-link">
+                      <a
+                        href={testResults[suite.id].screenshotsLink} // This will now include the full backend URL
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        Download All Screenshots
+                      </a>
+                    </div>
+                  )}
+                </div>
+              )}
             </div>
           )}
 
