@@ -59,13 +59,13 @@ function TestSuiteForm({ onTestSuiteCreated }) {
 
   return (
     <div className="test-suite-form">
-      <h2>Create New Test Suite</h2>
+      <h2>Create test suite</h2>
 
       {error && <div className="error-message">{error}</div>}
 
       <form onSubmit={handleSubmit}>
         <div className="form-group">
-          <label htmlFor="suiteName">Test Suite Name:</label>
+          <label htmlFor="suiteName">Test suite name:</label>
           <input
             type="text"
             id="suiteName"
@@ -76,7 +76,7 @@ function TestSuiteForm({ onTestSuiteCreated }) {
           />
         </div>
 
-        <h3>Test Cases</h3>
+        <h3>Test cases</h3>
         {testCases.length > 0 ? (
           <div className="test-cases-list">
             {testCases.map((testCase, index) => (
@@ -111,7 +111,7 @@ function TestSuiteForm({ onTestSuiteCreated }) {
             className="submit-button"
             disabled={isLoading}
           >
-            {isLoading ? 'Creating...' : 'Create Test Suite'}
+            {isLoading ? 'Creating...' : 'Create test suite'}
           </button>
         </div>
       </form>

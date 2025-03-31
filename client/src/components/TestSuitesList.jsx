@@ -80,7 +80,7 @@ function TestSuitesList({ testSuites: propTestSuites }) {
 
   return (
     <div className="test-suites-list">
-      <h2>Your Test Suites</h2>
+      <h2>Test suites</h2>
 
       {error && <div className="error-message">{error}</div>}
 
@@ -94,7 +94,7 @@ function TestSuitesList({ testSuites: propTestSuites }) {
                 onClick={() => runTest(suite.id)}
                 disabled={runningTests[suite.id]}
               >
-                {runningTests[suite.id] ? 'Running...' : 'Run All Tests'}
+                {runningTests[suite.id] ? 'Running...' : 'Run'}
               </button>
               <button
                 className="delete-button"
@@ -156,7 +156,7 @@ function TestSuitesList({ testSuites: propTestSuites }) {
           )}
 
           <div className="test-cases">
-            <h4>Test Cases:</h4>
+            <h4>Test cases:</h4>
             <ul>
               {suite.testCases.map((testCase, index) => (
                 <li key={index} className="test-case">

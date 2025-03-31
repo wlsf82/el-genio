@@ -98,10 +98,10 @@ function TestCaseForm({ onAddTestCase }) {
 
   return (
     <div className="test-case-form">
-      <h3>Add New Test Case</h3>
+      <h3>Add new test case</h3>
 
       <div className="form-group">
-        <label htmlFor="description">Test Description:</label>
+        <label htmlFor="description">Test description:</label>
         <input
           type="text"
           id="description"
@@ -191,7 +191,7 @@ function TestCaseForm({ onAddTestCase }) {
               onClick={handleAddStep}
               disabled={!currentStep.command}
             >
-              Add Step
+              Add step
             </button>
           </div>
         </div>
@@ -203,7 +203,7 @@ function TestCaseForm({ onAddTestCase }) {
         onClick={handleAddTestCase}
         disabled={!description.trim() || steps.length === 0}
       >
-        Add Test Case
+        Add test case
       </button>
     </div>
   );

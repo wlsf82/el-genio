@@ -21,13 +21,13 @@ function App() {
             className={activeView === 'create' ? 'active' : ''}
             onClick={() => setActiveView('create')}
           >
-            Create Test
+            Create test
           </button>
           <button
             className={activeView === 'list' ? 'active' : ''}
             onClick={() => setActiveView('list')}
           >
-            View Tests
+            View tests
           </button>
         </nav>
       </header>
