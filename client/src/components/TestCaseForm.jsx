@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { X } from 'lucide-react'; // Import the close icon
+import { X } from 'lucide-react';
 import './TestCaseForm.css';
 
 function TestCaseForm({ onAddTestCase }) {
@@ -38,7 +38,6 @@ function TestCaseForm({ onAddTestCase }) {
   ];
 
   const handleAddStep = () => {
-    // Validate current step
     if (!currentStep.command) {
       return;
     }
@@ -55,7 +54,6 @@ function TestCaseForm({ onAddTestCase }) {
 
     const newStep = { ...currentStep };
 
-    // Mark "should" commands as chained to previous step
     if (newStep.command === 'should') {
       newStep.isChained = true;
     }
@@ -90,7 +88,6 @@ function TestCaseForm({ onAddTestCase }) {
       steps
     });
 
-    // Reset form
     setDescription('');
     setSteps([]);
   };

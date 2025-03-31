@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import './TestSuitesList.css';
-import { Play, Trash, X, ChevronDown, ChevronUp } from 'lucide-react'; // Import icons
+import { Play, Trash, X, ChevronDown, ChevronUp } from 'lucide-react';
 
 function TestSuitesList({ testSuites: propTestSuites }) {
   const [testSuites, setTestSuites] = useState(propTestSuites || []);
@@ -10,7 +10,7 @@ function TestSuitesList({ testSuites: propTestSuites }) {
   const [runningTests, setRunningTests] = useState({});
   const [testResults, setTestResults] = useState({});
   const [isAnyTestRunning, setIsAnyTestRunning] = useState(false);
-  const [expandedSuites, setExpandedSuites] = useState({}); // Track expanded state for each suite
+  const [expandedSuites, setExpandedSuites] = useState({});
 
   useEffect(() => {
     if (propTestSuites?.length > 0) {
