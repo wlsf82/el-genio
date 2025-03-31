@@ -19,8 +19,8 @@ function TestCaseForm({ onAddTestCase }) {
     { value: 'check', hasSelector: false, hasValue: false },
     { value: 'uncheck', hasSelector: false, hasValue: false },
     { value: 'select', hasSelector: false, hasValue: true },
-    { value: 'wait', hasSelector: false, hasValue: true },
-    { value: 'should', hasSelector: false, hasValue: true, hasShouldOptions: true }
+    { value: 'blur', hasSelector: false, hasValue: false },
+    { value: 'should', hasSelector: false, hasValue: true, hasShouldOptions: true },
   ];
 
   const SHOULD_OPTIONS = [

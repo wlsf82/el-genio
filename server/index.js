@@ -202,7 +202,7 @@ describe('${name.replace(/'/g, "\\'")}', () => {
   it('${testCase.description.replace(/'/g, "\\'")}', () => {`;
 
     // Add test steps
-    testCase.steps.forEach((step, index) => {
+    testCase.steps.forEach((step) => {
       switch (step.command) {
         case 'visit':
           testFileContent += `
@@ -236,13 +236,13 @@ describe('${name.replace(/'/g, "\\'")}', () => {
           testFileContent = testFileContent.trimEnd();
           testFileContent += `.select('${step.value.replace(/'/g, "\\'")}');`;
           break;
-        case 'wait':
-          testFileContent += `
-    cy.wait(${parseInt(step.value) || 0});`;
-          break;
         case 'should':
           testFileContent = testFileContent.trimEnd();
           testFileContent += `.should('${step.value}');`;
+          break;
+        case 'blur':
+          testFileContent = testFileContent.trimEnd();
+          testFileContent += `.blur();`;
           break;
         default:
           console.warn(`Unknown command: ${step.command}`);
@@ -334,16 +334,16 @@ async function parseCypressTestFile(fileContent) {
       steps.push({ command: 'select', selector: match[1], value: match[2] });
     }
 
-    // Wait command
-    const waitMatches = testBody.matchAll(/cy\.wait\((\d+)\)/g);
-    for (const match of waitMatches) {
-      steps.push({ command: 'wait', value: parseInt(match[1]) });
-    }
-
     // Should command
     const shouldMatches = testBody.matchAll(/cy\.get\(['"](.+?)['"]\)\.should\(['"](.+?)['"]\)/g);
     for (const match of shouldMatches) {
       steps.push({ command: 'should', selector: match[1], value: match[2] });
+    }
+
+    // Blur command
+    const blurMatches = testBody.matchAll(/cy\.get\(['"](.+?)['"]\)\.blur\(\)/g);
+    for (const match of blurMatches) {
+      steps.push({ command: 'blur', selector: match[1] });
     }
 
     testCases.push({ description, steps });
