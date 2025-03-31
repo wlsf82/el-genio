@@ -1,16 +1,22 @@
 import { useState } from 'react';
-import { Eye, PlusCircle } from 'lucide-react'; // Import icons
+import { Eye, PlusCircle } from 'lucide-react';
 import TestSuiteForm from './components/TestSuiteForm';
 import TestSuitesList from './components/TestSuitesList';
 import './App.css';
+import axios from 'axios';
 
 function App() {
   const [testSuites, setTestSuites] = useState([]);
-  const [activeView, setActiveView] = useState('list'); // 'create' or 'list'
+  const [activeView, setActiveView] = useState('list');
 
-  const handleTestSuiteCreated = (newTestSuite) => {
-    setTestSuites([...testSuites, newTestSuite]);
-    setActiveView('list');
+  const handleTestSuiteCreated = async () => {
+    try {
+      const response = await axios.get('/api/test-suites');
+      setTestSuites(response.data);
+      setActiveView('list');
+    } catch (error) {
+      console.error('Failed to fetch test suites:', error);
+    }
   };
 
   return (
