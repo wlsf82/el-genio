@@ -15,7 +15,7 @@ function App() {
   return (
     <div className="app-container">
       <header>
-        <h1>Low-Code Cypress Test Builder</h1>
+        <h1>No-Code QA</h1>
         <nav>
           <button
             className={activeView === 'create' ? 'active' : ''}
