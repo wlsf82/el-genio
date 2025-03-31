@@ -146,6 +146,29 @@
   border-radius: 4px;
 }
 
+.failed-tests {
+  margin-top: 1rem;
+  background-color: #fdf0ef;
+  border-radius: 4px;
+}
+
+.failed-tests h5 {
+  margin-bottom: 0.5rem;
+  color: #e74c3c;
+}
+
+.stack-trace {
+  padding: 0.75rem;
+  border-radius: 4px;
+  font-size: 0.85rem;
+  color: #333;
+  overflow-x: auto;
+}
+
+.screenshots-link {
+  margin-top: 1rem;
+}
+
 .screenshots-link a {
   color: #007bff;
   text-decoration: none;

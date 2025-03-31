@@ -126,16 +126,23 @@ function TestSuitesList({ testSuites: propTestSuites }) {
               )}
               {!testResults[suite.id].success && (
                 <div className="test-results-failure">
-                  {testResults[suite.id].stackTrace && (
-                    <div className="stack-trace">
-                      <h5>Stack Trace:</h5>
-                      <pre>{testResults[suite.id].stackTrace}</pre>
+                  {testResults[suite.id].failedTests && (
+                    <div className="failed-tests">
+                      <h5>Failed Tests:</h5>
+                      <ul>
+                        {testResults[suite.id].failedTests.map((test, index) => (
+                          <li key={index}>
+                            <strong>{test.title}</strong>
+                            <pre className="stack-trace">{test.error}</pre>
+                          </li>
+                        ))}
+                      </ul>
                     </div>
                   )}
                   {testResults[suite.id].screenshotsLink && (
                     <div className="screenshots-link">
                       <a
-                        href={testResults[suite.id].screenshotsLink} // This will now include the full backend URL
+                        href={testResults[suite.id].screenshotsLink}
                         target="_blank"
                         rel="noopener noreferrer"
                       >

@@ -116,6 +116,14 @@ app.post('/api/test-suites/:id/run', async (req, res) => {
     console.log(`Running Cypress test with spec: ${specFilePath}`);
     const results = await cypress.run(cypressOptions);
 
+    // Extract stack traces for failed tests
+    const failedTests = results.runs[0].tests
+      .filter(test => test.state === 'failed')
+      .map(test => ({
+        title: test.title.join(' > '), // Combine test titles
+        error: test.displayError // Include the error message
+      }));
+
     // Simplified result
     const response = {
       success: results.totalFailed === 0,
@@ -128,7 +136,8 @@ app.post('/api/test-suites/:id/run', async (req, res) => {
         totalFailed: results.totalFailed,
         totalPending: results.totalPending,
         totalSkipped: results.totalSkipped
-      }
+      },
+      failedTests // Include failed tests with stack traces
     };
 
     // Include screenshots link if tests failed
