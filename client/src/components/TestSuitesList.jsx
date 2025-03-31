@@ -139,7 +139,7 @@ function TestSuitesList({ testSuites: propTestSuites }) {
                         target="_blank"
                         rel="noopener noreferrer"
                       >
-                        Download All Screenshots
+                        Download screenshots
                       </a>
                     </div>
                   )}
