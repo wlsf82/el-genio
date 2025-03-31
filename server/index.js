@@ -121,7 +121,7 @@ app.post('/api/test-suites/:id/run', async (req, res) => {
       .filter(test => test.state === 'failed')
       .map(test => ({
         title: test.title.join(' > '), // Combine test titles
-        error: test.displayError // Include the error message
+        error: test.displayError.replace(/at Context\.eval.*$/m, '').trim() // Remove unwanted stack trace part
       }));
 
     // Simplified result
