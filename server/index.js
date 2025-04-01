@@ -224,17 +224,15 @@ async function generateCypressTestFile(testSuite) {
 describe("${name.replace(/"/g, '\\"')}", () => {
 `;
 
-  // Add test cases
   testCases.forEach(testCase => {
     testFileContent += `
   it("${testCase.description.replace(/"/g, '\\"')}", () => {`;
 
-    // Add test steps
     testCase.steps.forEach((step) => {
       switch (step.command) {
         case 'visit':
           testFileContent += `
-    cy.visit(\`${step.value}\`);`; // Use template literals to avoid unnecessary escaping
+    cy.visit(\`${step.value}\`);`;
           break;
         case 'get':
           testFileContent += `
@@ -250,7 +248,7 @@ describe("${name.replace(/"/g, '\\"')}", () => {
           break;
         case 'type':
           testFileContent = testFileContent.trimEnd();
-          testFileContent += `.type(\`${step.value}\`);`;
+          testFileContent += `.type(\`${step.value}\`)`;
           break;
         case 'check':
           testFileContent = testFileContent.trimEnd();
@@ -265,8 +263,13 @@ describe("${name.replace(/"/g, '\\"')}", () => {
           testFileContent += `.select(\`${step.value}\`);`;
           break;
         case 'should':
-          testFileContent = testFileContent.trimEnd();
-          testFileContent += `.should(\`${step.value}\`);`;
+          if (step.value === 'have.length') {
+            testFileContent = testFileContent.trimEnd();
+            testFileContent += `.should('${step.value}', ${step.lengthValue});`;
+          } else {
+            testFileContent = testFileContent.trimEnd();
+            testFileContent += `.should('${step.value}');`;
+          }
           break;
         case 'blur':
           testFileContent = testFileContent.trimEnd();
@@ -281,20 +284,17 @@ describe("${name.replace(/"/g, '\\"')}", () => {
   });
 `;
   });
-  // Close describe block
+
   testFileContent += `
 });
 `;
 
-  // Write file to cypress/e2e directory
   const filename = `${name.toLowerCase().replace(/\s+/g, '_')}_${id}.cy.js`;
   const filePath = path.join(__dirname, 'cypress', 'e2e', filename);
 
-  // Ensure directory exists
   const dirPath = path.dirname(filePath);
   await fs.mkdir(dirPath, { recursive: true });
 
-  // Write file
   await fs.writeFile(filePath, testFileContent);
 
   return filename;

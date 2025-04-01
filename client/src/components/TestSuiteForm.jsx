@@ -94,6 +94,9 @@ function TestSuiteForm({ onTestSuiteCreated, initialData = null, isEditing = fal
       case 'type':
         return `type "${step.value}"`;
       case 'should':
+        if (step.value === 'have.length') {
+          return `asserts it should "${step.value}" with value "${step.lengthValue}"`;
+        }
         return `asserts it should "${step.value}"`;
       default:
         return step.command;

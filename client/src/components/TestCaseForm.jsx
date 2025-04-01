@@ -8,7 +8,8 @@ function TestCaseForm({ onAddTestCase, initialData = null }) {
   const [currentStep, setCurrentStep] = useState({
     command: '',
     selector: '',
-    value: ''
+    value: '',
+    lengthValue: ''
   });
   const [editingStepIndex, setEditingStepIndex] = useState(null);
 
@@ -35,7 +36,8 @@ function TestCaseForm({ onAddTestCase, initialData = null }) {
     'be.disabled',
     'not.be.disabled',
     'be.focused',
-    'not.be.focused'
+    'not.be.focused',
+    'have.length'
   ];
 
   useEffect(() => {
@@ -78,7 +80,8 @@ function TestCaseForm({ onAddTestCase, initialData = null }) {
     setCurrentStep({
       command: '',
       selector: '',
-      value: ''
+      value: '',
+      lengthValue: ''
     });
   };
 
@@ -135,6 +138,9 @@ function TestCaseForm({ onAddTestCase, initialData = null }) {
       case 'type':
         return `type "${step.value}"`;
       case 'should':
+        if (step.value === 'have.length') {
+          return `asserts it should "${step.value}" with value "${step.lengthValue}"`;
+        }
         return `asserts it should "${step.value}"`;
       default:
         return step.command;
@@ -211,17 +217,28 @@ function TestCaseForm({ onAddTestCase, initialData = null }) {
             )}
 
             {selectedCommand?.hasShouldOptions && (
-              <select
-                value={currentStep.value}
-                onChange={(e) => setCurrentStep({ ...currentStep, value: e.target.value })}
-              >
-                <option value="">Select an assertion</option>
-                {SHOULD_OPTIONS.map(option => (
-                  <option key={option} value={option}>
-                    {option}
-                  </option>
-                ))}
-              </select>
+              <>
+                <select
+                  value={currentStep.value}
+                  onChange={(e) => setCurrentStep({ ...currentStep, value: e.target.value })}
+                >
+                  <option value="">Select an assertion</option>
+                  {SHOULD_OPTIONS.map(option => (
+                    <option key={option} value={option}>
+                      {option}
+                    </option>
+                  ))}
+                </select>
+
+                {currentStep.value === 'have.length' && (
+                  <input
+                    type="number"
+                    value={currentStep.lengthValue || ''}
+                    onChange={(e) => setCurrentStep({ ...currentStep, lengthValue: e.target.value })}
+                    placeholder="Enter length (e.g., 3)"
+                  />
+                )}
+              </>
             )}
 
             {selectedCommand?.hasValue && !selectedCommand?.hasShouldOptions && (
