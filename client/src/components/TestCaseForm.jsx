@@ -117,11 +117,11 @@ function TestCaseForm({ onAddTestCase, initialData = null }) {
   const getStepDescription = (step) => {
     switch (step.command) {
       case 'visit':
-        return `visit '${step.value}'`;
+        return `visit "${step.value}"`;
       case 'get':
-        return `get element with selector '${step.selector}'`;
+        return `get element with selector "${step.selector}"`;
       case 'contains':
-        return `get element with selector '${step.selector}' which contains '${step.value}'`;
+        return `get element with selector "${step.selector}" which contains "${step.value}"`;
       case 'click':
         return 'click';
       case 'check':
@@ -129,13 +129,13 @@ function TestCaseForm({ onAddTestCase, initialData = null }) {
       case 'uncheck':
         return 'uncheck';
       case 'select':
-        return `select '${step.value}'`;
+        return `select "${step.value}"`;
       case 'blur':
         return 'blur';
       case 'type':
-        return `type '${step.value}'`;
+        return `type "${step.value}"`;
       case 'should':
-        return `asserts it should '${step.value}'`;
+        return `asserts it should "${step.value}"`;
       default:
         return step.command;
     }
