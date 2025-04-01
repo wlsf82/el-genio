@@ -93,6 +93,13 @@ function TestCaseForm({ onAddTestCase, initialData = null }) {
     const stepToEdit = steps[index];
     setCurrentStep(stepToEdit);
     setEditingStepIndex(index);
+
+    setTimeout(() => {
+      document.querySelector('.step-form').scrollIntoView({
+        behavior: 'smooth',
+        block: 'center'
+      });
+    }, 100);
   };
 
   const handleCommandChange = (e) => {
