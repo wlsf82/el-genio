@@ -128,6 +128,13 @@
   background-color: #e67e22;
 }
 
+.edit-button:disabled {
+  background-color: #e0e0e0;
+  color: #a0a0a0;
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
 /* Test results */
 .test-results {
   padding: 1.2rem 1.5rem;
