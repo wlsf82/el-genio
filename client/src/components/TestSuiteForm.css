@@ -13,6 +13,8 @@
   --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   --radius: 6px;
   --transition: all 0.2s ease-in-out;
+  --edit-color: #f39c12;
+  --edit-hover: #d68910;
 }
 
 .test-suite-form {
@@ -117,6 +119,23 @@
 
 .remove-button:hover {
   background-color: var(--danger-color);
+  color: white;
+}
+
+.edit-button {
+  background-color: transparent;
+  color: var(--edit-color);
+  border: 1px solid var(--edit-color);
+  padding: 0.5rem 0.75rem;
+  border-radius: var(--radius);
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: var(--transition);
+  margin-right: 0.5rem;
+}
+
+.edit-button:hover {
+  background-color: var(--edit-color);
   color: white;
 }
 

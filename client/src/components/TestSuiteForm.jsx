@@ -3,9 +3,10 @@ import TestCaseForm from './TestCaseForm';
 import axios from 'axios';
 import './TestSuiteForm.css';
 
-function TestSuiteForm({ onTestSuiteCreated }) {
-  const [suiteName, setSuiteName] = useState('');
-  const [testCases, setTestCases] = useState([]);
+function TestSuiteForm({ onTestSuiteCreated, initialData = null, isEditing = false }) {
+  const [suiteName, setSuiteName] = useState(initialData?.name || '');
+  const [testCases, setTestCases] = useState(initialData?.testCases || []);
+  const [editingTestCase, setEditingTestCase] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
   const [isFormValid, setIsFormValid] = useState(false);
@@ -15,7 +16,24 @@ function TestSuiteForm({ onTestSuiteCreated }) {
   }, [suiteName, testCases]);
 
   const handleAddTestCase = (testCase) => {
-    setTestCases([...testCases, testCase]);
+    if (editingTestCase !== null) {
+      setTestCases((prev) =>
+        prev.map((tc, index) => (index === editingTestCase ? testCase : tc))
+      );
+      setEditingTestCase(null);
+    } else {
+      setTestCases([...testCases, testCase]);
+    }
+  };
+
+  const handleEditTestCase = (index) => {
+    setEditingTestCase(index);
+    setTimeout(() => {
+      document.querySelector('.form-controls').scrollIntoView({
+        behavior: 'smooth',
+        block: 'center'
+      });
+    }, 100);
   };
 
   const handleRemoveTestCase = (index) => {
@@ -34,18 +52,22 @@ function TestSuiteForm({ onTestSuiteCreated }) {
         testCases
       };
 
-      const response = await axios.post('/api/test-suites', testSuite);
-
-      onTestSuiteCreated({
-        id: response.data.id,
-        ...testSuite
-      });
+      if (isEditing) {
+        const response = await axios.put(`/api/test-suites/${initialData.id}`, testSuite);
+        onTestSuiteCreated(response.data);
+      } else {
+        const response = await axios.post('/api/test-suites', testSuite);
+        onTestSuiteCreated({
+          id: response.data.id,
+          ...testSuite
+        });
+      }
 
       setSuiteName('');
       setTestCases([]);
 
     } catch (err) {
-      setError('Failed to create test suite: ' + (err.response?.data?.message || err.message));
+      setError('Failed to save test suite: ' + (err.response?.data?.message || err.message));
     } finally {
       setIsLoading(false);
     }
@@ -80,7 +102,7 @@ function TestSuiteForm({ onTestSuiteCreated }) {
 
   return (
     <div className="test-suite-form">
-      <h2>Create test suite</h2>
+      <h2>{isEditing ? 'Edit test suite' : 'Create test suite'}</h2>
 
       {error && <div className="error-message">{error}</div>}
 
@@ -112,6 +134,13 @@ function TestSuiteForm({ onTestSuiteCreated }) {
                 </ul>
                 <button
                   type="button"
+                  className="edit-button"
+                  onClick={() => handleEditTestCase(index)}
+                >
+                  Edit
+                </button>
+                <button
+                  type="button"
                   className="remove-button"
                   onClick={() => handleRemoveTestCase(index)}
                 >
@@ -124,7 +153,10 @@ function TestSuiteForm({ onTestSuiteCreated }) {
           <p className="no-test-cases">No test cases added yet.</p>
         )}
 
-        <TestCaseForm onAddTestCase={handleAddTestCase} />
+        <TestCaseForm
+          onAddTestCase={handleAddTestCase}
+          initialData={editingTestCase !== null ? testCases[editingTestCase] : null}
+        />
 
         <div className="form-controls">
           <button
@@ -132,7 +164,7 @@ function TestSuiteForm({ onTestSuiteCreated }) {
             className="submit-button"
             disabled={!isFormValid || isLoading}
           >
-            {isLoading ? 'Creating...' : 'Create test suite'}
+            {isLoading ? 'Saving...' : isEditing ? 'Save changes' : 'Create test suite'}
           </button>
         </div>
       </form>

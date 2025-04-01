@@ -52,6 +52,34 @@ app.post('/api/test-suites', async (req, res) => {
   }
 });
 
+app.put('/api/test-suites/:id', async (req, res) => {
+  const id = req.params.id;
+  const { name, testCases } = req.body;
+
+  if (!name || !testCases || !Array.isArray(testCases) || testCases.length === 0) {
+    return res.status(400).json({ message: 'Invalid test suite data' });
+  }
+
+  const suite = testSuites[id];
+  if (!suite) {
+    return res.status(404).json({ message: 'Test suite not found' });
+  }
+
+  try {
+    // Update the test suite in memory
+    suite.name = name;
+    suite.testCases = testCases;
+
+    // Regenerate the Cypress test file
+    await generateCypressTestFile(suite);
+
+    res.json(suite);
+  } catch (error) {
+    console.error('Error updating test suite:', error);
+    res.status(500).json({ message: 'Failed to update test suite', error: error.message });
+  }
+});
+
 app.delete('/api/test-suites/:id', async (req, res) => {
   const id = req.params.id;
   const suite = testSuites[id];
@@ -193,28 +221,28 @@ async function generateCypressTestFile(testSuite) {
 // Auto-generated Cypress test file
 // Test Suite: ${name}
 
-describe('${name.replace(/'/g, "\\'")}', () => {
+describe("${name.replace(/"/g, '\\"')}", () => {
 `;
 
   // Add test cases
   testCases.forEach(testCase => {
     testFileContent += `
-  it('${testCase.description.replace(/'/g, "\\'")}', () => {`;
+  it("${testCase.description.replace(/"/g, '\\"')}", () => {`;
 
     // Add test steps
     testCase.steps.forEach((step) => {
       switch (step.command) {
         case 'visit':
           testFileContent += `
-    cy.visit('${step.value.replace(/'/g, "\\'")}');`;
+    cy.visit(\`${step.value}\`);`; // Use template literals to avoid unnecessary escaping
           break;
         case 'get':
           testFileContent += `
-    cy.get('${step.selector.replace(/'/g, "\\'")}')`;
+    cy.get(\`${step.selector}\`)`;
           break;
         case 'contains':
           testFileContent += `
-    cy.contains('${step.selector.replace(/'/g, "\\'")}', '${step.value.replace(/'/g, "\\'")}')`;
+    cy.contains(\`${step.selector}\`, \`${step.value}\`)`;
           break;
         case 'click':
           testFileContent = testFileContent.trimEnd();
@@ -222,7 +250,7 @@ describe('${name.replace(/'/g, "\\'")}', () => {
           break;
         case 'type':
           testFileContent = testFileContent.trimEnd();
-          testFileContent += `.type('${step.value.replace(/'/g, "\\'")}');`;
+          testFileContent += `.type(\`${step.value}\`);`;
           break;
         case 'check':
           testFileContent = testFileContent.trimEnd();
@@ -234,11 +262,11 @@ describe('${name.replace(/'/g, "\\'")}', () => {
           break;
         case 'select':
           testFileContent = testFileContent.trimEnd();
-          testFileContent += `.select('${step.value.replace(/'/g, "\\'")}');`;
+          testFileContent += `.select(\`${step.value}\`);`;
           break;
         case 'should':
           testFileContent = testFileContent.trimEnd();
-          testFileContent += `.should('${step.value}');`;
+          testFileContent += `.should(\`${step.value}\`);`;
           break;
         case 'blur':
           testFileContent = testFileContent.trimEnd();

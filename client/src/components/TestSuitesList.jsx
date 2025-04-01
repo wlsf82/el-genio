@@ -2,8 +2,9 @@ import { useState, useEffect } from 'react';
 import axios from 'axios';
 import './TestSuitesList.css';
 import { Play, Trash, X, ChevronDown, ChevronUp } from 'lucide-react';
+import TestSuiteForm from './TestSuiteForm';
 
-function TestSuitesList({ testSuites: propTestSuites }) {
+function TestSuitesList({ testSuites: propTestSuites, resetEditingSuite, forceListView }) {
   const [testSuites, setTestSuites] = useState(propTestSuites || []);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -11,6 +12,7 @@ function TestSuitesList({ testSuites: propTestSuites }) {
   const [testResults, setTestResults] = useState({});
   const [isAnyTestRunning, setIsAnyTestRunning] = useState(false);
   const [expandedSuites, setExpandedSuites] = useState({});
+  const [editingSuite, setEditingSuite] = useState(null);
 
   useEffect(() => {
     if (propTestSuites?.length > 0) {
@@ -19,6 +21,12 @@ function TestSuitesList({ testSuites: propTestSuites }) {
       fetchTestSuites();
     }
   }, [propTestSuites]);
+
+  useEffect(() => {
+    if (forceListView) {
+      setEditingSuite(null);
+    }
+  }, [forceListView]);
 
   const toggleSuiteExpansion = (suiteId) => {
     setExpandedSuites((prev) => ({
@@ -78,6 +86,33 @@ function TestSuitesList({ testSuites: propTestSuites }) {
     }
   };
 
+  const handleEditSuite = (suite) => {
+    setEditingSuite(suite);
+    resetEditingSuite();
+  };
+
+  const handleSuiteUpdated = (updatedSuite) => {
+    setTestSuites((prevSuites) =>
+      prevSuites.map((suite) => (suite.id === updatedSuite.id ? updatedSuite : suite))
+    );
+    setEditingSuite(null);
+  };
+
+  if (editingSuite) {
+    return (
+      <TestSuiteForm
+        initialData={editingSuite}
+        onTestSuiteCreated={(updatedSuite) => {
+          setTestSuites((prevSuites) =>
+            prevSuites.map((suite) => (suite.id === updatedSuite.id ? updatedSuite : suite))
+          );
+          setEditingSuite(null);
+        }}
+        isEditing={true}
+      />
+    );
+  }
+
   if (isLoading && testSuites.length === 0) {
     return <div className="loading">Loading test suites...</div>;
   }
@@ -114,6 +149,13 @@ function TestSuitesList({ testSuites: propTestSuites }) {
                 disabled={runningTests[suite.id]}
               >
                 <Trash size={16} /> Delete
+              </button>
+              <button
+                className="edit-button"
+                onClick={() => handleEditSuite(suite)}
+                disabled={runningTests[suite.id]}
+              >
+                Edit
               </button>
               <button
                 className="toggle-button"

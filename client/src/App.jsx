@@ -8,6 +8,8 @@ import axios from 'axios';
 function App() {
   const [testSuites, setTestSuites] = useState([]);
   const [activeView, setActiveView] = useState('list');
+  const [editingSuite, setEditingSuite] = useState(null);
+  const [forceListView, setForceListView] = useState(false);
 
   const handleTestSuiteCreated = async () => {
     try {
@@ -19,6 +21,11 @@ function App() {
     }
   };
 
+  const resetEditingSuite = () => {
+    setEditingSuite(null);
+    setForceListView(false);
+  };
+
   return (
     <div className="app-container">
       <header>
@@ -26,13 +33,19 @@ function App() {
         <nav>
           <button
             className={activeView === 'create' ? 'active' : ''}
-            onClick={() => setActiveView('create')}
+            onClick={() => {
+              resetEditingSuite();
+              setActiveView('create');
+            }}
           >
             <PlusCircle size={16} /> Create test
           </button>
           <button
             className={activeView === 'list' ? 'active' : ''}
-            onClick={() => setActiveView('list')}
+            onClick={() => {
+              setForceListView(true);
+              setActiveView('list');
+            }}
           >
             <Eye size={16} /> View tests
           </button>
@@ -43,7 +56,11 @@ function App() {
         {activeView === 'create' ? (
           <TestSuiteForm onTestSuiteCreated={handleTestSuiteCreated} />
         ) : (
-          <TestSuitesList testSuites={testSuites} />
+          <TestSuitesList
+            testSuites={testSuites}
+            resetEditingSuite={resetEditingSuite}
+            forceListView={forceListView}
+          />
         )}
       </main>
     </div>

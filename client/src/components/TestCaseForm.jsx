@@ -1,15 +1,16 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { X } from 'lucide-react';
 import './TestCaseForm.css';
 
-function TestCaseForm({ onAddTestCase }) {
-  const [description, setDescription] = useState('');
-  const [steps, setSteps] = useState([]);
+function TestCaseForm({ onAddTestCase, initialData = null }) {
+  const [description, setDescription] = useState(initialData?.description || '');
+  const [steps, setSteps] = useState(initialData?.steps || []);
   const [currentStep, setCurrentStep] = useState({
     command: '',
     selector: '',
     value: ''
   });
+  const [editingStepIndex, setEditingStepIndex] = useState(null);
 
   const CYPRESS_COMMANDS = [
     { value: 'visit', hasSelector: false, hasValue: true },
@@ -37,6 +38,13 @@ function TestCaseForm({ onAddTestCase }) {
     'not.be.focused'
   ];
 
+  useEffect(() => {
+    if (initialData) {
+      setDescription(initialData.description);
+      setSteps(initialData.steps);
+    }
+  }, [initialData]);
+
   const handleAddStep = () => {
     if (!currentStep.command) {
       return;
@@ -58,7 +66,15 @@ function TestCaseForm({ onAddTestCase }) {
       newStep.isChained = true;
     }
 
-    setSteps([...steps, newStep]);
+    if (editingStepIndex !== null) {
+      const updatedSteps = [...steps];
+      updatedSteps[editingStepIndex] = newStep;
+      setSteps(updatedSteps);
+      setEditingStepIndex(null);
+    } else {
+      setSteps([...steps, newStep]);
+    }
+
     setCurrentStep({
       command: '',
       selector: '',
@@ -70,6 +86,12 @@ function TestCaseForm({ onAddTestCase }) {
     setSteps(steps.filter((_, i) => i !== index));
   };
 
+  const handleEditStep = (index) => {
+    const stepToEdit = steps[index];
+    setCurrentStep(stepToEdit);
+    setEditingStepIndex(index);
+  };
+
   const handleCommandChange = (e) => {
     const command = e.target.value;
     setCurrentStep({
@@ -78,7 +100,7 @@ function TestCaseForm({ onAddTestCase }) {
     });
   };
 
-  const handleAddTestCase = () => {
+  const handleSubmit = () => {
     if (!description.trim() || steps.length === 0) {
       return;
     }
@@ -123,7 +145,7 @@ function TestCaseForm({ onAddTestCase }) {
 
   return (
     <div className="test-case-form">
-      <h3>Add new test case</h3>
+      <h3>{initialData ? 'Edit test case' : 'Add new test case'}</h3>
 
       <div className="form-group">
         <label htmlFor="description">Test description:</label>
@@ -144,6 +166,13 @@ function TestCaseForm({ onAddTestCase }) {
             {steps.map((step, index) => (
               <li key={index} className="step-item">
                 <span>{getStepDescription(step)}</span>
+                <button
+                  type="button"
+                  className="edit-step-button"
+                  onClick={() => handleEditStep(index)}
+                >
+                  Edit
+                </button>
                 <button
                   type="button"
                   className="remove-step-button"
@@ -210,7 +239,7 @@ function TestCaseForm({ onAddTestCase }) {
               onClick={handleAddStep}
               disabled={!currentStep.command}
             >
-              Add step
+              {editingStepIndex !== null ? 'Update step' : 'Add step'}
             </button>
           </div>
         </div>
@@ -219,10 +248,10 @@ function TestCaseForm({ onAddTestCase }) {
       <button
         type="button"
         className="add-test-case-button"
-        onClick={handleAddTestCase}
+        onClick={handleSubmit}
         disabled={!description.trim() || steps.length === 0}
       >
-        Add test case
+        {initialData ? 'Save changes' : 'Add test case'}
       </button>
     </div>
   );
