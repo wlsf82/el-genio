@@ -288,7 +288,7 @@ describe("${name.replace(/"/g, '\\"')}", () => {
       switch (step.command) {
         case 'visit':
           testFileContent += `
-    cy.visit(\`${step.value}\`);`;
+    cy.visit(\`${step.value}\`)`;
           break;
         case 'get':
           testFileContent += `
@@ -300,7 +300,7 @@ describe("${name.replace(/"/g, '\\"')}", () => {
           break;
         case 'click':
           testFileContent = testFileContent.trimEnd();
-          testFileContent += `.click();`;
+          testFileContent += `.click()`;
           break;
         case 'type':
           testFileContent = testFileContent.trimEnd();
@@ -308,28 +308,28 @@ describe("${name.replace(/"/g, '\\"')}", () => {
           break;
         case 'check':
           testFileContent = testFileContent.trimEnd();
-          testFileContent += `.check();`;
+          testFileContent += `.check()`;
           break;
         case 'uncheck':
           testFileContent = testFileContent.trimEnd();
-          testFileContent += `.uncheck();`;
+          testFileContent += `.uncheck()`;
           break;
         case 'select':
           testFileContent = testFileContent.trimEnd();
-          testFileContent += `.select(\`${step.value}\`);`;
+          testFileContent += `.select(\`${step.value}\`)`;
           break;
         case 'should':
           if (step.value === 'have.length') {
             testFileContent = testFileContent.trimEnd();
-            testFileContent += `.should('${step.value}', ${step.lengthValue});`;
+            testFileContent += `.should('${step.value}', ${step.lengthValue})`;
           } else {
             testFileContent = testFileContent.trimEnd();
-            testFileContent += `.should('${step.value}');`;
+            testFileContent += `.should('${step.value}')`;
           }
           break;
         case 'blur':
           testFileContent = testFileContent.trimEnd();
-          testFileContent += `.blur();`;
+          testFileContent += `.blur()`;
           break;
         default:
           console.warn(`Unknown command: ${step.command}`);
@@ -337,12 +337,12 @@ describe("${name.replace(/"/g, '\\"')}", () => {
     });
 
     testFileContent += `
-  });
+  })
 `;
   });
 
   testFileContent += `
-});
+})
 `;
 
   const filename = `${name.toLowerCase().replace(/\s+/g, '_')}_${id}.cy.js`;
