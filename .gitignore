@@ -4,6 +4,11 @@ node_modules/
 client/node_modules/
 server/node_modules/
 
+cypress.env.json
+cypress/downloads/
+cypress/screenshots/
+cypress/videos/
+
 server/cypress.env.json
 server/cypress/downloads/
 server/cypress/screenshots/
