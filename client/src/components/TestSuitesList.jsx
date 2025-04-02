@@ -213,21 +213,21 @@ function TestSuitesList({ testSuites: propTestSuites, resetEditingSuite, forceLi
               <button
                 className="run-button"
                 onClick={() => runTest(suite.id)}
-                disabled={runningTests[suite.id] || isAnyTestRunning}
+                disabled={isAnyTestRunning || isRunningAll}
               >
                 <Play size={16} /> {runningTests[suite.id] ? 'Running...' : 'Run'}
               </button>
               <button
                 className="delete-button"
                 onClick={() => deleteTestSuite(suite.id)}
-                disabled={runningTests[suite.id] || isAnyTestRunning}
+                disabled={runningTests[suite.id] || isRunningAll}
               >
                 <Trash size={16} /> Delete
               </button>
               <button
                 className="edit-button"
                 onClick={() => handleEditSuite(suite)}
-                disabled={runningTests[suite.id] || isAnyTestRunning}
+                disabled={runningTests[suite.id] || isRunningAll}
               >
                 Edit
               </button>
