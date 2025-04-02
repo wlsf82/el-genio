@@ -277,10 +277,9 @@ async function generateCypressTestFile(testSuite) {
 // Auto-generated Cypress test file
 // Test Suite: ${name}
 
-describe("${name.replace(/"/g, '\\"')}", () => {
-`;
+describe("${name.replace(/"/g, '\\"')}", () => {`;
 
-  testCases.forEach(testCase => {
+  testCases.forEach((testCase, index) => {
     testFileContent += `
   it("${testCase.description.replace(/"/g, '\\"')}", () => {`;
 
@@ -337,8 +336,12 @@ describe("${name.replace(/"/g, '\\"')}", () => {
     });
 
     testFileContent += `
-  })
-`;
+  })`;
+
+    // Add newline between test cases, but not after the last one
+    if (index < testCases.length - 1) {
+      testFileContent += `\n`;
+    }
   });
 
   testFileContent += `
