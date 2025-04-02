@@ -9,7 +9,7 @@
     "client": "cd client && npm run dev",
     "install:all": "npm install && cd client && npm install && cd ../server && npm install",
     "cy:open": "cypress open",
-    "test": "cypress run --headed"
+    "test": "cypress run"
   },
   "keywords": [
     "cypress",
@@ -19,6 +19,7 @@
   "author": "",
   "license": "MIT",
   "devDependencies": {
-    "concurrently": "^8.2.0"
+    "concurrently": "^8.2.0",
+    "cypress": "^14.2.1"
   }
 }

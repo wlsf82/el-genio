@@ -1,0 +1,20 @@
+name: CI
+
+on: [push, pull_request]
+
+jobs:
+  cypress-tests:
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Install dependencies
+        uses: cypress-io/github-action@v6
+        with:
+          install-command: npm run install:all
+          runTests: false
+      - name: Run Cypress tests 🧪
+        uses: cypress-io/github-action@v6
+        with:
+          start: npm run start
+          command: npm test
