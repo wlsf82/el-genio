@@ -363,80 +363,103 @@ describe("${name.replace(/"/g, '\\"')}", () => {`;
 async function parseCypressTestFile(fileContent) {
   const testCases = [];
 
-  const testRegex = /it\(['"](.+?)['"]\s*,\s*\(\)\s*=>\s*\{([\s\S]+?)\}\s*\)\s*;/g;
+  // Updated regex to better handle multiline test cases
+  const testRegex = /it\(['"](.+?)['"]\s*,\s*\(\)\s*=>\s*\{([\s\S]+?)\}\)\s*$/gm;
   let testMatch;
 
   while ((testMatch = testRegex.exec(fileContent)) !== null) {
     const description = testMatch[1];
-    const testBody = testMatch[2];
+    const testBody = testMatch[2].trim();
     const steps = [];
 
-    // Enhanced regex to capture base command and all chained commands
-    const commandRegex = /cy\.(visit|get|contains)(?:\(`([^`]+)`(?:,\s*`([^`]+)`)?\)|(?:\(['"]([^'"]+)['"](?:,\s*['"]([^'"]+)['"])?\)))(?:\.(type|click|check|uncheck|should|blur)\(([^)]*)\))*(?:\.blur\(\))?/g;
+    // Enhanced regex to capture all Cypress commands with their parameters
+    const commandRegex = /cy\.(visit|get|contains)\((?:`([^`]+)`|['"]([^'"]+)['"])(?:\s*,\s*(?:`([^`]+)`|['"]([^'"]+)['"])?)?\)(?:\.(type|click|check|uncheck|should|blur)\((?:`([^`]+)`|['"]([^'"]+)['"](?:\s*,\s*(\d+))?)?\))?/g;
     let commandMatch;
 
-    while ((commandMatch = commandRegex.exec(testBody)) !== null) {
-      const [fullMatch, mainCommand, selector, value, containsSelector, containsValue] = commandMatch;
+    const lines = testBody.split('\n');
+    for (const line of lines) {
+      const trimmedLine = line.trim();
+      if (!trimmedLine.startsWith('cy.')) continue;
 
-      // Handle the main command first
-      if (mainCommand === 'visit') {
-        steps.push({ command: 'visit', value: selector });
-      } else if (mainCommand === 'get') {
-        steps.push({ command: 'get', selector });
-      } else if (mainCommand === 'contains') {
-        steps.push({
-          command: 'contains',
-          selector: mainCommand === 'contains' ? selector : containsSelector,
-          value: mainCommand === 'contains' ? value : containsValue
-        });
-      }
+      while ((commandMatch = commandRegex.exec(trimmedLine)) !== null) {
+        const [
+          _,
+          mainCommand,
+          backTickSelector,
+          quoteSelector,
+          backTickValue,
+          quoteValue,
+          chainedCommand,
+          chainedBackTickValue,
+          chainedQuoteValue,
+          numericValue
+        ] = commandMatch;
 
-      // Handle all chained commands
-      const chainedCommands = fullMatch.match(/\.(type|click|check|uncheck|should|blur)\(([^)]*)\)/g) || [];
-      for (const chainedCommand of chainedCommands) {
-        const chainMatch = chainedCommand.match(/\.(type|click|check|uncheck|should|blur)\(([^)]*)\)/);
-        if (chainMatch) {
-          const [_, action, params] = chainMatch;
-          switch (action) {
-            case 'type':
-              steps.push({
-                command: 'type',
-                value: params.replace(/[`'"]/g, '')
-              });
-              break;
-            case 'click':
-              steps.push({ command: 'click' });
-              break;
-            case 'check':
-              steps.push({ command: 'check' });
-              break;
-            case 'uncheck':
-              steps.push({ command: 'uncheck' });
-              break;
-            case 'should':
-              const shouldParams = params.split(',').map(p => p.trim().replace(/[`'"]/g, ''));
-              if (shouldParams[0] === 'have.length') {
-                steps.push({
-                  command: 'should',
-                  value: 'have.length',
-                  lengthValue: parseInt(shouldParams[1])
-                });
-              } else {
-                steps.push({
-                  command: 'should',
-                  value: shouldParams[0]
-                });
-              }
-              break;
-            case 'blur':
-              steps.push({ command: 'blur' });
-              break;
+        // Handle main command
+        const selector = backTickSelector || quoteSelector;
+        const value = backTickValue || quoteValue;
+
+        if (mainCommand === 'visit') {
+          steps.push({ command: 'visit', value: selector });
+        } else if (mainCommand === 'get') {
+          steps.push({ command: 'get', selector });
+
+          // Handle chained commands
+          if (chainedCommand) {
+            const chainedValue = chainedBackTickValue || chainedQuoteValue;
+            switch (chainedCommand) {
+              case 'type':
+                steps.push({ command: 'type', value: chainedValue });
+                break;
+              case 'click':
+                steps.push({ command: 'click' });
+                break;
+              case 'check':
+                steps.push({ command: 'check' });
+                break;
+              case 'uncheck':
+                steps.push({ command: 'uncheck' });
+                break;
+              case 'should':
+                if (chainedValue === 'have.length') {
+                  steps.push({
+                    command: 'should',
+                    value: 'have.length',
+                    lengthValue: parseInt(numericValue)
+                  });
+                } else {
+                  steps.push({ command: 'should', value: chainedValue });
+                }
+                break;
+              case 'blur':
+                steps.push({ command: 'blur' });
+                break;
+            }
+          }
+        } else if (mainCommand === 'contains') {
+          steps.push({
+            command: 'contains',
+            selector,
+            value
+          });
+
+          // Handle chained commands for contains
+          if (chainedCommand) {
+            const chainedValue = chainedBackTickValue || chainedQuoteValue;
+            switch (chainedCommand) {
+              case 'click':
+                steps.push({ command: 'click' });
+                break;
+              case 'should':
+                steps.push({ command: 'should', value: chainedValue });
+                break;
+            }
           }
         }
       }
 
-      // Handle trailing .blur() only if it wasn't already added in the chain
-      if (fullMatch.endsWith('.blur()') && !chainedCommands.some(cmd => cmd.includes('.blur('))) {
+      // Handle standalone chained commands
+      if (trimmedLine.includes('.blur()')) {
         steps.push({ command: 'blur' });
       }
     }
