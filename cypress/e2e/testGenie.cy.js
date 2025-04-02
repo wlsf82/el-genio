@@ -62,4 +62,19 @@ describe('TestGenie', () => {
     // Assert test case is contained inside the test suite
     cy.contains('.test-cases', 'asserts h1 is visible').should('be.visible')
   })
+
+  it('runs a just created test suite', () => {
+    cy.createSampleTestSuite()
+
+    cy.contains('.test-suite-card', 'walmyr.dev')
+      .should('be.visible')
+      .find('button:contains(Run)')
+      .click()
+
+    cy.contains(
+      '.test-results.success',
+      'All tests passed! ✅',
+      { timeout: 30000 }
+    ).should('be.visible')
+  })
 })
