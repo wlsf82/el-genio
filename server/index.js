@@ -313,65 +313,65 @@ async function parseCypressTestFile(fileContent) {
     const testBody = testMatch[2];
     const steps = [];
 
-    // Extract steps from the test body
     // Visit command
-    const visitMatches = testBody.matchAll(/cy\.visit\(['"](.+?)['"]\)/g);
+    const visitMatches = testBody.matchAll(/cy\.visit\(`(.+?)`\)/g);
     for (const match of visitMatches) {
       steps.push({ command: 'visit', value: match[1] });
     }
 
-    // Get command
-    const getMatches = testBody.matchAll(/cy\.get\(['"](.+?)['"]\)(?!\.)/g);
-    for (const match of getMatches) {
-      steps.push({ command: 'get', selector: match[1] });
+    // Get command with chained actions
+    const getWithActionMatches = testBody.matchAll(/cy\.get\(`(.+?)`\)\.(\w+)\((.*?)\)/g);
+    for (const match of getWithActionMatches) {
+      const selector = match[1];
+      const action = match[2];
+      const params = match[3];
+
+      // Add the get step
+      steps.push({ command: 'get', selector });
+
+      // Add the chained action
+      switch (action) {
+        case 'type':
+          steps.push({ command: 'type', value: params.replace(/[`'"]/g, '') });
+          break;
+        case 'click':
+          steps.push({ command: 'click' });
+          break;
+        case 'check':
+          steps.push({ command: 'check' });
+          break;
+        case 'uncheck':
+          steps.push({ command: 'uncheck' });
+          break;
+        case 'should':
+          const shouldParams = params.split(',').map(p => p.trim().replace(/[`'"]/g, ''));
+          if (shouldParams[0] === 'have.length') {
+            steps.push({ command: 'should', value: shouldParams[0], lengthValue: parseInt(shouldParams[1]) });
+          } else {
+            steps.push({ command: 'should', value: shouldParams[0] });
+          }
+          break;
+        case 'blur':
+          steps.push({ command: 'blur' });
+          break;
+      }
     }
 
     // Contains command
-    const containsMatches = testBody.matchAll(/cy\.contains\(['"](.+?)['"],\s*['"](.+?)['"]\)/g);
+    const containsMatches = testBody.matchAll(/cy\.contains\(`(.+?)`,\s*`(.+?)`\)/g);
     for (const match of containsMatches) {
       steps.push({ command: 'contains', selector: match[1], value: match[2] });
     }
 
-    // Click command
-    const clickMatches = testBody.matchAll(/cy\.get\(['"](.+?)['"]\)\.click\(\)/g);
-    for (const match of clickMatches) {
-      steps.push({ command: 'click', selector: match[1] });
-    }
-
-    // Type command
-    const typeMatches = testBody.matchAll(/cy\.get\(['"](.+?)['"]\)\.type\(['"](.+?)['"]\)/g);
-    for (const match of typeMatches) {
-      steps.push({ command: 'type', selector: match[1], value: match[2] });
-    }
-
-    // Check command
-    const checkMatches = testBody.matchAll(/cy\.get\(['"](.+?)['"]\)\.check\(\)/g);
-    for (const match of checkMatches) {
-      steps.push({ command: 'check', selector: match[1] });
-    }
-
-    // Uncheck command
-    const uncheckMatches = testBody.matchAll(/cy\.get\(['"](.+?)['"]\)\.uncheck\(\)/g);
-    for (const match of uncheckMatches) {
-      steps.push({ command: 'uncheck', selector: match[1] });
-    }
-
-    // Select command
-    const selectMatches = testBody.matchAll(/cy\.get\(['"](.+?)['"]\)\.select\(['"](.+?)['"]\)/g);
-    for (const match of selectMatches) {
-      steps.push({ command: 'select', selector: match[1], value: match[2] });
-    }
-
-    // Should command
-    const shouldMatches = testBody.matchAll(/cy\.get\(['"](.+?)['"]\)\.should\(['"](.+?)['"]\)/g);
-    for (const match of shouldMatches) {
-      steps.push({ command: 'should', selector: match[1], value: match[2] });
-    }
-
-    // Blur command
-    const blurMatches = testBody.matchAll(/cy\.get\(['"](.+?)['"]\)\.blur\(\)/g);
-    for (const match of blurMatches) {
-      steps.push({ command: 'blur', selector: match[1] });
+    // Get with should command (standalone)
+    const getShouldMatches = testBody.matchAll(/cy\.get\(`(.+?)`\)\.should\(`(.+?)`(?:,\s*(\d+))?\)/g);
+    for (const match of getShouldMatches) {
+      steps.push({ command: 'get', selector: match[1] });
+      if (match[3]) { // If there's a length value
+        steps.push({ command: 'should', value: match[2], lengthValue: parseInt(match[3]) });
+      } else {
+        steps.push({ command: 'should', value: match[2] });
+      }
     }
 
     testCases.push({ description, steps });
