@@ -1,0 +1,31 @@
+{
+  "name":"walmyr.dev",
+  "testCases":
+  [
+    {
+      "description":"asserts heading 1 is visible",
+      "steps": [
+        {
+          "command":
+            "visit",
+            "selector":"",
+            "value":"https://walmyr.dev",
+            "lengthValue":""
+        },
+        {
+          "command":"contains",
+          "selector":"h1",
+          "value":"Walmyr",
+          "lengthValue":""
+        },
+        {
+          "command":"should",
+          "selector":"",
+          "value":"be.visible",
+          "lengthValue":"",
+          "isChained":true
+        }
+      ]
+    }
+  ]
+}

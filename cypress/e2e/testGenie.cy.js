@@ -1,5 +1,6 @@
 describe('TestGenie', () => {
   beforeEach(() => {
+    cy.deleteTestSuitesByName('walmyr.dev')
     cy.intercept('GET', '/api/test-suites').as('getTestSuites')
 
     cy.visit('/')
@@ -65,6 +66,7 @@ describe('TestGenie', () => {
 
   it('runs a just created test suite', () => {
     cy.createSampleTestSuite()
+    cy.visit('/')
 
     cy.contains('.test-suite-card', 'walmyr.dev')
       .should('be.visible')
