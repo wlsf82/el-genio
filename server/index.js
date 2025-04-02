@@ -107,6 +107,62 @@ app.delete('/api/test-suites/:id', async (req, res) => {
   }
 });
 
+app.post('/api/test-suites/run-all', async (req, res) => {
+  try {
+    const configFilePath = path.join(__dirname, './', 'cypress.config.js');
+    const specPattern = path.join(__dirname, 'cypress', 'e2e', '**', '*.cy.js');
+
+    let cypressOptions = {
+      browser: 'chrome',
+      headed: false,
+      configFile: configFilePath,
+      spec: specPattern
+    };
+
+    console.log('Running all Cypress tests');
+    const results = await cypress.run(cypressOptions);
+
+    // Extract stack traces for failed tests
+    const failedTests = results.runs
+      .flatMap(run => run.tests)
+      .filter(test => test.state === 'failed')
+      .map(test => ({
+        title: test.title.join(' > '),
+        error: test.displayError.replace(/at Context\.eval.*$/m, '').trim()
+      }));
+
+    // Simplified result
+    const response = {
+      success: results.totalFailed === 0,
+      message: results.totalFailed === 0
+        ? 'All tests passed! ✅'
+        : `${results.totalFailed} test(s) failed. ❌`,
+      details: {
+        totalTests: results.totalTests,
+        totalPassed: results.totalPassed,
+        totalFailed: results.totalFailed,
+        totalPending: results.totalPending,
+        totalSkipped: results.totalSkipped
+      },
+      failedTests
+    };
+
+    // Include screenshots link if tests failed
+    if (results.totalFailed > 0) {
+      response.screenshotsLink = `${req.protocol}://${req.get('host')}/cypress/screenshots/download`;
+    }
+
+    res.json(response);
+  } catch (error) {
+    console.error('Error running all test suites:', error);
+    res.status(500).json({
+      message: 'Failed to run test suites',
+      error: error.message,
+      success: false
+    });
+  }
+});
+
 app.post('/api/test-suites/:id/run', async (req, res) => {
   const id = req.params.id;
   const suite = testSuites[id];

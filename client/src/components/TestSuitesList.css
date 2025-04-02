@@ -350,3 +350,32 @@
 .toggle-button:hover {
   background-color: #f0f0f0;
 }
+
+/* Test suites header */
+.test-suites-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.run-all-button {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.run-all-button:hover {
+  background-color: #45a049;
+}
+
+.run-all-button:disabled {
+  background-color: #cccccc;
+  cursor: not-allowed;
+}

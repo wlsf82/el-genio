@@ -13,6 +13,8 @@ function TestSuitesList({ testSuites: propTestSuites, resetEditingSuite, forceLi
   const [isAnyTestRunning, setIsAnyTestRunning] = useState(false);
   const [expandedSuites, setExpandedSuites] = useState({});
   const [editingSuite, setEditingSuite] = useState(null);
+  const [isRunningAll, setIsRunningAll] = useState(false);
+  const [allTestsResults, setAllTestsResults] = useState(null);
 
   useEffect(() => {
     if (propTestSuites?.length > 0) {
@@ -98,6 +100,23 @@ function TestSuitesList({ testSuites: propTestSuites, resetEditingSuite, forceLi
     setEditingSuite(null);
   };
 
+  const runAllTests = async () => {
+    setIsRunningAll(true);
+    setIsAnyTestRunning(true);
+    setError(null);
+    setAllTestsResults(null);
+
+    try {
+      const response = await axios.post('/api/test-suites/run-all');
+      setAllTestsResults(response.data);
+    } catch (err) {
+      setError('Failed to run all tests: ' + (err.response?.data?.message || err.message));
+    } finally {
+      setIsRunningAll(false);
+      setIsAnyTestRunning(false);
+    }
+  };
+
   if (editingSuite) {
     return (
       <TestSuiteForm
@@ -127,9 +146,64 @@ function TestSuitesList({ testSuites: propTestSuites, resetEditingSuite, forceLi
 
   return (
     <div className="test-suites-list">
-      <h2>Test suites</h2>
+      <div className="test-suites-header">
+        <h2>Test suites</h2>
+        <button
+          className="run-all-button"
+          onClick={runAllTests}
+          disabled={isRunningAll || isAnyTestRunning}
+        >
+          <Play size={16} /> {isRunningAll ? 'Running all...' : 'Run all'}
+        </button>
+      </div>
 
       {error && <div className="error-message">{error}</div>}
+
+      {allTestsResults && (
+        <div className={`test-results ${allTestsResults.success ? 'success' : 'failure'}`}>
+          <div className="test-results-header">
+            <h4>All Tests Results</h4>
+            <button
+              className="close-button"
+              onClick={() => setAllTestsResults(null)}
+            >
+              <X size={16} />
+            </button>
+          </div>
+          <p>{allTestsResults.message}</p>
+          {allTestsResults.details && (
+            <pre>{JSON.stringify(allTestsResults.details, null, 2)}</pre>
+          )}
+          {!allTestsResults.success && (
+            <div className="test-results-failure">
+              {allTestsResults.failedTests && (
+                <div className="failed-tests">
+                  <h5>Failed Tests:</h5>
+                  <ul>
+                    {allTestsResults.failedTests.map((test, index) => (
+                      <li key={index}>
+                        <strong>{test.title}</strong>
+                        <pre className="stack-trace">{test.error}</pre>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+              {allTestsResults.screenshotsLink && (
+                <div className="screenshots-link">
+                  <a
+                    href={allTestsResults.screenshotsLink}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    Download screenshots
+                  </a>
+                </div>
+              )}
+            </div>
+          )}
+        </div>
+      )}
 
       {testSuites.map((suite) => (
         <div key={suite.id} className="test-suite-card">
@@ -146,14 +220,14 @@ function TestSuitesList({ testSuites: propTestSuites, resetEditingSuite, forceLi
               <button
                 className="delete-button"
                 onClick={() => deleteTestSuite(suite.id)}
-                disabled={runningTests[suite.id]}
+                disabled={runningTests[suite.id] || isAnyTestRunning}
               >
                 <Trash size={16} /> Delete
               </button>
               <button
                 className="edit-button"
                 onClick={() => handleEditSuite(suite)}
-                disabled={runningTests[suite.id]}
+                disabled={runningTests[suite.id] || isAnyTestRunning}
               >
                 Edit
               </button>
