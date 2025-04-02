@@ -360,7 +360,6 @@ describe("${name.replace(/"/g, '\\"')}", () => {
 async function parseCypressTestFile(fileContent) {
   const testCases = [];
 
-  // Extract 'it' blocks which represent test cases
   const testRegex = /it\(['"](.+?)['"]\s*,\s*\(\)\s*=>\s*\{([\s\S]+?)\}\s*\)\s*;/g;
   let testMatch;
 
@@ -369,64 +368,73 @@ async function parseCypressTestFile(fileContent) {
     const testBody = testMatch[2];
     const steps = [];
 
-    // Visit command
-    const visitMatches = testBody.matchAll(/cy\.visit\(`(.+?)`\)/g);
-    for (const match of visitMatches) {
-      steps.push({ command: 'visit', value: match[1] });
-    }
+    // Enhanced regex to capture base command and all chained commands
+    const commandRegex = /cy\.(visit|get|contains)(?:\(`([^`]+)`(?:,\s*`([^`]+)`)?\)|(?:\(['"]([^'"]+)['"](?:,\s*['"]([^'"]+)['"])?\)))(?:\.(type|click|check|uncheck|should|blur)\(([^)]*)\))*(?:\.blur\(\))?/g;
+    let commandMatch;
 
-    // Get command with chained actions
-    const getWithActionMatches = testBody.matchAll(/cy\.get\(`(.+?)`\)\.(\w+)\((.*?)\)/g);
-    for (const match of getWithActionMatches) {
-      const selector = match[1];
-      const action = match[2];
-      const params = match[3];
+    while ((commandMatch = commandRegex.exec(testBody)) !== null) {
+      const [fullMatch, mainCommand, selector, value, containsSelector, containsValue] = commandMatch;
 
-      // Add the get step
-      steps.push({ command: 'get', selector });
-
-      // Add the chained action
-      switch (action) {
-        case 'type':
-          steps.push({ command: 'type', value: params.replace(/[`'"]/g, '') });
-          break;
-        case 'click':
-          steps.push({ command: 'click' });
-          break;
-        case 'check':
-          steps.push({ command: 'check' });
-          break;
-        case 'uncheck':
-          steps.push({ command: 'uncheck' });
-          break;
-        case 'should':
-          const shouldParams = params.split(',').map(p => p.trim().replace(/[`'"]/g, ''));
-          if (shouldParams[0] === 'have.length') {
-            steps.push({ command: 'should', value: shouldParams[0], lengthValue: parseInt(shouldParams[1]) });
-          } else {
-            steps.push({ command: 'should', value: shouldParams[0] });
-          }
-          break;
-        case 'blur':
-          steps.push({ command: 'blur' });
-          break;
+      // Handle the main command first
+      if (mainCommand === 'visit') {
+        steps.push({ command: 'visit', value: selector });
+      } else if (mainCommand === 'get') {
+        steps.push({ command: 'get', selector });
+      } else if (mainCommand === 'contains') {
+        steps.push({
+          command: 'contains',
+          selector: mainCommand === 'contains' ? selector : containsSelector,
+          value: mainCommand === 'contains' ? value : containsValue
+        });
       }
-    }
 
-    // Contains command
-    const containsMatches = testBody.matchAll(/cy\.contains\(`(.+?)`,\s*`(.+?)`\)/g);
-    for (const match of containsMatches) {
-      steps.push({ command: 'contains', selector: match[1], value: match[2] });
-    }
+      // Handle all chained commands
+      const chainedCommands = fullMatch.match(/\.(type|click|check|uncheck|should|blur)\(([^)]*)\)/g) || [];
+      for (const chainedCommand of chainedCommands) {
+        const chainMatch = chainedCommand.match(/\.(type|click|check|uncheck|should|blur)\(([^)]*)\)/);
+        if (chainMatch) {
+          const [_, action, params] = chainMatch;
+          switch (action) {
+            case 'type':
+              steps.push({
+                command: 'type',
+                value: params.replace(/[`'"]/g, '')
+              });
+              break;
+            case 'click':
+              steps.push({ command: 'click' });
+              break;
+            case 'check':
+              steps.push({ command: 'check' });
+              break;
+            case 'uncheck':
+              steps.push({ command: 'uncheck' });
+              break;
+            case 'should':
+              const shouldParams = params.split(',').map(p => p.trim().replace(/[`'"]/g, ''));
+              if (shouldParams[0] === 'have.length') {
+                steps.push({
+                  command: 'should',
+                  value: 'have.length',
+                  lengthValue: parseInt(shouldParams[1])
+                });
+              } else {
+                steps.push({
+                  command: 'should',
+                  value: shouldParams[0]
+                });
+              }
+              break;
+            case 'blur':
+              steps.push({ command: 'blur' });
+              break;
+          }
+        }
+      }
 
-    // Get with should command (standalone)
-    const getShouldMatches = testBody.matchAll(/cy\.get\(`(.+?)`\)\.should\(`(.+?)`(?:,\s*(\d+))?\)/g);
-    for (const match of getShouldMatches) {
-      steps.push({ command: 'get', selector: match[1] });
-      if (match[3]) { // If there's a length value
-        steps.push({ command: 'should', value: match[2], lengthValue: parseInt(match[3]) });
-      } else {
-        steps.push({ command: 'should', value: match[2] });
+      // Handle trailing .blur() only if it wasn't already added in the chain
+      if (fullMatch.endsWith('.blur()') && !chainedCommands.some(cmd => cmd.includes('.blur('))) {
+        steps.push({ command: 'blur' });
       }
     }
 
