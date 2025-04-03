@@ -6,7 +6,7 @@ A no-code testing app that uses Cypress in the background to create and run test
 
 ## Pre-requirements
 
-You must have [git](https://git-scm.com/downloads), [Node.js](https://nodejs.org/), and npm installed on your computer to clone and run the app.
+To clone and run the app, you must have [git](https://git-scm.com/downloads), [Node.js](https://nodejs.org/), and npm installed on your computer.
 
 I've used the following version of the systems mentioned above:
 
@@ -20,12 +20,6 @@ I've used the following version of the systems mentioned above:
 
 Run `npm run install:all` to install all the necessary dependencies.
 
-## Tests
-
-Run `npm test` to run the tests in headless mode.
-
-Or, run `npm cy:open` to open the Cypress App and run the tests in interactive mode.
-
 ## Running the app
 
 Run `npm start` to start the client and server.
@@ -35,6 +29,14 @@ Run `npm start` to start the client and server.
 To start the server in production mode, run `npm run server`. In this case, the client needs be be started separetedly with `npm run client`.
 
 After the app is started you should be able to access it locally at `http://localhost:5173/`.
+
+### Tests
+
+With the app up-and-running, you can now run tests in both headless and interactive mode.
+
+Run `npm test` to run the tests in headless mode.
+
+Or, run `npm cy:open` to open the Cypress App and run the tests in interactive mode.
 
 ___
 
