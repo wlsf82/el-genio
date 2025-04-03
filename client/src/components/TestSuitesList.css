@@ -268,6 +268,13 @@
   margin-bottom: 8px;
 }
 
+.test-case-checkbox {
+  width: 18px;
+  height: 18px;
+  margin-left: 12px;
+  cursor: pointer;
+}
+
 .run-test-case-button {
   padding: 4px 8px;
   background-color: #4caf50;

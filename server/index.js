@@ -166,6 +166,7 @@ app.post('/api/test-suites/run-all', async (req, res) => {
 app.post('/api/test-suites/:id/run', async (req, res) => {
   const id = req.params.id;
   const suite = testSuites[id];
+  const { grepTags } = req.body; // Get the selected test titles
 
   if (!suite) {
     return res.status(404).json({ message: 'Test suite not found' });
@@ -173,12 +174,9 @@ app.post('/api/test-suites/:id/run', async (req, res) => {
 
   try {
     const configFilePath = path.join(__dirname, './', 'cypress.config.js');
-
-    // Get the path to the existing test file
     const filename = `${suite.name.toLowerCase().replace(/\s+/g, '_')}_${id}.cy.js`;
     const specFilePath = path.join(__dirname, 'cypress', 'e2e', filename);
 
-    // Verify the file exists
     try {
       await fs.access(specFilePath);
     } catch (err) {
@@ -194,8 +192,17 @@ app.post('/api/test-suites/:id/run', async (req, res) => {
       browser: 'chrome',
       headed: false,
       configFile: configFilePath,
-      spec: specFilePath
+      spec: specFilePath,
+      env: {
+        grepFilterSpecs: true,
+        grepOmitFiltered: true
+      }
     };
+
+    // Add grep options if specific tests are selected
+    if (grepTags && grepTags.length > 0) {
+      cypressOptions.env.grep = grepTags.join(';');
+    }
 
     console.log(`Running Cypress test with spec: ${specFilePath}`);
     const results = await cypress.run(cypressOptions);

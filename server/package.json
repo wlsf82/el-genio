@@ -12,6 +12,7 @@
   "author": "",
   "license": "MIT",
   "dependencies": {
+    "@cypress/grep": "^4.1.0",
     "archiver": "^7.0.1",
     "cors": "^2.8.5",
     "cypress": "^14.2.1",

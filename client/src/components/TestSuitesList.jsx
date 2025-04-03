@@ -15,6 +15,7 @@ function TestSuitesList({ testSuites: propTestSuites, resetEditingSuite, forceLi
   const [editingSuite, setEditingSuite] = useState(null);
   const [isRunningAll, setIsRunningAll] = useState(false);
   const [allTestsResults, setAllTestsResults] = useState(null);
+  const [selectedTests, setSelectedTests] = useState({});
 
   useEffect(() => {
     if (propTestSuites?.length > 0) {
@@ -51,13 +52,30 @@ function TestSuitesList({ testSuites: propTestSuites, resetEditingSuite, forceLi
     }
   };
 
+  const toggleTestSelection = (suiteId, testDescription) => {
+    setSelectedTests((prev) => {
+      const suiteTests = prev[suiteId] || [];
+      const newSuiteTests = suiteTests.includes(testDescription)
+        ? suiteTests.filter((desc) => desc !== testDescription)
+        : [...suiteTests, testDescription];
+
+      return {
+        ...prev,
+        [suiteId]: newSuiteTests,
+      };
+    });
+  };
+
   const runTest = async (testSuiteId) => {
     setRunningTests({ ...runningTests, [testSuiteId]: true });
     setIsAnyTestRunning(true);
     setError(null);
 
     try {
-      const response = await axios.post(`/api/test-suites/${testSuiteId}/run`, {});
+      const selectedTestTitles = selectedTests[testSuiteId] || [];
+      const response = await axios.post(`/api/test-suites/${testSuiteId}/run`, {
+        grepTags: selectedTestTitles,
+      });
       setTestResults({
         ...testResults,
         [testSuiteId]: response.data,
@@ -300,6 +318,12 @@ function TestSuitesList({ testSuites: propTestSuites, resetEditingSuite, forceLi
                   <li key={index} className="test-case">
                     <div className="test-case-header">
                       <h5>{testCase.description}</h5>
+                      <input
+                        type="checkbox"
+                        checked={selectedTests[suite.id]?.includes(testCase.description) || false}
+                        onChange={() => toggleTestSelection(suite.id, testCase.description)}
+                        className="test-case-checkbox"
+                      />
                     </div>
                   </li>
                 ))}
