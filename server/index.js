@@ -299,6 +299,13 @@ describe("${name.replace(/"/g, '\\"')}", () => {`;
         case 'get':
           testFileContent += `
     cy.get(\`${step.selector}\`)`;
+          if (step.chainOption === 'first') {
+            testFileContent = testFileContent.trimEnd();
+            testFileContent += `.first()`;
+          } else if (step.chainOption === 'last') {
+            testFileContent = testFileContent.trimEnd();
+            testFileContent += `.last()`;
+          }
           break;
         case 'contains':
           testFileContent += `
@@ -328,9 +335,9 @@ describe("${name.replace(/"/g, '\\"')}", () => {`;
           if (step.value === 'have.length') {
             testFileContent = testFileContent.trimEnd();
             testFileContent += `.should('${step.value}', ${step.lengthValue})`;
-          } else if (step.value === 'be.checked' || step.value === 'not.be.checked') {
+          } else if (step.value === 'contain') {
             testFileContent = testFileContent.trimEnd();
-            testFileContent += `.should('${step.value}')`;
+            testFileContent += `.should('${step.value}', '${step.containedText}')`;
           } else {
             testFileContent = testFileContent.trimEnd();
             testFileContent += `.should('${step.value}')`;

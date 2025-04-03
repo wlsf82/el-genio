@@ -78,7 +78,7 @@ function TestSuiteForm({ onTestSuiteCreated, initialData = null, isEditing = fal
       case 'visit':
         return `visit "${step.value}"`;
       case 'get':
-        return `get element with selector "${step.selector}"`;
+        return `get ${step.chainOption ? `${step.chainOption}` : ''} element with selector "${step.selector}"`;
       case 'contains':
         return `get element with selector "${step.selector}" which contains "${step.value}"`;
       case 'click':
@@ -96,6 +96,8 @@ function TestSuiteForm({ onTestSuiteCreated, initialData = null, isEditing = fal
       case 'should':
         if (step.value === 'have.length') {
           return `asserts it should "${step.value}" with value "${step.lengthValue}"`;
+        } else if (step.value === 'contain') {
+          return `asserts it should "${step.value}" text "${step.containedText}"`;
         }
         return `asserts it should "${step.value}"`;
       default:

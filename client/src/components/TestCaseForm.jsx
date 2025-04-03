@@ -9,13 +9,14 @@ function TestCaseForm({ onAddTestCase, initialData = null }) {
     command: '',
     selector: '',
     value: '',
-    lengthValue: ''
+    lengthValue: '',
+    containedText: ''
   });
   const [editingStepIndex, setEditingStepIndex] = useState(null);
 
   const CYPRESS_COMMANDS = [
     { value: 'visit', hasSelector: false, hasValue: true },
-    { value: 'get', hasSelector: true, hasValue: false },
+    { value: 'get', hasSelector: true, hasValue: false, hasChainOptions: true },
     { value: 'contains', hasSelector: true, hasValue: true },
     { value: 'click', hasSelector: false, hasValue: false },
     { value: 'type', hasSelector: false, hasValue: true },
@@ -39,8 +40,11 @@ function TestCaseForm({ onAddTestCase, initialData = null }) {
     'not.be.focused',
     'have.length',
     'be.checked',
-    'not.be.checked'
+    'not.be.checked',
+    'contain'
   ];
+
+  const CHAIN_OPTIONS = ['first', 'last'];
 
   useEffect(() => {
     if (initialData) {
@@ -83,7 +87,8 @@ function TestCaseForm({ onAddTestCase, initialData = null }) {
       command: '',
       selector: '',
       value: '',
-      lengthValue: ''
+      lengthValue: '',
+      containedText: ''
     });
   };
 
@@ -131,7 +136,7 @@ function TestCaseForm({ onAddTestCase, initialData = null }) {
       case 'visit':
         return `visit "${step.value}"`;
       case 'get':
-        return `get element with selector "${step.selector}"`;
+        return `get ${step.chainOption ? `${step.chainOption}` : ''} element with selector "${step.selector}"`;
       case 'contains':
         return `get element with selector "${step.selector}" which contains "${step.value}"`;
       case 'click':
@@ -149,6 +154,8 @@ function TestCaseForm({ onAddTestCase, initialData = null }) {
       case 'should':
         if (step.value === 'have.length') {
           return `asserts it should "${step.value}" with value "${step.lengthValue}"`;
+        } else if (step.value === 'contain') {
+          return `asserts it should "${step.value}" text "${step.containedText}"`;
         }
         return `asserts it should "${step.value}"`;
       default:
@@ -247,7 +254,30 @@ function TestCaseForm({ onAddTestCase, initialData = null }) {
                     placeholder="Enter length (e.g., 3)"
                   />
                 )}
+
+                {currentStep.value === 'contain' && (
+                  <input
+                    type="text"
+                    value={currentStep.containedText || ''}
+                    onChange={(e) => setCurrentStep({ ...currentStep, containedText: e.target.value })}
+                    placeholder="Enter text to contain"
+                  />
+                )}
               </>
+            )}
+
+            {selectedCommand?.hasChainOptions && (
+              <select
+                value={currentStep.chainOption || ''}
+                onChange={(e) => setCurrentStep({ ...currentStep, chainOption: e.target.value })}
+              >
+                <option value="">No chain</option>
+                {CHAIN_OPTIONS.map(option => (
+                  <option key={option} value={option}>
+                    {option}
+                  </option>
+                ))}
+              </select>
             )}
 
             {selectedCommand?.hasValue && !selectedCommand?.hasShouldOptions && (
