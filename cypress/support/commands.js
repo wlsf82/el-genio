@@ -1,4 +1,4 @@
-const testSuite = require('../fixtures/sampleTestSuite')
+const testSuite = require('../fixtures/sampleTestSuite.json')
 
 Cypress.Commands.add('createSampleTestSuite', () => {
   cy.request('POST', '/api/test-suites', testSuite)

@@ -1,3 +1,5 @@
+const sampleTestSuiteJSFile = require('../fixtures/sampleTestSuite')
+
 describe('TestGenie', () => {
   beforeEach(() => {
     cy.deleteTestSuitesByName('walmyr.dev')
@@ -16,6 +18,9 @@ describe('TestGenie', () => {
   })
 
   it('createa a new test suite with one test with a few steps', () => {
+    // Intercept test suite creation and give it an alias
+    cy.intercept('POST', '/api/test-suites').as('createTestSuite')
+
     // Access the create test suite form
     cy.contains('header nav button', 'Create test').click()
 
@@ -52,6 +57,14 @@ describe('TestGenie', () => {
 
     // Create test suite
     cy.contains('button', 'Create test suite').click()
+
+    // Wait for the correct request to happen
+    cy.wait('@createTestSuite')
+      .then(request => {
+        // Assert the generated test file is correct
+        cy.readFile(`server/cypress/e2e/walmyr.dev_${request.response.body.id}.cy.js`)
+          .should('be.equal', sampleTestSuiteJSFile)
+      })
 
     // Assert redirect to the test suites view
     cy.contains('h2', 'Test suites').should('be.visible')
