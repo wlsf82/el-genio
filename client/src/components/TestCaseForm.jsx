@@ -37,7 +37,9 @@ function TestCaseForm({ onAddTestCase, initialData = null }) {
     'not.be.disabled',
     'be.focused',
     'not.be.focused',
-    'have.length'
+    'have.length',
+    'be.checked',
+    'not.be.checked'
   ];
 
   useEffect(() => {

@@ -328,6 +328,9 @@ describe("${name.replace(/"/g, '\\"')}", () => {`;
           if (step.value === 'have.length') {
             testFileContent = testFileContent.trimEnd();
             testFileContent += `.should('${step.value}', ${step.lengthValue})`;
+          } else if (step.value === 'be.checked' || step.value === 'not.be.checked') {
+            testFileContent = testFileContent.trimEnd();
+            testFileContent += `.should('${step.value}')`;
           } else {
             testFileContent = testFileContent.trimEnd();
             testFileContent += `.should('${step.value}')`;
