@@ -30,6 +30,10 @@ Or, run `npm cy:open` to open the Cypress App and run the tests in interactive m
 
 Run `npm start` to start the client and server.
 
+> The command above will start both client and server in development mode.
+
+To start the server in production mode, run `npm run server`. In this case, the client needs be be started separetedly with `npm run client`.
+
 After the app is started you should be able to access it locally at `http://localhost:5173/`.
 
 ___
