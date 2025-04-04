@@ -100,6 +100,13 @@ function TestSuiteForm({ onTestSuiteCreated, initialData = null, isEditing = fal
           return `asserts it should "${step.value}" text "${step.containedText}"`;
         }
         return `asserts it should "${step.value}"`;
+      case 'and':
+        if (step.value === 'have.length') {
+          return `asserts it should "${step.value}" with value "${step.lengthValue}"`;
+        } else if (step.value === 'contain') {
+          return `asserts it should "${step.value}" text "${step.containedText}"`;
+        }
+        return `asserts it should "${step.value}"`;
       default:
         return step.command;
     }

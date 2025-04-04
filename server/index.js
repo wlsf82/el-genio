@@ -343,6 +343,18 @@ describe("${name.replace(/"/g, '\\"')}", () => {`;
             testFileContent += `.should('${step.value}')`;
           }
           break;
+        case 'and':
+          if (step.value === 'have.length') {
+            testFileContent = testFileContent.trimEnd();
+            testFileContent += `.and('${step.value}', ${step.lengthValue})`;
+          } else if (step.value === 'contain') {
+            testFileContent = testFileContent.trimEnd();
+            testFileContent += `.and('${step.value}', '${step.containedText}')`;
+          } else {
+            testFileContent = testFileContent.trimEnd();
+            testFileContent += `.and('${step.value}')`;
+          }
+          break;
         case 'blur':
           testFileContent = testFileContent.trimEnd();
           testFileContent += `.blur()`;

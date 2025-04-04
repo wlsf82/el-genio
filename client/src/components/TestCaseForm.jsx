@@ -25,6 +25,7 @@ function TestCaseForm({ onAddTestCase, initialData = null }) {
     { value: 'select', hasSelector: false, hasValue: true },
     { value: 'blur', hasSelector: false, hasValue: false },
     { value: 'should', hasSelector: false, hasValue: true, hasShouldOptions: true },
+    { value: 'and', hasSelector: false, hasValue: true, hasShouldOptions: true }
   ];
 
   const SHOULD_OPTIONS = [
@@ -152,6 +153,13 @@ function TestCaseForm({ onAddTestCase, initialData = null }) {
       case 'type':
         return `type "${step.value}"`;
       case 'should':
+        if (step.value === 'have.length') {
+          return `asserts it should "${step.value}" with value "${step.lengthValue}"`;
+        } else if (step.value === 'contain') {
+          return `asserts it should "${step.value}" text "${step.containedText}"`;
+        }
+        return `asserts it should "${step.value}"`;
+      case 'and':
         if (step.value === 'have.length') {
           return `asserts it should "${step.value}" with value "${step.lengthValue}"`;
         } else if (step.value === 'contain') {
