@@ -8,16 +8,26 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-      - name: Install dependencies
-        uses: cypress-io/github-action@v6
-        with:
-          install-command: npm run install:all
-          runTests: false
+
+      - name: Install client dependencies
+        run: cd client && npm install
+
+      - name: Build server Docker image
+        run: |
+          cd server
+          docker build -t test-genie-server .
+
+      - name: Run server using Docker
+        run: |
+          cd server
+          docker run -d -p 3003:3003 -v ${{ github.workspace }}/server/cypress/e2e:/usr/src/server/cypress/e2e --name test-genie-server test-genie-server
+
       - name: Run Cypress tests 🧪
         uses: cypress-io/github-action@v6
         with:
-          start: npm run server, npm run client
+          start: npm run client
           command: npm test
+
       - name: Save screenshots in case of failures
         uses: actions/upload-artifact@v4
         if: failure()
@@ -25,3 +35,9 @@ jobs:
           name: cypress-screenshots
           path: cypress/screenshots
           if-no-files-found: ignore
+
+      - name: Stop and clean up Docker container
+        if: always()
+        run: |
+          docker stop test-genie-server
+          docker rm test-genie-server
