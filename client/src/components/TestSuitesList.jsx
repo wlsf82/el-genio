@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import './TestSuitesList.css';
-import { Play, Trash, X, ChevronDown, ChevronUp } from 'lucide-react';
+import { Play, Trash, X, ChevronDown, ChevronUp, Edit } from 'lucide-react';
 import TestSuiteForm from './TestSuiteForm';
 
 function TestSuitesList({ testSuites: propTestSuites, resetEditingSuite, forceListView }) {
@@ -247,7 +247,7 @@ function TestSuitesList({ testSuites: propTestSuites, resetEditingSuite, forceLi
                 onClick={() => handleEditSuite(suite)}
                 disabled={runningTests[suite.id] || isRunningAll}
               >
-                Edit
+                <Edit size={16} /> Edit
               </button>
               <button
                 className="toggle-button"
