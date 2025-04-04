@@ -1,0 +1,320 @@
+{
+  "name": "Cypress Playground",
+  "testCases": [
+    {
+      "description": "ensures there are five animals",
+      "steps": [
+        {
+          "command": "visit",
+          "value": "https://cypress-playground.s3.eu-central-1.amazonaws.com/index.html"
+        },
+        {
+          "command": "get",
+          "selector": "ul li"
+        },
+        {
+          "command": "should",
+          "value": "have.length",
+          "lengthValue": 5
+        }
+      ]
+    },
+    {
+      "description": "shows signature preview when signing it",
+      "steps": [
+        {
+          "command": "visit",
+          "value": "https://cypress-playground.s3.eu-central-1.amazonaws.com/index.html"
+        },
+        {
+          "command": "get",
+          "selector": "#signature-textarea"
+        },
+        {
+          "command": "type",
+          "value": "Mary"
+        },
+        {
+          "command": "contains",
+          "selector": "#signature",
+          "value": "Mary"
+        },
+        {
+          "command": "should",
+          "value": "be.visible"
+        }
+      ]
+    },
+    {
+      "description": "subscribes to the newsletter",
+      "steps": [
+        {
+          "command": "visit",
+          "value": "https://cypress-playground.s3.eu-central-1.amazonaws.com/index.html"
+        },
+        {
+          "command": "contains",
+          "selector": "button",
+          "value": "Subscribe"
+        },
+        {
+          "command": "click"
+        },
+        {
+          "command": "contains",
+          "selector": ".success",
+          "value": "You've been successfully subscribed to our newsletter."
+        },
+        {
+          "command": "should",
+          "value": "be.visible"
+        }
+      ]
+    },
+    {
+      "description": "shows signature preview when signing and marking to show it",
+      "steps": [
+        {
+          "command": "visit",
+          "value": "https://cypress-playground.s3.eu-central-1.amazonaws.com/index.html"
+        },
+        {
+          "command": "get",
+          "selector": "#signature-textarea-with-checkbox"
+        },
+        {
+          "command": "type",
+          "value": "Lary"
+        },
+        {
+          "command": "get",
+          "selector": "#signature-checkbox"
+        },
+        {
+          "command": "check"
+        },
+        {
+          "command": "contains",
+          "selector": "#signature-triggered-by-check",
+          "value": "Lary"
+        },
+        {
+          "command": "should",
+          "value": "be.visible"
+        }
+      ]
+    },
+    {
+      "description": "turns the switch off then back on",
+      "steps": [
+        {
+          "command": "visit",
+          "value": "https://cypress-playground.s3.eu-central-1.amazonaws.com/index.html"
+        },
+        {
+          "command": "contains",
+          "selector": "#on-off",
+          "value": "ON"
+        },
+        {
+          "command": "should",
+          "value": "be.visible"
+        },
+        {
+          "command": "get",
+          "selector": "#off"
+        },
+        {
+          "command": "check"
+        },
+        {
+          "command": "contains",
+          "selector": "#on-off",
+          "value": "OFF"
+        },
+        {
+          "command": "should",
+          "value": "be.visible"
+        },
+        {
+          "command": "get",
+          "selector": "#on"
+        },
+        {
+          "command": "check"
+        },
+        {
+          "command": "contains",
+          "selector": "#on-off",
+          "value": "ON"
+        },
+        {
+          "command": "should",
+          "value": "be.visible"
+        }
+      ]
+    },
+    {
+      "description": "gets TODO",
+      "steps": [
+        {
+          "command": "visit",
+          "value": "https://cypress-playground.s3.eu-central-1.amazonaws.com/index.html"
+        },
+        {
+          "command": "contains",
+          "selector": "button",
+          "value": "Get TODO"
+        },
+        {
+          "command": "click"
+        },
+        {
+          "command": "contains",
+          "selector": "ul li",
+          "value": "TODO ID: 1"
+        },
+        {
+          "command": "should",
+          "value": "be.visible"
+        }
+      ]
+    },
+    {
+      "description": "sets a date (e.g., 2025/04/01)",
+      "steps": [
+        {
+          "command": "visit",
+          "value": "https://cypress-playground.s3.eu-central-1.amazonaws.com/index.html"
+        },
+        {
+          "command": "get",
+          "selector": "input[type=\"date\"]"
+        },
+        {
+          "command": "type",
+          "value": "2025-04-01"
+        },
+        {
+          "command": "blur"
+        },
+        {
+          "command": "contains",
+          "selector": "p",
+          "value": "The date you've selected is: 2025-04-01"
+        },
+        {
+          "command": "should",
+          "value": "be.visible"
+        }
+      ]
+    },
+    {
+      "description": "shows an error message when submitting a wrong code",
+      "steps": [
+        {
+          "command": "visit",
+          "value": "https://cypress-playground.s3.eu-central-1.amazonaws.com/index.html"
+        },
+        {
+          "command": "get",
+          "selector": "#code"
+        },
+        {
+          "command": "type",
+          "value": "0123456789"
+        },
+        {
+          "command": "contains",
+          "selector": "button",
+          "value": "Submit"
+        },
+        {
+          "command": "click"
+        },
+        {
+          "command": "contains",
+          "selector": ".error",
+          "value": "The provided code isn't correct. Please, try again."
+        },
+        {
+          "command": "should",
+          "value": "be.visible"
+        }
+      ]
+    },
+    {
+      "description": "shows a promotinal banner for the Cypress, from Zero to the Cloud course",
+      "steps": [
+        {
+          "command": "visit",
+          "value": "https://cypress-playground.s3.eu-central-1.amazonaws.com/index.html"
+        },
+        {
+          "command": "contains",
+          "selector": "#promotional-banner a",
+          "value": "Cypress, from Zero to the Cloud"
+        },
+        {
+          "command": "should",
+          "value": "be.visible"
+        }
+      ]
+    },
+    {
+      "description": "ensures the first animal is a camel and the last one is a dog",
+      "steps": [
+        {
+          "command": "visit",
+          "value": "https://cypress-playground.s3.eu-central-1.amazonaws.com/index.html"
+        },
+        {
+          "command": "get",
+          "selector": "ul li",
+          "chainOption": "first"
+        },
+        {
+          "command": "should",
+          "selector": "",
+          "value": "contain",
+          "lengthValue": "",
+          "containedText": "Camel",
+          "isChained": true
+        },
+        {
+          "command": "get",
+          "selector": "ul li",
+          "value": "",
+          "lengthValue": "",
+          "containedText": "",
+          "chainOption": "last"
+        },
+        {
+          "command": "should",
+          "selector": "",
+          "value": "contain",
+          "lengthValue": "",
+          "containedText": "Dog",
+          "isChained": true
+        }
+      ]
+    },
+    {
+      "description": "timestamp",
+      "steps": [
+        {
+          "command": "visit",
+          "value": "https://cypress-playground.s3.eu-central-1.amazonaws.com/index.html"
+        },
+        {
+          "command": "get",
+          "selector": "#timestamp"
+        },
+        {
+          "command": "should",
+          "value": "be.visible"
+        }
+      ]
+    }
+  ]
+}

@@ -1,5 +1,6 @@
 const sampleTestSuiteJSFile = require('../fixtures/sampleTestSuite.js')
 const updatedSampleTestSuiteJSFile = require('../fixtures/updatedTestSuite.js')
+const sampleTestSuiteWithManyTestCasesJSFile = require('../fixtures/sampleTestSuiteWithManyTestCases.js')
 
 describe('TestGenie', () => {
   beforeEach(() => {
@@ -247,5 +248,43 @@ describe('TestGenie', () => {
       .find('a:contains(Download screenshots)')
       .should('be.visible')
       .and('have.attr', 'href', 'http://localhost:3003/cypress/screenshots/download')
+  })
+
+  it('creates and runs a test suite with lots of test cases', () => {
+    cy.deleteTestSuitesByName('Cypress Playground')
+    cy.createSampleTestSuiteWithManyTestCases()
+      .then(response => {
+        // Assert the generated test file is correct
+        cy.readFile(`server/cypress/e2e/cypress_playground_${response.body.id}.cy.js`)
+          .should('be.equal', sampleTestSuiteWithManyTestCasesJSFile)
+      })
+
+    cy.visit('/')
+
+    cy.contains('.test-suite-card', 'Cypress Playground')
+      .should('be.visible')
+      .find('button:contains(Run)')
+      .click()
+
+    cy.contains('button', 'Run all').should('be.disabled')
+    cy.contains('.test-suite-card', 'Cypress Playground')
+      .should('be.visible')
+      .find('.run-button').should('be.disabled')
+    cy.contains('.test-suite-card', 'Cypress Playground')
+      .should('be.visible')
+      .find('.delete-button').should('be.disabled')
+    cy.contains('.test-suite-card', 'Cypress Playground')
+      .should('be.visible')
+      .find('.edit-button').should('be.disabled')
+
+    cy.contains(
+      '.test-results.success',
+      'All tests passed! ✅',
+      { timeout: 30000 }
+    ).should('be.visible')
+    cy.contains(
+      '.test-results.success',
+      '"totalPassed": 11,'
+    ).should('be.visible')
   })
 })

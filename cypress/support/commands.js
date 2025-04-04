@@ -1,5 +1,6 @@
 const testSuite = require('../fixtures/sampleTestSuite.json')
 const testSuiteThatFails = require('../fixtures/sampleTestSuiteThatFails.json')
+const testSuiteWithManyTestCases = require('../fixtures/sampleTestSuiteWithManyTestCases.json')
 
 Cypress.Commands.add('createSampleTestSuite', () => {
   cy.request('POST', '/api/test-suites', testSuite)
@@ -7,6 +8,10 @@ Cypress.Commands.add('createSampleTestSuite', () => {
 
 Cypress.Commands.add('createSampleTestSuiteThatFails', () => {
   cy.request('POST', '/api/test-suites', testSuiteThatFails)
+})
+
+Cypress.Commands.add('createSampleTestSuiteWithManyTestCases', () => {
+  cy.request('POST', '/api/test-suites', testSuiteWithManyTestCases)
 })
 
 Cypress.Commands.add('deleteTestSuitesByName', name => {
