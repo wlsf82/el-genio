@@ -36,7 +36,7 @@ With the app up-and-running, you can now run tests in both headless and interact
 
 Run `npm test` to run the tests in headless mode.
 
-Or, run `npm cy:open` to open the Cypress App and run the tests in interactive mode.
+Or, run `npm run cy:open` to open the Cypress App and run the tests in interactive mode.
 
 ___
 
