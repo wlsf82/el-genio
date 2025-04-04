@@ -1,4 +1,5 @@
 const sampleTestSuiteJSFile = require('../fixtures/sampleTestSuite.js')
+const updatedSampleTestSuiteJSFile = require('../fixtures/updatedTestSuite.js')
 
 describe('TestGenie', () => {
   beforeEach(() => {
@@ -91,5 +92,86 @@ describe('TestGenie', () => {
       'All tests passed! ✅',
       { timeout: 30000 }
     ).should('be.visible')
+  })
+
+  it('edits a test case', () => {
+    // Intercept test suite edition and give it an alias
+    cy.intercept('PUT', '/api/test-suites/*').as('updateTestSuite')
+
+    // Create a sample test suite via an API call to save time
+    cy.createSampleTestSuite()
+    // Visit the app to see the newly created test suite
+    cy.visit('/')
+
+    // From the test suites view, click the edit button
+    cy.contains('.test-suite-card', 'walmyr.dev')
+      .should('be.visible')
+      .find('button:contains(Edit)')
+      .click()
+
+    // Go to edition mode
+    cy.get('.test-case-item')
+      .as('testCasePreview')
+      .find('button:contains(Edit)')
+      .click()
+
+    // Remove a couple of test steps
+    cy.get('.steps-section')
+      .as('steps')
+      .find('.step-item:contains(get element with selector "h1" which contains "Walmyr")')
+      .find('.remove-step-button')
+      .click()
+    cy.get('.steps-section')
+      .as('steps')
+      .find('.step-item:contains(asserts it should "be.visible")')
+      .find('.remove-step-button')
+      .click()
+
+    // Substitute the just removes steps by three new ones
+    cy.get('select').select('get')
+    cy.get('input[placeholder="Selector (e.g., #button, .class)"]').type('h1')
+    cy.contains('button', 'Add step').click()
+    cy.get('select').select('should')
+    cy.contains('option', 'Select an assertion')
+      .parent()
+      .select('contain')
+    cy.get('input[placeholder="Enter text to contain"]').type('Walmyr')
+    cy.contains('button', 'Add step').click()
+    cy.get('select').select('and')
+    cy.contains('option', 'Select an assertion')
+      .parent()
+      .select('be.visible')
+    cy.contains('button', 'Add step').click()
+    // Save test case edition
+    cy.get('.test-case-form')
+      .find('button:contains(Save changes)').click()
+
+    // Assert test case preview is displayed
+    cy.contains('.test-cases-list', 'asserts heading 1 is visible').should('be.visible')
+    cy.contains('.test-cases-list', 'visit "https://walmyr.dev"').should('be.visible')
+    cy.contains('.test-cases-list', 'get element with selector "h1"').should('be.visible')
+    cy.contains('.test-cases-list', 'asserts it should "contain" text "Walmyr"').should('be.visible')
+    cy.contains('.test-cases-list', 'and asserts it should "be.visible"').should('be.visible')
+
+    // Save test suite edition
+    cy.contains('button', 'Save changes').click()
+
+    // Wait for the correct request to happen
+    cy.wait('@updateTestSuite')
+      .then(request => {
+        // Assert the updated test file is correct
+        cy.readFile(`server/cypress/e2e/walmyr.dev_${request.response.body.id}.cy.js`)
+          .should('be.equal', updatedSampleTestSuiteJSFile)
+      })
+
+    // Assert redirect to the test suites view
+    cy.contains('h2', 'Test suites').should('be.visible')
+    // Assert test suite was created
+    cy.contains('.test-suite-card', 'walmyr.dev')
+      .should('be.visible')
+      .find('.toggle-button')
+      .click()
+    // Assert test case is contained inside the test suite
+    cy.contains('.test-cases', 'asserts heading 1 is visible').should('be.visible')
   })
 })
