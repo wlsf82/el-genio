@@ -20,7 +20,7 @@ const testSuites = {};
 
 // Define default Cypress options
 const defaultCypressOptions = {
-  browser: 'chrome',
+  browser: 'chromium',
   headed: false,
   configFile: path.join(__dirname, './', 'cypress.config.js'),
 };
