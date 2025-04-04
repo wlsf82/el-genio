@@ -174,4 +174,27 @@ describe('TestGenie', () => {
     // Assert test case is contained inside the test suite
     cy.contains('.test-cases', 'asserts heading 1 is visible').should('be.visible')
   })
+
+  it('deletes a test suite', () => {
+    // Intercept test suite deletion and give it an alias
+    cy.intercept('DELETE', '/api/test-suites/*').as('deleteTestSuite')
+
+    // Create a sample test suite via an API call to save time
+    cy.createSampleTestSuite()
+    // Visit the app to see the newly created test suite
+    cy.visit('/')
+
+    // From the test suites view, click the edit button
+    cy.contains('.test-suite-card', 'walmyr.dev')
+      .should('be.visible')
+      .find('button:contains(Delete)')
+      .click()
+
+    // Wait for deletion to complete
+    cy.wait('@deleteTestSuite')
+      .its('response.statusCode')
+      .should('be.equal', 204)
+    // Assert deleted test suites does not show anymore at the list
+    cy.contains('.test-suite-card', 'walmyr.dev').should('not.exist')
+  })
 })
