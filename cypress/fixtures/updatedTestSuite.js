@@ -1,4 +1,4 @@
-const sampleTestSuite = `
+const sampleUpdatedTestSuite = `
 // Auto-generated Cypress test file
 // Test Suite: walmyr.dev
 
@@ -10,4 +10,4 @@ describe("walmyr.dev", () => {
 })
 `
 
-module.exports = sampleTestSuite
+module.exports = sampleUpdatedTestSuite
