@@ -1,7 +1,12 @@
 const testSuite = require('../fixtures/sampleTestSuite.json')
+const testSuiteThatFails = require('../fixtures/sampleTestSuiteThatFails.json')
 
 Cypress.Commands.add('createSampleTestSuite', () => {
   cy.request('POST', '/api/test-suites', testSuite)
+})
+
+Cypress.Commands.add('createSampleTestSuiteThatFails', () => {
+  cy.request('POST', '/api/test-suites', testSuiteThatFails)
 })
 
 Cypress.Commands.add('deleteTestSuitesByName', name => {

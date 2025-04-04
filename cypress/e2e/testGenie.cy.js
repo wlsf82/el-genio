@@ -208,4 +208,44 @@ describe('TestGenie', () => {
     // Assert deleted test suites does not show anymore at the list
     cy.contains('.test-suite-card', 'walmyr.dev').should('not.exist')
   })
+
+  it('runs and fails a just created test suite', () => {
+    cy.createSampleTestSuiteThatFails()
+    cy.visit('/')
+
+    cy.contains('.test-suite-card', 'walmyr.dev')
+      .should('be.visible')
+      .find('button:contains(Run)')
+      .click()
+
+    cy.contains('button', 'Run all').should('be.disabled')
+    cy.contains('.test-suite-card', 'walmyr.dev')
+      .should('be.visible')
+      .find('.run-button').should('be.disabled')
+    cy.contains('.test-suite-card', 'walmyr.dev')
+      .should('be.visible')
+      .find('.delete-button').should('be.disabled')
+    cy.contains('.test-suite-card', 'walmyr.dev')
+      .should('be.visible')
+      .find('.edit-button').should('be.disabled')
+
+    cy.contains(
+      '.test-results.failure',
+      '1 test(s) failed. ❌',
+      { timeout: 30000 }
+    ).should('be.visible')
+    cy.get('.test-results.failure')
+      .find('h5:contains(Failed Tests:)')
+      .should('be.visible')
+    cy.get('.test-results.failure')
+      .find('li:contains(walmyr.dev > asserts heading 1 is visible)')
+      .should('be.visible')
+    cy.get('.test-results.failure')
+      .find('pre:contains(AssertionError: Timed out retrying after 4000ms: expected)')
+      .should('be.visible')
+    cy.get('.test-results.failure')
+      .find('a:contains(Download screenshots)')
+      .should('be.visible')
+      .and('have.attr', 'href', 'http://localhost:3003/cypress/screenshots/download')
+  })
 })
