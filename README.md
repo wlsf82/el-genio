@@ -30,6 +30,18 @@ To start the server in production mode, run `npm run server`. In this case, the 
 
 After the app is started you should be able to access it locally at `http://localhost:5173/`.
 
+### Using Docker (server side only)
+
+For the server side, it's possible to use Docker.
+
+> In this case, Docker is required.
+
+To run the server using Docker, follow the below steps.
+
+1. `cd server/`
+2. `docker build -t test-genie-server .`
+3. `docker run -d -p 3003:3003 -v $(pwd)/cypress/e2e:/usr/src/server/cypress/e2e test-genie-server`
+
 ### Tests
 
 With the app up-and-running, you can now run tests in both headless and interactive mode.
