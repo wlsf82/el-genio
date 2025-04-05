@@ -18,6 +18,13 @@ app.use(express.json());
 // Store test suites in memory (in a real app, use a database)
 const testSuites = {};
 
+// Define default Cypress options
+const defaultCypressOptions = {
+  browser: 'chrome',
+  headed: false,
+  configFile: path.join(__dirname, './', 'cypress.config.js'),
+};
+
 // API routes
 app.get('/api/test-suites', (req, res) => {
   const suites = Object.values(testSuites);
@@ -111,14 +118,11 @@ app.delete('/api/test-suites/:id', async (req, res) => {
 
 app.post('/api/test-suites/run-all', async (req, res) => {
   try {
-    const configFilePath = path.join(__dirname, './', 'cypress.config.js');
     const specPattern = path.join(__dirname, 'cypress', 'e2e', '**', '*.cy.js');
 
-    let cypressOptions = {
-      browser: 'chrome',
-      headed: false,
-      configFile: configFilePath,
-      spec: specPattern
+    const cypressOptions = {
+      ...defaultCypressOptions,
+      spec: specPattern,
     };
 
     console.log('Running all Cypress tests');
@@ -168,14 +172,13 @@ app.post('/api/test-suites/run-all', async (req, res) => {
 app.post('/api/test-suites/:id/run', async (req, res) => {
   const id = req.params.id;
   const suite = testSuites[id];
-  const { grepTags } = req.body; // Get the selected test titles
+  const { grepTags } = req.body;
 
   if (!suite) {
     return res.status(404).json({ message: 'Test suite not found' });
   }
 
   try {
-    const configFilePath = path.join(__dirname, './', 'cypress.config.js');
     const filename = `${suite.name.toLowerCase().replace(/\s+/g, '_')}_${id}.cy.js`;
     const specFilePath = path.join(__dirname, 'cypress', 'e2e', filename);
 
@@ -186,25 +189,19 @@ app.post('/api/test-suites/:id/run', async (req, res) => {
       return res.status(500).json({
         message: 'Test file not found',
         error: err.message,
-        success: false
+        success: false,
       });
     }
 
-    let cypressOptions = {
-      browser: 'chrome',
-      headed: false,
-      configFile: configFilePath,
+    const cypressOptions = {
+      ...defaultCypressOptions,
       spec: specFilePath,
       env: {
         grepFilterSpecs: true,
-        grepOmitFiltered: true
-      }
+        grepOmitFiltered: true,
+        ...(grepTags && grepTags.length > 0 ? { grep: grepTags.join(';') } : {}),
+      },
     };
-
-    // Add grep options if specific tests are selected
-    if (grepTags && grepTags.length > 0) {
-      cypressOptions.env.grep = grepTags.join(';');
-    }
 
     console.log(`Running Cypress test with spec: ${specFilePath}`);
     const results = await cypress.run(cypressOptions);
@@ -213,8 +210,8 @@ app.post('/api/test-suites/:id/run', async (req, res) => {
     const failedTests = results.runs[0].tests
       .filter(test => test.state === 'failed')
       .map(test => ({
-        title: test.title.join(' > '), // Combine test titles
-        error: test.displayError.replace(/at Context\.eval.*$/m, '').trim() // Remove unwanted stack trace part
+        title: test.title.join(' > '),
+        error: test.displayError.replace(/at Context\.eval.*$/m, '').trim()
       }));
 
     // Simplified result
@@ -230,7 +227,7 @@ app.post('/api/test-suites/:id/run', async (req, res) => {
         totalPending: results.totalPending,
         totalSkipped: results.totalSkipped
       },
-      failedTests // Include failed tests with stack traces
+      failedTests
     };
 
     // Include screenshots link if tests failed
