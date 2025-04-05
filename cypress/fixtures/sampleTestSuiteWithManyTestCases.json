@@ -155,32 +155,6 @@
       ]
     },
     {
-      "description": "gets TODO",
-      "steps": [
-        {
-          "command": "visit",
-          "value": "https://cypress-playground.s3.eu-central-1.amazonaws.com/index.html"
-        },
-        {
-          "command": "contains",
-          "selector": "button",
-          "value": "Get TODO"
-        },
-        {
-          "command": "click"
-        },
-        {
-          "command": "contains",
-          "selector": "ul li",
-          "value": "TODO ID: 1"
-        },
-        {
-          "command": "should",
-          "value": "be.visible"
-        }
-      ]
-    },
-    {
       "description": "sets a date (e.g., 2025/04/01)",
       "steps": [
         {

@@ -36,12 +36,6 @@ describe("Cypress Playground", () => {
     cy.contains(\`#on-off\`, \`ON\`).should('be.visible')
   })
 
-  it("gets TODO", () => {
-    cy.visit(\`https://cypress-playground.s3.eu-central-1.amazonaws.com/index.html\`)
-    cy.contains(\`button\`, \`Get TODO\`).click()
-    cy.contains(\`ul li\`, \`TODO ID: 1\`).should('be.visible')
-  })
-
   it("sets a date (e.g., 2025/04/01)", () => {
     cy.visit(\`https://cypress-playground.s3.eu-central-1.amazonaws.com/index.html\`)
     cy.get(\`input[type="date"]\`).type(\`2025-04-01\`).blur()

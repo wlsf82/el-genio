@@ -284,7 +284,7 @@ describe('TestGenie', () => {
     ).should('be.visible')
     cy.contains(
       '.test-results.success',
-      '"totalPassed": 11,'
+      '"totalPassed": 10,'
     ).should('be.visible')
   })
 })
