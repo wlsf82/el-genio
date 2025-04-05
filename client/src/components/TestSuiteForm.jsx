@@ -176,7 +176,7 @@ function TestSuiteForm({ onTestSuiteCreated, initialData = null, isEditing = fal
             className="submit-button"
             disabled={!isFormValid || isLoading}
           >
-            {isLoading ? 'Saving...' : isEditing ? 'Save changes' : 'Create test suite'}
+            {isLoading ? 'Saving...' : isEditing ? 'Save test suite' : 'Create test suite'}
           </button>
         </div>
       </form>

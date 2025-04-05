@@ -166,7 +166,7 @@ describe('TestGenie', () => {
     cy.contains('.test-cases-list', 'and asserts it should "be.visible"').should('be.visible')
 
     // Save test suite edition
-    cy.contains('button', 'Save changes').click()
+    cy.contains('button', 'Save test suite').click()
 
     // Wait for the correct request to happen
     cy.wait('@updateTestSuite')
