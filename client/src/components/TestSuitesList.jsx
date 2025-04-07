@@ -111,13 +111,6 @@ function TestSuitesList({ testSuites: propTestSuites, resetEditingSuite, forceLi
     resetEditingSuite();
   };
 
-  const handleSuiteUpdated = (updatedSuite) => {
-    setTestSuites((prevSuites) =>
-      prevSuites.map((suite) => (suite.id === updatedSuite.id ? updatedSuite : suite))
-    );
-    setEditingSuite(null);
-  };
-
   const runAllTests = async () => {
     setIsRunningAll(true);
     setIsAnyTestRunning(true);
