@@ -1,7 +1,7 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
 import './TestSuitesList.css';
-import { Play, Trash, X, ChevronDown, ChevronUp, Edit } from 'lucide-react';
+import { Play, Trash, X, ChevronDown, ChevronUp, Edit, Clock, StopCircle } from 'lucide-react';
 import TestSuiteForm from './TestSuiteForm';
 
 function TestSuitesList({ testSuites: propTestSuites, resetEditingSuite, forceListView }) {
@@ -16,6 +16,12 @@ function TestSuitesList({ testSuites: propTestSuites, resetEditingSuite, forceLi
   const [isRunningAll, setIsRunningAll] = useState(false);
   const [allTestsResults, setAllTestsResults] = useState(null);
   const [selectedTests, setSelectedTests] = useState({});
+  const [scheduleInterval, setScheduleInterval] = useState('');
+  const [isScheduling, setIsScheduling] = useState(false);
+  const scheduleRef = useRef(null);
+  const [nextRunTimeLeft, setNextRunTimeLeft] = useState(null);
+  const countdownIntervalRef = useRef(null);
+  const [currentJobId, setCurrentJobId] = useState(null);
 
   useEffect(() => {
     if (propTestSuites?.length > 0) {
@@ -30,6 +36,26 @@ function TestSuitesList({ testSuites: propTestSuites, resetEditingSuite, forceLi
       setEditingSuite(null);
     }
   }, [forceListView]);
+
+  useEffect(() => {
+    return () => {
+      // Cleanup intervals on component unmount
+      if (scheduleRef.current) {
+        clearInterval(scheduleRef.current);
+      }
+      if (countdownIntervalRef.current) {
+        clearInterval(countdownIntervalRef.current);
+      }
+    };
+  }, []);
+
+  useEffect(() => {
+    if (isScheduling && !isRunningAll && nextRunTimeLeft === 0) {
+      // Tests have just finished, reset the countdown
+      const intervalMs = parseInt(scheduleInterval) * 60 * 1000;
+      setNextRunTimeLeft(intervalMs);
+    }
+  }, [isRunningAll, isScheduling, nextRunTimeLeft, scheduleInterval]);
 
   const toggleSuiteExpansion = (suiteId) => {
     setExpandedSuites((prev) => ({
@@ -128,6 +154,86 @@ function TestSuitesList({ testSuites: propTestSuites, resetEditingSuite, forceLi
     }
   };
 
+  const startScheduling = async () => {
+    if (!scheduleInterval || isNaN(scheduleInterval) || scheduleInterval <= 0) {
+      alert('Please enter a valid interval in minutes.');
+      return;
+    }
+
+    setIsLoading(true);
+    setError(null);
+
+    try {
+      // Convert minutes to a cron expression (e.g., "*/5 * * * *" for every 5 minutes)
+      const cronExpression = `*/${scheduleInterval} * * * *`;
+
+      const response = await axios.post('/api/schedule', {
+        schedule: cronExpression,
+      });
+
+      // Store the job ID for later cancellation
+      setCurrentJobId(response.data.jobId);
+
+      // Initialize countdown using next run time from server
+      const nextRunTime = new Date(response.data.nextRunTime);
+      const now = new Date();
+      const initialTimeLeft = nextRunTime - now;
+
+      setNextRunTimeLeft(initialTimeLeft);
+
+      // Start countdown interval (updates every second)
+      countdownIntervalRef.current = setInterval(() => {
+        setNextRunTimeLeft((prevTime) => {
+          if (prevTime <= 1000) {
+            return 0;
+          }
+          return prevTime - 1000;
+        });
+      }, 1000);
+
+      setIsScheduling(true);
+    } catch (err) {
+      setError('Failed to schedule tests: ' + (err.response?.data?.message || err.message));
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const stopScheduling = async () => {
+    if (!currentJobId) return;
+
+    setIsLoading(true);
+    setError(null);
+
+    try {
+      await axios.delete(`/api/schedule/${currentJobId}`);
+
+      // Clear client-side scheduling state
+      if (countdownIntervalRef.current) {
+        clearInterval(countdownIntervalRef.current);
+        countdownIntervalRef.current = null;
+      }
+
+      setNextRunTimeLeft(null);
+      setCurrentJobId(null);
+      setIsScheduling(false);
+    } catch (err) {
+      setError('Failed to stop scheduling: ' + (err.response?.data?.message || err.message));
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const formatTimeLeft = (milliseconds) => {
+    if (!milliseconds) return '';
+
+    const totalSeconds = Math.floor(milliseconds / 1000);
+    const minutes = Math.floor(totalSeconds / 60);
+    const seconds = totalSeconds % 60;
+
+    return `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+  };
+
   if (editingSuite) {
     return (
       <TestSuiteForm
@@ -166,6 +272,46 @@ function TestSuitesList({ testSuites: propTestSuites, resetEditingSuite, forceLi
         >
           <Play size={16} /> {isRunningAll ? 'Running all...' : 'Run all'}
         </button>
+      </div>
+
+      {/* Scheduling UI */}
+      <div className="scheduling-controls">
+        <label>
+          Schedule interval (minutes):
+          <input
+            type="number"
+            value={scheduleInterval}
+            onChange={(e) => setScheduleInterval(e.target.value)}
+            disabled={isScheduling || isLoading}
+            min="1"
+            step="1"
+            onKeyDown={(e) => {
+              // Prevent decimal point (period and comma)
+              if (e.key === '.' || e.key === ',') {
+                e.preventDefault();
+              }
+            }}
+          />
+        </label>
+        <button
+          onClick={startScheduling}
+          disabled={isScheduling || isRunningAll || isAnyTestRunning || isLoading}
+          className="start-schedule-button"
+        >
+          <Clock size={16} /> {isLoading && !isScheduling ? 'Starting...' : 'Start scheduling'}
+        </button>
+        <button
+          onClick={stopScheduling}
+          disabled={!isScheduling || isLoading}
+          className="stop-schedule-button"
+        >
+          <StopCircle size={16} /> {isLoading && isScheduling ? 'Stopping...' : 'Stop scheduling'}
+        </button>
+        {isScheduling && nextRunTimeLeft !== null && (
+          <div className="next-run-countdown">
+            Next run in: <span className="countdown-time">{formatTimeLeft(nextRunTimeLeft)}</span>
+          </div>
+        )}
       </div>
 
       {error && <div className="error-message">{error}</div>}
