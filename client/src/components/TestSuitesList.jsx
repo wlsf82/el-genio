@@ -173,7 +173,7 @@ function TestSuitesList({ testSuites: propTestSuites, resetEditingSuite, forceLi
       {allTestsResults && (
         <div className={`test-results ${allTestsResults.success ? 'success' : 'failure'}`}>
           <div className="test-results-header">
-            <h4>All Tests Results</h4>
+            <h4>Test results</h4>
             <button
               className="close-button"
               onClick={() => setAllTestsResults(null)}
