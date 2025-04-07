@@ -4,7 +4,7 @@ const archiver = require('archiver');
 const fs = require('fs').promises;
 const { defaultCypressOptions } = require('../config/cypressConfig');
 const { testSuites } = require('./testSuiteController');
-const { processTestResults } = require('../utils/processTestResults');
+const { processTestResults } = require('../utils');
 
 // Run all test suites
 const runAllTestSuites = async (req, res) => {
