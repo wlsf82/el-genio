@@ -5,6 +5,44 @@ const fs = require('fs').promises;
 const { defaultCypressOptions } = require('../config/cypressConfig');
 const { testSuites } = require('./testSuiteController');
 
+// Helper function to process test results and create standardized response
+const processTestResults = (results, req) => {
+  // Extract failed tests (handling both single run and multiple runs cases)
+  const tests = results.runs.length === 1
+    ? results.runs[0].tests
+    : results.runs.flatMap(run => run.tests);
+
+  const failedTests = tests
+    .filter(test => test.state === 'failed')
+    .map(test => ({
+      title: test.title.join(' > '),
+      error: test.displayError.replace(/at Context\.eval.*$/m, '').trim()
+    }));
+
+  // Build response object
+  const response = {
+    success: results.totalFailed === 0,
+    message: results.totalFailed === 0
+      ? 'All tests passed! ✅'
+      : `${results.totalFailed} test(s) failed. ❌`,
+    details: {
+      totalTests: results.totalTests,
+      totalPassed: results.totalPassed,
+      totalFailed: results.totalFailed,
+      totalPending: results.totalPending,
+      totalSkipped: results.totalSkipped
+    },
+    failedTests
+  };
+
+  // Include screenshots link if tests failed
+  if (results.totalFailed > 0) {
+    response.screenshotsLink = `${req.protocol}://${req.get('host')}/cypress/screenshots/download`;
+  }
+
+  return response;
+};
+
 // Run all test suites
 const runAllTestSuites = async (req, res) => {
   try {
@@ -18,37 +56,8 @@ const runAllTestSuites = async (req, res) => {
     console.log('Running all Cypress tests');
     const results = await cypress.run(cypressOptions);
 
-    // Extract stack traces for failed tests
-    const failedTests = results.runs
-      .flatMap(run => run.tests)
-      .filter(test => test.state === 'failed')
-      .map(test => ({
-        title: test.title.join(' > '),
-        error: test.displayError.replace(/at Context\.eval.*$/m, '').trim()
-      }));
-
-    // Simplified result
-    const response = {
-      success: results.totalFailed === 0,
-      message: results.totalFailed === 0
-        ? 'All tests passed! ✅'
-        : `${results.totalFailed} test(s) failed. ❌`,
-      details: {
-        totalTests: results.totalTests,
-        totalPassed: results.totalPassed,
-        totalFailed: results.totalFailed,
-        totalPending: results.totalPending,
-        totalSkipped: results.totalSkipped
-      },
-      failedTests
-    };
-
-    // Include screenshots link if tests failed
-    if (results.totalFailed > 0) {
-      response.screenshotsLink = `${req.protocol}://${req.get('host')}/cypress/screenshots/download`;
-    }
-
-    res.json(response);
+    // Process results and send response
+    res.json(processTestResults(results, req));
   } catch (error) {
     console.error('Error running all test suites:', error);
     res.status(500).json({
@@ -97,36 +106,8 @@ const runTestSuite = async (req, res) => {
     console.log(`Running Cypress test with spec: ${specFilePath}`);
     const results = await cypress.run(cypressOptions);
 
-    // Extract stack traces for failed tests
-    const failedTests = results.runs[0].tests
-      .filter(test => test.state === 'failed')
-      .map(test => ({
-        title: test.title.join(' > '),
-        error: test.displayError.replace(/at Context\.eval.*$/m, '').trim()
-      }));
-
-    // Simplified result
-    const response = {
-      success: results.totalFailed === 0,
-      message: results.totalFailed === 0
-        ? 'All tests passed! ✅'
-        : `${results.totalFailed} test(s) failed. ❌`,
-      details: {
-        totalTests: results.totalTests,
-        totalPassed: results.totalPassed,
-        totalFailed: results.totalFailed,
-        totalPending: results.totalPending,
-        totalSkipped: results.totalSkipped
-      },
-      failedTests
-    };
-
-    // Include screenshots link if tests failed
-    if (results.totalFailed > 0) {
-      response.screenshotsLink = `${req.protocol}://${req.get('host')}/cypress/screenshots/download`;
-    }
-
-    res.json(response);
+    // Process results and send response
+    res.json(processTestResults(results, req));
   } catch (error) {
     console.error('Error running test suite:', error);
     res.status(500).json({
