@@ -125,7 +125,7 @@ function TestSuitesList({ testSuites: propTestSuites, resetEditingSuite, forceLi
     setAllTestsResults(null);
 
     try {
-      const response = await axios.post('/api/test-suites/run-all');
+      const response = await axios.post('/api/test-run/all');
       setAllTestsResults(response.data);
     } catch (err) {
       setError('Failed to run all tests: ' + (err.response?.data?.message || err.message));
