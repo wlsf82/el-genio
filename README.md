@@ -2,7 +2,7 @@
 
 [![CI](https://github.com/wlsf82/el-genio/actions/workflows/ci.yml/badge.svg)](https://github.com/wlsf82/el-genio/actions/workflows/ci.yml)
 
-A no-code testing app that uses Cypress in the background to create and run tests.
+A no-code testing app that uses [Cypress](https://cypress.io) in the background to create and run tests.
 
 ## Pre-requirements
 
