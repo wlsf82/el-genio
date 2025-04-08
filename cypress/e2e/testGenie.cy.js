@@ -287,4 +287,19 @@ describe('TestGenie', () => {
       '"totalPassed": 10,'
     ).should('be.visible')
   })
+
+  it('runs all tests', () => {
+    Cypress._.times(3, () => {
+      cy.createSampleTestSuite()
+    })
+
+    cy.visit('/')
+    cy.contains('button', 'Run all').click()
+
+    cy.contains(
+      '.test-results.success',
+      'All tests passed! ✅',
+      { timeout: 60000 }
+    ).should('be.visible')
+  })
 })
