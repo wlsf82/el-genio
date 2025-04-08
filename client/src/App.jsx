@@ -29,7 +29,7 @@ function App() {
   return (
     <div className="app-container">
       <header>
-        <h1>TestGenie 🧞‍♀️</h1>
+        <h1>El Genio 🧞‍♂️</h1>
         <nav>
           <button
             className={activeView === 'create' ? 'active' : ''}

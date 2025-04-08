@@ -1,5 +1,5 @@
 {
-  "name": "test-genie",
+  "name": "el-genio",
   "version": "1.0.0",
   "description": "A low-code web app for creating and running Cypress tests",
   "main": "index.js",

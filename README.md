@@ -1,6 +1,6 @@
-# test-genie
+# el-genio
 
-[![CI](https://github.com/wlsf82/test-genie/actions/workflows/ci.yml/badge.svg)](https://github.com/wlsf82/test-genie/actions/workflows/ci.yml)
+[![CI](https://github.com/wlsf82/el-genio/actions/workflows/ci.yml/badge.svg)](https://github.com/wlsf82/el-genio/actions/workflows/ci.yml)
 
 A no-code testing app that uses Cypress in the background to create and run tests.
 
@@ -39,8 +39,8 @@ For the server-side, it's possible to use Docker.
 To run the server using Docker, follow the below steps.
 
 1. `cd server/`
-2. `docker build -t test-genie-server .`
-3. `docker run -d -p 3003:3003 -v $(pwd)/cypress/e2e:/usr/src/server/cypress/e2e test-genie-server`
+2. `docker build -t el-genio-server .`
+3. `docker run -d -p 3003:3003 -v $(pwd)/cypress/e2e:/usr/src/server/cypress/e2e el-genio-server`
 
 ### Tests
 
