@@ -2,7 +2,7 @@ const sampleTestSuiteJSFile = require('../fixtures/sampleTestSuite.js')
 const updatedSampleTestSuiteJSFile = require('../fixtures/updatedTestSuite.js')
 const sampleTestSuiteWithManyTestCasesJSFile = require('../fixtures/sampleTestSuiteWithManyTestCases.js')
 
-describe('TestGenie', () => {
+describe('El Genio', () => {
   beforeEach(() => {
     cy.deleteTestSuitesByName('walmyr.dev')
     cy.intercept('GET', '/api/test-suites').as('getTestSuites')
@@ -14,7 +14,8 @@ describe('TestGenie', () => {
   })
 
   it('arrives at the test suites view', () => {
-    cy.contains('h1', 'TestGenie 🧞‍♀️').should('be.visible')
+    cy.title().should('be.equal', 'El Genio 🧞‍♂️')
+    cy.contains('h1', 'El Genio 🧞‍♂️').should('be.visible')
     cy.contains('header nav button', 'Create test').should('be.visible')
     cy.contains('header nav button', 'View tests').should('be.visible')
   })

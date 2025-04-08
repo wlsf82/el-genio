@@ -15,12 +15,12 @@ jobs:
       - name: Build server Docker image
         run: |
           cd server
-          docker build -t test-genie-server .
+          docker build -t el-genio-server .
 
       - name: Run server using Docker
         run: |
           cd server
-          docker run -d -p 3003:3003 -v ${{ github.workspace }}/server/cypress/e2e:/usr/src/server/cypress/e2e --name test-genie-server test-genie-server
+          docker run -d -p 3003:3003 -v ${{ github.workspace }}/server/cypress/e2e:/usr/src/server/cypress/e2e --name el-genio-server el-genio-server
 
       - name: Run Cypress tests 🧪
         uses: cypress-io/github-action@v6
@@ -39,5 +39,5 @@ jobs:
       - name: Stop and clean up Docker container
         if: always()
         run: |
-          docker stop test-genie-server
-          docker rm test-genie-server
+          docker stop el-genio-server
+          docker rm el-genio-server
