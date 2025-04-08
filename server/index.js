@@ -6,6 +6,7 @@ const cors = require('cors');
 // Import routes
 const testSuiteRoutes = require('./routes/testSuiteRoutes');
 const testRunRoutes = require('./routes/testRunRoutes');
+const scheduleRoutes = require('./routes/scheduleRoutes');
 const { downloadScreenshots } = require('./controllers/testRunController');
 
 const app = express();
@@ -18,6 +19,7 @@ app.use(express.json());
 // Mount routes
 app.use('/api/test-suites', testSuiteRoutes);
 app.use('/api/test-run', testRunRoutes);
+app.use('/api/schedule', scheduleRoutes);
 
 // Serve Cypress screenshots folder
 app.use('/cypress/screenshots', express.static(path.join(__dirname, 'cypress', 'screenshots')));

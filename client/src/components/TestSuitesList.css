@@ -386,3 +386,95 @@
   background-color: #cccccc;
   cursor: not-allowed;
 }
+
+/* Scheduling controls */
+.scheduling-controls {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin: 1.5rem 0;
+  padding: 1rem;
+  background-color: #f8f9fa;
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+}
+
+.scheduling-controls label {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 1rem;
+  color: #2c3e50;
+}
+
+.scheduling-controls input {
+  width: 80px;
+  padding: 0.4rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 1rem;
+}
+
+.scheduling-controls button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 6px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+  line-height: 1;
+}
+
+.scheduling-controls button svg {
+  vertical-align: middle;
+  position: relative;
+  top: -1px;
+}
+
+.start-schedule-button {
+  background-color: #3498db;
+  color: white;
+}
+
+.start-schedule-button:hover:not(:disabled) {
+  background-color: #2980b9;
+}
+
+.stop-schedule-button {
+  background-color: #e74c3c;
+  color: white;
+}
+
+.stop-schedule-button:hover:not(:disabled) {
+  background-color: #c0392b;
+}
+
+.scheduling-controls button:disabled {
+  background-color: #e0e0e0;
+  color: #a0a0a0;
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+/* Add this at the end of the file */
+.next-run-countdown {
+  display: flex;
+  align-items: center;
+  padding: 0.5rem 1rem;
+  background-color: #f1f8ff;
+  border-radius: 6px;
+  color: #2980b9;
+  font-weight: 500;
+  margin-left: auto;
+}
+
+.countdown-time {
+  font-family: monospace;
+  font-size: 1.1rem;
+  margin-left: 0.5rem;
+  font-weight: 700;
+}
