@@ -30,9 +30,9 @@ To start the server in production mode, run `npm run server`. In this case, the 
 
 After the app is started you should be able to access it locally at `http://localhost:5173/`.
 
-### Using Docker (server side only)
+### Using Docker (server-side only)
 
-For the server side, it's possible to use Docker.
+For the server-side, it's possible to use Docker.
 
 > In this case, Docker is required.
 
