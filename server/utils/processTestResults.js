@@ -21,9 +21,7 @@ const processTestResults = (results, req) => {
     details: {
       totalTests: results.totalTests,
       totalPassed: results.totalPassed,
-      totalFailed: results.totalFailed,
-      totalPending: results.totalPending,
-      totalSkipped: results.totalSkipped
+      totalFailed: results.totalFailed
     },
     failedTests
   };
