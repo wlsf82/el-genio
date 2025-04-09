@@ -1,14 +1,20 @@
 .DS_Store
 
+# Node.js modules
 node_modules/
 client/node_modules/
 server/node_modules/
 
+# Cypress
 cypress.env.json
 cypress/downloads/
 cypress/screenshots/
 cypress/videos/
 
+#Client
+client/dist/
+
+#Server
 server/cypress.env.json
 server/cypress/downloads/
 server/cypress/screenshots/
