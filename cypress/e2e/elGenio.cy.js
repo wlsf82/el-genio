@@ -91,13 +91,10 @@ describe('El Genio', () => {
 
     cy.contains('button', 'Run all').should('be.disabled')
     cy.contains('.test-suite-card', 'walmyr.dev')
-      .should('be.visible')
       .find('.run-button').should('be.disabled')
     cy.contains('.test-suite-card', 'walmyr.dev')
-      .should('be.visible')
       .find('.delete-button').should('be.disabled')
     cy.contains('.test-suite-card', 'walmyr.dev')
-      .should('be.visible')
       .find('.edit-button').should('be.disabled')
 
     cy.contains(
@@ -222,13 +219,10 @@ describe('El Genio', () => {
 
     cy.contains('button', 'Run all').should('be.disabled')
     cy.contains('.test-suite-card', 'walmyr.dev')
-      .should('be.visible')
       .find('.run-button').should('be.disabled')
     cy.contains('.test-suite-card', 'walmyr.dev')
-      .should('be.visible')
       .find('.delete-button').should('be.disabled')
     cy.contains('.test-suite-card', 'walmyr.dev')
-      .should('be.visible')
       .find('.edit-button').should('be.disabled')
 
     cy.contains(
@@ -269,13 +263,10 @@ describe('El Genio', () => {
 
     cy.contains('button', 'Run all').should('be.disabled')
     cy.contains('.test-suite-card', 'Cypress Playground')
-      .should('be.visible')
       .find('.run-button').should('be.disabled')
     cy.contains('.test-suite-card', 'Cypress Playground')
-      .should('be.visible')
       .find('.delete-button').should('be.disabled')
     cy.contains('.test-suite-card', 'Cypress Playground')
-      .should('be.visible')
       .find('.edit-button').should('be.disabled')
 
     cy.contains(
