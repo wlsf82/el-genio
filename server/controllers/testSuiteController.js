@@ -145,6 +145,42 @@ const loadExistingTestSuites = async () => {
   }
 };
 
+// Download a specific test file
+const downloadTestFile = async (req, res) => {
+  const id = req.params.id;
+  const suite = testSuites[id];
+
+  if (!suite) {
+    return res.status(404).json({ message: 'Test suite not found' });
+  }
+
+  try {
+    const filename = `${suite.name.toLowerCase().replace(/\s+/g, '_')}_${id}.cy.js`;
+    const filePath = path.join(__dirname, '..', 'cypress', 'e2e', filename);
+
+    try {
+      await fs.access(filePath);
+    } catch (err) {
+      console.error(`Test file not found: ${filePath}`);
+      return res.status(404).json({ message: 'Test file not found' });
+    }
+
+    // Set headers for the response
+    res.setHeader('Content-Type', 'text/javascript');
+    res.setHeader('Content-Disposition', `attachment; filename="${filename}"`);
+
+    // Read the file and send it as the response
+    const fileContent = await fs.readFile(filePath, 'utf8');
+    res.send(fileContent);
+  } catch (error) {
+    console.error('Error downloading test file:', error);
+    res.status(500).json({
+      message: 'Failed to download test file',
+      error: error.message
+    });
+  }
+};
+
 module.exports = {
   getAllTestSuites,
   getTestSuite,
@@ -152,5 +188,6 @@ module.exports = {
   updateTestSuite,
   deleteTestSuite,
   loadExistingTestSuites,
+  downloadTestFile,
   testSuites
 };

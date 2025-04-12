@@ -135,6 +135,18 @@
   opacity: 0.7;
 }
 
+.download-button {
+  background-color: #2ecc71;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.download-button:hover {
+  background-color: #27ae60;
+}
+
 /* Test results */
 .test-results {
   padding: 1.2rem 1.5rem;

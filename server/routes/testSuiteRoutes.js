@@ -21,4 +21,7 @@ router.delete('/:id', testSuiteController.deleteTestSuite);
 // POST run a specific test suite
 router.post('/:id/run', testRunController.runTestSuite);
 
+// GET download a specific test file
+router.get('/:id/download', testSuiteController.downloadTestFile);
+
 module.exports = router;

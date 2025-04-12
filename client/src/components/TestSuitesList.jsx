@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import './TestSuitesList.css';
-import { Play, Trash, X, ChevronDown, ChevronUp, Edit } from 'lucide-react';
+import { Play, Trash, X, ChevronDown, ChevronUp, Edit, Download } from 'lucide-react';
 import TestSuiteForm from './TestSuiteForm';
 
 function TestSuitesList({ testSuites: propTestSuites, resetEditingSuite, forceListView }) {
@@ -128,6 +128,17 @@ function TestSuitesList({ testSuites: propTestSuites, resetEditingSuite, forceLi
     }
   };
 
+  const downloadTestFile = (suiteId) => {
+    // Create a link to download the file and click it
+    const downloadUrl = `/api/test-suites/${suiteId}/download`;
+    const a = document.createElement('a');
+    a.href = downloadUrl;
+    a.download = true;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+  };
+
   if (editingSuite) {
     return (
       <TestSuiteForm
@@ -227,6 +238,13 @@ function TestSuitesList({ testSuites: propTestSuites, resetEditingSuite, forceLi
                 disabled={isAnyTestRunning || isRunningAll}
               >
                 <Play size={16} /> {runningTests[suite.id] ? 'Running...' : 'Run'}
+              </button>
+              <button
+                className="download-button"
+                onClick={() => downloadTestFile(suite.id)}
+                title="Download test file"
+              >
+                <Download size={16} />
               </button>
               <button
                 className="delete-button"
