@@ -5,6 +5,9 @@ const testRunController = require('../controllers/testRunController');
 // POST run all test suites
 router.post('/all', testRunController.runAllTestSuites);
 
+// POST run all test suites for a project
+router.post('/project/:projectId', testRunController.runProjectTestSuites);
+
 // GET download screenshots as zip
 router.get('/screenshots/download', testRunController.downloadScreenshots);
 

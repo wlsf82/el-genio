@@ -15,6 +15,7 @@ cypress/videos/
 client/dist/
 
 #Server
+server/.env
 server/cypress.env.json
 server/cypress/downloads/
 server/cypress/screenshots/

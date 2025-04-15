@@ -3,7 +3,7 @@ import TestCaseForm from './TestCaseForm';
 import axios from 'axios';
 import './TestSuiteForm.css';
 
-function TestSuiteForm({ onTestSuiteCreated, initialData = null, isEditing = false }) {
+function TestSuiteForm({ onTestSuiteCreated, initialData = null, isEditing = false, projectId }) {
   const [suiteName, setSuiteName] = useState(initialData?.name || '');
   const [testCases, setTestCases] = useState(initialData?.testCases || []);
   const [editingTestCase, setEditingTestCase] = useState(null);
@@ -49,7 +49,8 @@ function TestSuiteForm({ onTestSuiteCreated, initialData = null, isEditing = fal
     try {
       const testSuite = {
         name: suiteName,
-        testCases
+        testCases,
+        projectId
       };
 
       if (isEditing) {

@@ -1,43 +1,80 @@
 const path = require('path');
 const fs = require('fs').promises;
-const { v4: uuidv4 } = require('uuid');
+const { TestSuite, Project } = require('../models');
 const { generateCypressTestFile, parseCypressTestFile } = require('../utils');
 
-// Store test suites in memory (in a real app, use a database)
-const testSuites = {};
+// Get all test suites for a project
+const getAllTestSuites = async (req, res) => {
+  try {
+    const { projectId } = req.params;
 
-// Get all test suites
-const getAllTestSuites = (req, res) => {
-  const suites = Object.values(testSuites);
-  res.json(suites);
+    if (!projectId) {
+      return res.status(400).json({ message: 'Project ID is required' });
+    }
+
+    // Check if project exists
+    const project = await Project.findByPk(projectId);
+    if (!project) {
+      return res.status(404).json({ message: 'Project not found' });
+    }
+    
+    const testSuites = await TestSuite.findAll({
+      where: { projectId },
+      order: [['createdAt', 'DESC']]
+    });
+
+    res.json(testSuites);
+  } catch (error) {
+    console.error('Error getting test suites:', error);
+    res.status(500).json({ message: 'Failed to get test suites', error: error.message });
+  }
 };
 
 // Get one test suite
-const getTestSuite = (req, res) => {
-  const suite = testSuites[req.params.id];
-  if (!suite) {
-    return res.status(404).json({ message: 'Test suite not found' });
+const getTestSuite = async (req, res) => {
+  try {
+    const testSuite = await TestSuite.findByPk(req.params.id);
+
+    if (!testSuite) {
+      return res.status(404).json({ message: 'Test suite not found' });
+    }
+
+    res.json(testSuite);
+  } catch (error) {
+    console.error('Error getting test suite:', error);
+    res.status(500).json({ message: 'Failed to get test suite', error: error.message });
   }
-  res.json(suite);
 };
 
 // Create a test suite
 const createTestSuite = async (req, res) => {
   try {
-    const { name, testCases } = req.body;
+    const { name, testCases, projectId } = req.body;
 
     if (!name || !testCases || !Array.isArray(testCases) || testCases.length === 0) {
       return res.status(400).json({ message: 'Invalid test suite data' });
     }
 
-    const id = uuidv4();
-    const newSuite = { id, name, testCases, createdAt: new Date() };
-    testSuites[id] = newSuite;
+    if (!projectId) {
+      return res.status(400).json({ message: 'Project ID is required' });
+    }
+
+    // Check if project exists
+    const project = await Project.findByPk(projectId);
+    if (!project) {
+      return res.status(404).json({ message: 'Project not found' });
+    }
+
+    const testSuite = await TestSuite.create({
+      name,
+      testCases,
+      projectId
+    });
 
     // Generate Cypress test file
-    await generateCypressTestFile(newSuite);
+    await generateCypressTestFile(testSuite);
 
-    res.status(201).json(newSuite);
+    res.status(201).json(testSuite);
   } catch (error) {
     console.error('Error creating test suite:', error);
     res.status(500).json({ message: 'Failed to create test suite', error: error.message });
@@ -46,27 +83,28 @@ const createTestSuite = async (req, res) => {
 
 // Update a test suite
 const updateTestSuite = async (req, res) => {
-  const id = req.params.id;
-  const { name, testCases } = req.body;
-
-  if (!name || !testCases || !Array.isArray(testCases) || testCases.length === 0) {
-    return res.status(400).json({ message: 'Invalid test suite data' });
-  }
-
-  const suite = testSuites[id];
-  if (!suite) {
-    return res.status(404).json({ message: 'Test suite not found' });
-  }
-
   try {
-    // Update the test suite in memory
-    suite.name = name;
-    suite.testCases = testCases;
+    const { id } = req.params;
+    const { name, testCases } = req.body;
+
+    if (!name || !testCases || !Array.isArray(testCases) || testCases.length === 0) {
+      return res.status(400).json({ message: 'Invalid test suite data' });
+    }
+
+    const testSuite = await TestSuite.findByPk(id);
+    if (!testSuite) {
+      return res.status(404).json({ message: 'Test suite not found' });
+    }
+
+    // Update the test suite
+    testSuite.name = name;
+    testSuite.testCases = testCases;
+    await testSuite.save();
 
     // Regenerate the Cypress test file
-    await generateCypressTestFile(suite);
+    await generateCypressTestFile(testSuite);
 
-    res.json(suite);
+    res.json(testSuite);
   } catch (error) {
     console.error('Error updating test suite:', error);
     res.status(500).json({ message: 'Failed to update test suite', error: error.message });
@@ -75,16 +113,16 @@ const updateTestSuite = async (req, res) => {
 
 // Delete a test suite
 const deleteTestSuite = async (req, res) => {
-  const id = req.params.id;
-  const suite = testSuites[id];
-
-  if (!suite) {
-    return res.status(404).json({ message: 'Test suite not found' });
-  }
-
   try {
+    const { id } = req.params;
+
+    const testSuite = await TestSuite.findByPk(id);
+    if (!testSuite) {
+      return res.status(404).json({ message: 'Test suite not found' });
+    }
+
     // Delete the corresponding Cypress test file
-    const filename = `${suite.name.toLowerCase().replace(/\s+/g, '_')}_${id}.cy.js`;
+    const filename = `${testSuite.name.toLowerCase().replace(/\s+/g, '_')}_${id}.cy.js`;
     const filePath = path.join(__dirname, '..', 'cypress', 'e2e', filename);
 
     try {
@@ -93,7 +131,9 @@ const deleteTestSuite = async (req, res) => {
       console.warn(`Could not delete file ${filePath}:`, err);
     }
 
-    delete testSuites[id];
+    // Delete from database
+    await testSuite.destroy();
+
     res.status(204).end();
   } catch (error) {
     console.error('Error deleting test suite:', error);
@@ -108,14 +148,25 @@ const loadExistingTestSuites = async () => {
     const files = await fs.readdir(cypressE2ePath);
     const testFiles = files.filter(file => file.endsWith('.cy.js'));
 
+    // Create a default project for existing test suites if it doesn't exist
+    let defaultProject = await Project.findOne({ where: { name: 'Default Project' } });
+
+    if (!defaultProject) {
+      defaultProject = await Project.create({
+        name: 'Default Project',
+        description: 'Default project for existing test suites'
+      });
+    }
+
     for (const file of testFiles) {
       // Extract ID from filename (assumes format name_id.cy.js)
       const idMatch = file.match(/_([0-9a-f-]+)\.cy\.js$/);
       if (idMatch && idMatch[1]) {
         const id = idMatch[1];
 
-        // If this test suite is not already in memory, load basic info
-        if (!testSuites[id]) {
+        // Check if this test suite already exists in the database
+        const existingTestSuite = await TestSuite.findByPk(id);
+        if (!existingTestSuite) {
           const fileContent = await fs.readFile(path.join(cypressE2ePath, file), 'utf8');
 
           // Extract test suite name from comment or describe block
@@ -129,12 +180,12 @@ const loadExistingTestSuites = async () => {
           const testCases = await parseCypressTestFile(fileContent);
 
           // Create test suite object with parsed test cases
-          testSuites[id] = {
+          await TestSuite.create({
             id,
             name,
-            createdAt: new Date(),
-            testCases
-          };
+            testCases,
+            projectId: defaultProject.id
+          });
 
           console.log(`Loaded existing test suite: ${name} (${id}) with ${testCases.length} test cases`);
         }
@@ -147,15 +198,15 @@ const loadExistingTestSuites = async () => {
 
 // Download a specific test file
 const downloadTestFile = async (req, res) => {
-  const id = req.params.id;
-  const suite = testSuites[id];
-
-  if (!suite) {
-    return res.status(404).json({ message: 'Test suite not found' });
-  }
-
   try {
-    const filename = `${suite.name.toLowerCase().replace(/\s+/g, '_')}_${id}.cy.js`;
+    const { id } = req.params;
+
+    const testSuite = await TestSuite.findByPk(id);
+    if (!testSuite) {
+      return res.status(404).json({ message: 'Test suite not found' });
+    }
+
+    const filename = `${testSuite.name.toLowerCase().replace(/\s+/g, '_')}_${id}.cy.js`;
     const filePath = path.join(__dirname, '..', 'cypress', 'e2e', filename);
 
     try {
@@ -188,6 +239,5 @@ module.exports = {
   updateTestSuite,
   deleteTestSuite,
   loadExistingTestSuites,
-  downloadTestFile,
-  testSuites
+  downloadTestFile
 };

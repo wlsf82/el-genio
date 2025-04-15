@@ -6,13 +6,14 @@ A no-code testing app that uses [Cypress](https://cypress.io) in the background 
 
 ## Pre-requirements
 
-To clone and run the app, you must have [git](https://git-scm.com/downloads), [Node.js](https://nodejs.org/), and npm installed on your computer.
+To clone and run the app, you must have [git](https://git-scm.com/downloads), [Node.js](https://nodejs.org/), npm, and [Docker](https://www.docker.com/products/docker-desktop/) installed on your computer.
 
 I've used the following version of the systems mentioned above:
 
 - git `2.42.1`
 - Node.js `v22.13.1`
 - npm `10.9.2`
+- Docker `28.0.4`
 
 > There's no need to install npm since it's automatically installed when installing Node.js.
 
@@ -22,25 +23,52 @@ Run `npm run install:all` to install all the necessary dependencies.
 
 ## Running the app
 
-Run `npm start` to start the client and server.
+The _El Genio_ app is composed of a React app, an Express.js server, and a Postgres database.
 
-> The command above will start both client and server in development mode.
+### Server and Database
 
-To start the server in production mode, run `npm run server`. In this case, the client needs be be started separetedly with `npm run client`.
+You can run both the server and database using Docker.
 
-After the app is started you should be able to access it locally at `http://localhost:5173/`.
+#### Create a Docker Network
 
-### Using Docker (server-side only)
+First, create a Docker network to allow the containers to communicate:
 
-For the server-side, it's possible to use Docker.
+```bash
+docker network create el-genio-network
+```
 
-> In this case, Docker is required.
+#### Building and running the database
 
-To run the server using Docker, follow the below steps.
+To build and run the database container:
+
+1. `cd postgres/`
+2. `docker build -t el-genio-db .`
+3. `docker run -d -p 5432:5432 --network el-genio-network --name postgres el-genio-db`
+
+The database will be initialized with the following default settings:
+
+- Username: postgres
+- Password: postgres
+- Database name: elgenio
+- Port: 5432
+
+> **Note:** The container must be named "postgres" for the server to connect to it.
+
+#### Building and running the server
+
+To build and run the server container:
 
 1. `cd server/`
 2. `docker build -t el-genio-server .`
-3. `docker run -d -p 3003:3003 -v $(pwd)/cypress/e2e:/usr/src/server/cypress/e2e el-genio-server`
+3. `docker run -d -p 3003:3003 --network el-genio-network -v $(pwd)/cypress/e2e:/usr/src/server/cypress/e2e el-genio-server`
+
+> **Important:** Make sure to run the database container before the server container.
+
+### Client
+
+Run `npm run client` to start the client app.
+
+After the app is started you should be able to access it locally at `http://localhost:5173/`.
 
 ### Tests
 

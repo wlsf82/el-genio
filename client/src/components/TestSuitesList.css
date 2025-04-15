@@ -103,12 +103,18 @@
   opacity: 0.7;
 }
 
+/* Delete button styles */
 .delete-button {
   background-color: #e74c3c;
   color: white;
 }
 
-.delete-button:hover {
+/* Remove this duplicate rule */
+/* .delete-button:hover {
+  background-color: #c0392b;
+} */
+
+.delete-button:hover:not(:disabled) {
   background-color: #c0392b;
 }
 
@@ -119,12 +125,18 @@
   opacity: 0.7;
 }
 
+/* Edit button styles */
 .edit-button {
   background-color: #f39c12;
   color: white;
 }
 
-.edit-button:hover {
+/* Remove this duplicate rule */
+/* .edit-button:hover {
+  background-color: #e67e22;
+} */
+
+.edit-button:hover:not(:disabled) {
   background-color: #e67e22;
 }
 
@@ -397,4 +409,53 @@
 .run-all-button:disabled {
   background-color: #cccccc;
   cursor: not-allowed;
+}
+
+/* Update this section */
+
+.results-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.close-results {
+  background-color: transparent;
+  border: none;
+  color: #7f8c8d;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.4rem;
+  border-radius: 4px;
+  transition: background-color 0.2s;
+}
+
+.close-results:hover {
+  background-color: #f0f0f0;
+  color: #e74c3c;
+}
+
+/* Fix for test suite details */
+.test-suite-details {
+  padding: 0 1.5rem;
+}
+
+.test-suite-details h4 {
+  margin-top: 1rem;
+  margin-bottom: 0.5rem;
+}
+
+/* Fix for checkbox alignment */
+.test-selector {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+.test-description {
+  flex: 1;
 }

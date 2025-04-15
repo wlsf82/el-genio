@@ -62,3 +62,29 @@ main {
   padding: 20px;
   color: #666;
 }
+
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.back-button {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 14px;
+  background-color: #f0f8ff;
+  color: #2c73d2;
+  border: 1px solid #c6e0ff;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: all 0.2s ease;
+}
+
+.back-button:hover {
+  background-color: #e6f0ff;
+  color: #1a5cb3;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
