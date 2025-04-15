@@ -2,8 +2,8 @@ const path = require('path');
 const cypress = require('cypress');
 const archiver = require('archiver');
 const fs = require('fs').promises;
+const { TestSuite } = require('../models');
 const { defaultCypressOptions } = require('../config/cypressConfig');
-const { testSuites } = require('./testSuiteController');
 const { processTestResults } = require('../utils');
 
 // Run all test suites
@@ -31,18 +31,61 @@ const runAllTestSuites = async (req, res) => {
   }
 };
 
+// Run all test suites for a project
+const runProjectTestSuites = async (req, res) => {
+  try {
+    const { projectId } = req.params;
+
+    // Get all test suites for the project
+    const testSuites = await TestSuite.findAll({
+      where: { projectId }
+    });
+
+    if (testSuites.length === 0) {
+      return res.status(404).json({
+        message: 'No test suites found for this project',
+        success: false
+      });
+    }
+
+    // Create a spec pattern for all test suites in this project
+    const testSuiteIds = testSuites.map(suite => suite.id);
+    const specPattern = testSuiteIds.map(id => 
+      path.join(__dirname, '..', 'cypress', 'e2e', `*_${id}.cy.js`)
+    );
+
+    const cypressOptions = {
+      ...defaultCypressOptions,
+      spec: specPattern,
+    };
+
+    console.log(`Running all Cypress tests for project ${projectId}`);
+    const results = await cypress.run(cypressOptions);
+
+    // Process results and send response
+    res.json(processTestResults(results, req));
+  } catch (error) {
+    console.error('Error running project test suites:', error);
+    res.status(500).json({
+      message: 'Failed to run test suites',
+      error: error.message,
+      success: false
+    });
+  }
+};
+
 // Run a specific test suite
 const runTestSuite = async (req, res) => {
-  const id = req.params.id;
-  const suite = testSuites[id];
-  const { grepTags } = req.body;
-
-  if (!suite) {
-    return res.status(404).json({ message: 'Test suite not found' });
-  }
-
   try {
-    const filename = `${suite.name.toLowerCase().replace(/\s+/g, '_')}_${id}.cy.js`;
+    const { id } = req.params;
+    const { grepTags } = req.body;
+
+    const testSuite = await TestSuite.findByPk(id);
+    if (!testSuite) {
+      return res.status(404).json({ message: 'Test suite not found' });
+    }
+
+    const filename = `${testSuite.name.toLowerCase().replace(/\s+/g, '_')}_${id}.cy.js`;
     const specFilePath = path.join(__dirname, '..', 'cypress', 'e2e', filename);
 
     try {
@@ -109,6 +152,7 @@ const downloadScreenshots = async (req, res) => {
 
 module.exports = {
   runAllTestSuites,
+  runProjectTestSuites,
   runTestSuite,
   downloadScreenshots
 };

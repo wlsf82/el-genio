@@ -16,8 +16,19 @@ RUN apt-get update && \
   apt-get install -y chromium --no-install-recommends && \
   rm -rf /var/lib/apt/lists/*
 
+# Create cypress directories with proper permissions
+RUN mkdir -p cypress/e2e cypress/screenshots cypress/downloads && \
+  chmod -R 777 cypress
+
 # Bundle your app's source code inside the Docker image
 COPY . .
+
+# Set database environment variables
+ENV DB_NAME=elgenio
+ENV DB_USER=postgres
+ENV DB_PASSWORD=postgres
+ENV DB_HOST=postgres
+ENV DB_PORT=5432
 
 # Your app binds to port 3003, so use the EXPOSE instruction to have it mapped by the docker daemon
 EXPOSE 3003

@@ -2,8 +2,10 @@ const express = require('express');
 const path = require('path');
 const fs = require('fs').promises;
 const cors = require('cors');
+const { sequelize, createDbIfNotExists } = require('./config/database');
 
 // Import routes
+const projectRoutes = require('./routes/projectRoutes');
 const testSuiteRoutes = require('./routes/testSuiteRoutes');
 const testRunRoutes = require('./routes/testRunRoutes');
 const { downloadScreenshots } = require('./controllers/testRunController');
@@ -16,6 +18,7 @@ app.use(cors());
 app.use(express.json());
 
 // Mount routes
+app.use('/api/projects', projectRoutes);
 app.use('/api/test-suites', testSuiteRoutes);
 app.use('/api/test-run', testRunRoutes);
 
@@ -26,14 +29,29 @@ app.use('/cypress/screenshots', express.static(path.join(__dirname, 'cypress', '
 app.get('/cypress/screenshots/download', downloadScreenshots);
 
 // Start server
-app.listen(PORT, async () => {
-  console.log(`Server running on port ${PORT}`);
+const startServer = async () => {
+  try {
+    // Create database if it doesn't exist
+    await createDbIfNotExists();
+    
+    // Sync database models
+    await sequelize.sync();
+    console.log('Database synchronized successfully');
+    
+    app.listen(PORT, async () => {
+      console.log(`Server running on port ${PORT}`);
 
-  // Create cypress/e2e directory if it doesn't exist
-  const cypressE2ePath = path.join(__dirname, 'cypress', 'e2e');
-  await fs.mkdir(cypressE2ePath, { recursive: true });
+      // Create cypress/e2e directory if it doesn't exist
+      const cypressE2ePath = path.join(__dirname, 'cypress', 'e2e');
+      await fs.mkdir(cypressE2ePath, { recursive: true });
 
-  // Load existing test suites from disk
-  const { loadExistingTestSuites } = require('./controllers/testSuiteController');
-  await loadExistingTestSuites();
-});
+      // Load existing test suites from disk
+      const { loadExistingTestSuites } = require('./controllers/testSuiteController');
+      await loadExistingTestSuites();
+    });
+  } catch (error) {
+    console.error('Unable to start server:', error);
+  }
+};
+
+startServer();

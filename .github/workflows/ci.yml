@@ -9,18 +9,29 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Create Docker network
+        run: docker network create el-genio-network
+
       - name: Install client dependencies
         run: cd client && npm install
+
+      - name: Build Postgres Docker image
+        run: |
+          cd postgres
+          docker build -t el-genio-db .
+
+      - name: Run Postgres container
+        run: docker run -d -p 5432:5432 --network el-genio-network --name postgres el-genio-db
 
       - name: Build server Docker image
         run: |
           cd server
           docker build -t el-genio-server .
 
-      - name: Run server using Docker
+      - name: Run server container
         run: |
           cd server
-          docker run -d -p 3003:3003 -v ${{ github.workspace }}/server/cypress/e2e:/usr/src/server/cypress/e2e --name el-genio-server el-genio-server
+          docker run -d -p 3003:3003 --network el-genio-network -v ${{ github.workspace }}/server/cypress/e2e:/usr/src/server/cypress/e2e --name el-genio-server el-genio-server
 
       - name: Run Cypress tests 🧪
         uses: cypress-io/github-action@v6
@@ -36,8 +47,9 @@ jobs:
           path: cypress/screenshots
           if-no-files-found: ignore
 
-      - name: Stop and clean up Docker container
+      - name: Stop and clean up Docker containers
         if: always()
         run: |
-          docker stop el-genio-server
-          docker rm el-genio-server
+          docker stop el-genio-server postgres || true
+          docker rm el-genio-server postgres || true
+          docker network rm el-genio-network || true

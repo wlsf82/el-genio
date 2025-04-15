@@ -3,8 +3,8 @@ const router = express.Router();
 const testSuiteController = require('../controllers/testSuiteController');
 const testRunController = require('../controllers/testRunController');
 
-// GET all test suites
-router.get('/', testSuiteController.getAllTestSuites);
+// GET all test suites for a project
+router.get('/project/:projectId', testSuiteController.getAllTestSuites);
 
 // GET single test suite by ID
 router.get('/:id', testSuiteController.getTestSuite);

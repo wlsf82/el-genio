@@ -1,0 +1,263 @@
+.projects-list {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 1.5rem;
+}
+
+.projects-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.projects-header h2 {
+  color: #2c3e50;
+  font-size: 1.8rem;
+  margin: 0;
+}
+
+.create-project-button {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0.6rem 1rem;
+  background-color: #3498db;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: background-color 0.2s;
+}
+
+.create-project-button:hover {
+  background-color: #2980b9;
+}
+
+.no-projects {
+  text-align: center;
+  padding: 3rem;
+  background-color: #f8f9fa;
+  border-radius: 8px;
+  color: #6c757d;
+}
+
+.project-card {
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  margin-bottom: 1.5rem;
+  overflow: hidden;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.project-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
+}
+
+.project-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.2rem 1.5rem;
+  background-color: #f8f9fa;
+  border-bottom: 1px solid #eee;
+}
+
+.project-header h3 {
+  color: #2c3e50;
+  margin: 0;
+  font-size: 1.3rem;
+}
+
+.project-actions {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.project-actions button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  padding: 0.5rem;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.project-actions button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.view-tests-button {
+  background-color: #3498db;
+  color: white;
+  padding: 0.5rem 1rem !important;
+}
+
+.view-tests-button:hover {
+  background-color: #2980b9;
+}
+
+.add-test-button {
+  background-color: #2ecc71;
+  color: white;
+  padding: 0.5rem 1rem !important;
+}
+
+.add-test-button:hover {
+  background-color: #27ae60;
+}
+
+.run-button {
+  background-color: #9b59b6;
+  color: white;
+  padding: 0.5rem 1rem !important;
+}
+
+.run-button:hover:not(:disabled) {
+  background-color: #8e44ad;
+}
+
+.run-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.edit-button {
+  background-color: #f39c12;
+  color: white;
+  padding: 0.5rem 1rem !important;
+}
+
+.edit-button:hover {
+  background-color: #e67e22;
+}
+
+.delete-button {
+  background-color: #e74c3c;
+  color: white;
+  padding: 0.5rem 1rem !important;
+}
+
+.delete-button:hover {
+  background-color: #c0392b;
+}
+
+.toggle-button {
+  background-color: transparent;
+  color: #7f8c8d;
+}
+
+.toggle-button:hover {
+  background-color: #f0f0f0;
+}
+
+.project-details {
+  padding: 1.2rem 1.5rem;
+}
+
+.project-description h4 {
+  color: #34495e;
+  margin: 0 0 0.5rem 0;
+  font-size: 1rem;
+}
+
+.project-description p {
+  margin: 0;
+  color: #7f8c8d;
+  line-height: 1.5;
+}
+
+.loading, .error-message {
+  padding: 1rem;
+  margin-bottom: 1rem;
+  border-radius: 6px;
+}
+
+.loading {
+  text-align: center;
+  color: #7f8c8d;
+}
+
+.error-message {
+  background-color: #fdf0ef;
+  color: #e74c3c;
+  border-left: 4px solid #e74c3c;
+}
+
+.test-results {
+  margin: 1rem 1.5rem;
+  padding: 1rem;
+  border-radius: 6px;
+}
+
+.test-results.success {
+  background-color: #f0faf4;
+  border-left: 4px solid #2ecc71;
+}
+
+.test-results.failure {
+  background-color: #fdf0ef;
+  border-left: 4px solid #e74c3c;
+}
+
+.test-results h4 {
+  margin-top: 0;
+  color: #2c3e50;
+}
+
+.test-results pre {
+  background-color: #f1f2f6;
+  padding: 0.8rem;
+  border-radius: 4px;
+  overflow-x: auto;
+  font-size: 0.9rem;
+}
+
+/* Add this after your existing test-results styles */
+
+.results-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.close-results {
+  background-color: transparent;
+  border: none;
+  color: #7f8c8d;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.4rem;
+  border-radius: 4px;
+  transition: background-color 0.2s;
+}
+
+.close-results:hover {
+  background-color: #f0f0f0;
+  color: #e74c3c;
+}
+
+.failed-tests h5 {
+  margin-bottom: 0.5rem;
+  color: #e74c3c;
+}
+
+.failed-tests ul {
+  padding-left: 1.5rem;
+}
+
+.failed-tests pre {
+  margin-top: 0.5rem;
+  font-size: 0.85rem;
+}

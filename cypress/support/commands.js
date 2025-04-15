@@ -1,17 +1,32 @@
-const testSuite = require('../fixtures/sampleTestSuite.json')
-const testSuiteThatFails = require('../fixtures/sampleTestSuiteThatFails.json')
-const testSuiteWithManyTestCases = require('../fixtures/sampleTestSuiteWithManyTestCases.json')
+Cypress.Commands.add('createSampleTestSuiteForProject', projectId => {
+  const testSuiteData = {...require('../fixtures/sampleTestSuite.json')}
+  testSuiteData.projectId = projectId
 
-Cypress.Commands.add('createSampleTestSuite', () => {
-  cy.request('POST', '/api/test-suites', testSuite)
+  return cy.request('POST', '/api/test-suites', testSuiteData)
 })
 
-Cypress.Commands.add('createSampleTestSuiteThatFails', () => {
-  cy.request('POST', '/api/test-suites', testSuiteThatFails)
+Cypress.Commands.add('createSampleTestSuiteThatFailsForProject', projectId => {
+  const testSuiteData = {...require('../fixtures/sampleTestSuiteThatFails.json')}
+  testSuiteData.projectId = projectId
+
+  cy.request('POST', '/api/test-suites', testSuiteData)
 })
 
-Cypress.Commands.add('createSampleTestSuiteWithManyTestCases', () => {
-  cy.request('POST', '/api/test-suites', testSuiteWithManyTestCases)
+Cypress.Commands.add('createSampleTestSuiteWithManyTestCasesForProject', projectId => {
+  const testSuiteData = {...require('../fixtures/sampleTestSuiteWithManyTestCases.json')}
+  testSuiteData.projectId = projectId
+
+  cy.request('POST', '/api/test-suites', testSuiteData)
+})
+
+Cypress.Commands.add('deleteProjectByName', name => {
+  cy.request('GET', '/api/projects')
+    .then(response => {
+      const projectToDelete = response.body.filter(project => project.name === name)
+      projectToDelete.forEach(suite => {
+        cy.request('DELETE', `/api/projects/${suite.id}`)
+      })
+    })
 })
 
 Cypress.Commands.add('deleteTestSuitesByName', name => {

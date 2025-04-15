@@ -4,7 +4,7 @@ import './TestSuitesList.css';
 import { Play, Trash, X, ChevronDown, ChevronUp, Edit, Download } from 'lucide-react';
 import TestSuiteForm from './TestSuiteForm';
 
-function TestSuitesList({ testSuites: propTestSuites, resetEditingSuite, forceListView }) {
+function TestSuitesList({ testSuites: propTestSuites, resetEditingSuite, forceListView, projectId }) {
   const [testSuites, setTestSuites] = useState(propTestSuites || []);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -20,10 +20,10 @@ function TestSuitesList({ testSuites: propTestSuites, resetEditingSuite, forceLi
   useEffect(() => {
     if (propTestSuites?.length > 0) {
       setTestSuites(propTestSuites);
-    } else {
+    } else if (projectId) {
       fetchTestSuites();
     }
-  }, [propTestSuites]);
+  }, [propTestSuites, projectId]);
 
   useEffect(() => {
     if (forceListView) {
@@ -39,11 +39,13 @@ function TestSuitesList({ testSuites: propTestSuites, resetEditingSuite, forceLi
   };
 
   const fetchTestSuites = async () => {
+    if (!projectId) return;
+    
     setIsLoading(true);
     setError(null);
 
     try {
-      const response = await axios.get('/api/test-suites');
+      const response = await axios.get(`/api/test-suites/project/${projectId}`);
       setTestSuites(response.data);
     } catch (err) {
       setError('Failed to fetch test suites: ' + (err.response?.data?.message || err.message));
@@ -112,13 +114,15 @@ function TestSuitesList({ testSuites: propTestSuites, resetEditingSuite, forceLi
   };
 
   const runAllTests = async () => {
+    if (!projectId) return;
+    
     setIsRunningAll(true);
     setIsAnyTestRunning(true);
     setError(null);
     setAllTestsResults(null);
 
     try {
-      const response = await axios.post('/api/test-run/all');
+      const response = await axios.post(`/api/test-run/project/${projectId}`);
       setAllTestsResults(response.data);
     } catch (err) {
       setError('Failed to run all tests: ' + (err.response?.data?.message || err.message));
@@ -150,6 +154,7 @@ function TestSuitesList({ testSuites: propTestSuites, resetEditingSuite, forceLi
           setEditingSuite(null);
         }}
         isEditing={true}
+        projectId={projectId}
       />
     );
   }
@@ -163,19 +168,19 @@ function TestSuitesList({ testSuites: propTestSuites, resetEditingSuite, forceLi
   }
 
   if (testSuites.length === 0) {
-    return <div className="no-test-suites">No test suites created yet.</div>;
+    return <div className="no-test-suites">No test suites created yet in this project.</div>;
   }
 
   return (
-    <div className="test-suites-list">
+    <div className="test-suites-container">
       <div className="test-suites-header">
-        <h2>Test suites</h2>
+        <h2>Test Suites</h2>
         <button
           className="run-all-button"
           onClick={runAllTests}
-          disabled={isRunningAll || isAnyTestRunning}
+          disabled={isAnyTestRunning || testSuites.length === 0}
         >
-          <Play size={16} /> {isRunningAll ? 'Running all...' : 'Run all'}
+          <Play size={16} /> {isRunningAll ? 'Running all tests...' : 'Run All Tests'}
         </button>
       </div>
 
@@ -183,12 +188,9 @@ function TestSuitesList({ testSuites: propTestSuites, resetEditingSuite, forceLi
 
       {allTestsResults && (
         <div className={`test-results ${allTestsResults.success ? 'success' : 'failure'}`}>
-          <div className="test-results-header">
-            <h4>Test results</h4>
-            <button
-              className="close-button"
-              onClick={() => setAllTestsResults(null)}
-            >
+          <div className="results-header">
+            <h4>All Tests Results</h4>
+            <button onClick={() => setAllTestsResults(null)} className="close-results">
               <X size={16} />
             </button>
           </div>
@@ -196,153 +198,141 @@ function TestSuitesList({ testSuites: propTestSuites, resetEditingSuite, forceLi
           {allTestsResults.details && (
             <pre>{JSON.stringify(allTestsResults.details, null, 2)}</pre>
           )}
-          {!allTestsResults.success && (
-            <div className="test-results-failure">
-              {allTestsResults.failedTests && (
-                <div className="failed-tests">
-                  <h5>Failed Tests:</h5>
-                  <ul>
-                    {allTestsResults.failedTests.map((test, index) => (
-                      <li key={index}>
-                        <strong>{test.title}</strong>
-                        <pre className="stack-trace">{test.error}</pre>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              )}
-              {allTestsResults.screenshotsLink && (
-                <div className="screenshots-link">
-                  <a
-                    href={allTestsResults.screenshotsLink}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    Download screenshots
-                  </a>
-                </div>
-              )}
-            </div>
-          )}
-        </div>
-      )}
-
-      {testSuites.map((suite) => (
-        <div key={suite.id} className="test-suite-card">
-          <div className="test-suite-header">
-            <h3>{suite.name}</h3>
-            <div className="test-suite-actions">
-              <button
-                className="run-button"
-                onClick={() => runTest(suite.id)}
-                disabled={isAnyTestRunning || isRunningAll}
-              >
-                <Play size={16} /> {runningTests[suite.id] ? 'Running...' : 'Run'}
-              </button>
-              <button
-                className="download-button"
-                onClick={() => downloadTestFile(suite.id)}
-                title="Download test file"
-              >
-                <Download size={16} />
-              </button>
-              <button
-                className="delete-button"
-                onClick={() => deleteTestSuite(suite.id)}
-                disabled={runningTests[suite.id] || isRunningAll}
-              >
-                <Trash size={16} /> Delete
-              </button>
-              <button
-                className="edit-button"
-                onClick={() => handleEditSuite(suite)}
-                disabled={runningTests[suite.id] || isRunningAll}
-              >
-                <Edit size={16} /> Edit
-              </button>
-              <button
-                className="toggle-button"
-                onClick={() => toggleSuiteExpansion(suite.id)}
-              >
-                {expandedSuites[suite.id] ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
-              </button>
-            </div>
-          </div>
-
-          {testResults[suite.id] && (
-            <div className={`test-results ${testResults[suite.id].success ? 'success' : 'failure'}`}>
-              <div className="test-results-header">
-                <h4>Test Results</h4>
-                <button
-                  className="close-button"
-                  onClick={() =>
-                    setTestResults((prevResults) => {
-                      const newResults = { ...prevResults };
-                      delete newResults[suite.id];
-                      return newResults;
-                    })
-                  }
-                >
-                  <X size={16} />
-                </button>
-              </div>
-              <p>{testResults[suite.id].message}</p>
-              {testResults[suite.id].details && (
-                <pre>{JSON.stringify(testResults[suite.id].details, null, 2)}</pre>
-              )}
-              {!testResults[suite.id].success && (
-                <div className="test-results-failure">
-                  {testResults[suite.id].failedTests && (
-                    <div className="failed-tests">
-                      <h5>Failed Tests:</h5>
-                      <ul>
-                        {testResults[suite.id].failedTests.map((test, index) => (
-                          <li key={index}>
-                            <strong>{test.title}</strong>
-                            <pre className="stack-trace">{test.error}</pre>
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                  )}
-                  {testResults[suite.id].screenshotsLink && (
-                    <div className="screenshots-link">
-                      <a
-                        href={testResults[suite.id].screenshotsLink}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                      >
-                        Download screenshots
-                      </a>
-                    </div>
-                  )}
-                </div>
-              )}
-            </div>
-          )}
-
-          {expandedSuites[suite.id] && (
-            <div className="test-cases">
-              <h4>Test cases:</h4>
+          {!allTestsResults.success && allTestsResults.failedTests && (
+            <div className="failed-tests">
+              <h4>Failed Tests:</h4>
               <ul>
-                {suite.testCases.map((testCase, index) => (
-                  <li key={index} className="test-case">
-                    <div className="test-case-header">
-                      <h5>{testCase.description}</h5>
-                      <input
-                        type="checkbox"
-                        checked={selectedTests[suite.id]?.includes(testCase.description) || false}
-                        onChange={() => toggleTestSelection(suite.id, testCase.description)}
-                        className="test-case-checkbox"
-                      />
-                    </div>
+                {allTestsResults.failedTests.map((test, index) => (
+                  <li key={index}>
+                    <strong>{test.title}</strong>
+                    <pre>{test.error}</pre>
                   </li>
                 ))}
               </ul>
             </div>
           )}
+          {allTestsResults.screenshotsLink && (
+            <div className="screenshots-link">
+              <a
+                href={allTestsResults.screenshotsLink}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Download screenshots
+              </a>
+            </div>
+          )}
         </div>
-      ))}
+      )}
+
+      <div className="test-suites-list">
+        {testSuites.map((suite) => (
+          <div key={suite.id} className="test-suite-card">
+            <div className="test-suite-header">
+              <h3>{suite.name}</h3>
+              <div className="test-suite-actions">
+                <button
+                  className="run-button"
+                  onClick={() => runTest(suite.id)}
+                  disabled={runningTests[suite.id] || isAnyTestRunning}
+                >
+                  <Play size={16} /> {runningTests[suite.id] ? 'Running...' : 'Run Tests'}
+                </button>
+                <button
+                  className="download-button"
+                  onClick={() => downloadTestFile(suite.id)}
+                >
+                  <Download size={16} />
+                </button>
+                <button
+                  className="edit-button"
+                  onClick={() => handleEditSuite(suite)}
+                  disabled={isRunningAll || runningTests[suite.id]}
+                >
+                  <Edit size={16} />
+                </button>
+                <button
+                  className="delete-button"
+                  onClick={() => deleteTestSuite(suite.id)}
+                  disabled={isRunningAll || runningTests[suite.id]}
+                >
+                  <Trash size={16} />
+                </button>
+                <button
+                  className="toggle-button"
+                  onClick={() => toggleSuiteExpansion(suite.id)}
+                >
+                  {expandedSuites[suite.id] ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
+                </button>
+              </div>
+            </div>
+
+            {testResults[suite.id] && (
+              <div className={`test-results ${testResults[suite.id].success ? 'success' : 'failure'}`}>
+                <div className="results-header">
+                  <h4>Test Results</h4>
+                  <button
+                    onClick={() => setTestResults({ ...testResults, [suite.id]: null })}
+                    className="close-results"
+                  >
+                    <X size={16} />
+                  </button>
+                </div>
+                <p>{testResults[suite.id].message}</p>
+                {testResults[suite.id].details && (
+                  <pre>{JSON.stringify(testResults[suite.id].details, null, 2)}</pre>
+                )}
+                {!testResults[suite.id].success && testResults[suite.id].failedTests && (
+                  <div className="failed-tests">
+                    <h4>Failed Tests:</h4>
+                    <ul>
+                      {testResults[suite.id].failedTests.map((test, index) => (
+                        <li key={index}>
+                          <strong>{test.title}</strong>
+                          <pre>{test.error}</pre>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+                {testResults[suite.id].screenshotsLink && (
+                  <div className="screenshots-link">
+                    <a
+                      href={testResults[suite.id].screenshotsLink}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      Download screenshots
+                    </a>
+                  </div>
+                )}
+              </div>
+            )}
+
+            {expandedSuites[suite.id] && (
+              <div className="test-suite-details">
+                <h4>Test Cases:</h4>
+                <ul className="test-cases">
+                  {suite.testCases.map((testCase, testIndex) => (
+                    <li key={testIndex} className="test-case">
+                      <label className="test-selector">
+                        <span className="test-description">{testCase.description}</span>
+                        <input
+                          type="checkbox"
+                          checked={
+                            selectedTests[suite.id]?.includes(testCase.description) || false
+                          }
+                          onChange={() => toggleTestSelection(suite.id, testCase.description)}
+                        />
+                      </label>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+          </div>
+        ))}
+      </div>
     </div>
   );
 }
