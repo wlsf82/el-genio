@@ -13,5 +13,3 @@ COPY init/ /docker-entrypoint-initdb.d/
 
 # Expose PostgreSQL port
 EXPOSE 5432
-
-# The postgres image already has a suitable entrypoint

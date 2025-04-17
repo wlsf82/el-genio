@@ -32,7 +32,7 @@ function App() {
 
   const handleSelectProject = async (projectId, action) => {
     setSelectedProject(projectId);
-    
+
     if (action === 'view') {
       try {
         const response = await axios.get(`/api/test-suites/project/${projectId}`);
@@ -57,8 +57,8 @@ function App() {
         return <ProjectsList onSelectProject={handleSelectProject} />;
       case 'create':
         return (
-          <TestSuiteForm 
-            onTestSuiteCreated={handleTestSuiteCreated} 
+          <TestSuiteForm
+            onTestSuiteCreated={handleTestSuiteCreated}
             projectId={selectedProject}
           />
         );

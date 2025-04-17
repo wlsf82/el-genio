@@ -17,7 +17,7 @@ const getAllTestSuites = async (req, res) => {
     if (!project) {
       return res.status(404).json({ message: 'Project not found' });
     }
-    
+
     const testSuites = await TestSuite.findAll({
       where: { projectId },
       order: [['createdAt', 'DESC']]
