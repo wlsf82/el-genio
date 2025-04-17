@@ -1,10 +1,10 @@
 const sampleTestSuiteJSFile = require('../fixtures/sampleTestSuite.js')
 const updatedSampleTestSuiteJSFile = require('../fixtures/updatedTestSuite.js')
-const sampleTestSuiteWithManyTestCasesJSFile = require('../fixtures/sampleTestSuiteWithManyTestCases.js')
 
 describe('El Genio', () => {
   beforeEach(() => {
-    cy.deleteProjectByName('Sample project')
+    cy.deleteProjectByName('Sample Project')
+    cy.createSampleProject()
     cy.intercept('GET', '/api/projects').as('getProjects')
 
     cy.visit('/')
@@ -15,16 +15,26 @@ describe('El Genio', () => {
     cy.title().should('be.equal', 'El Genio 🧞‍♂️')
     cy.contains('h1', 'El Genio 🧞‍♂️').should('be.visible')
     cy.contains('h2', 'Projects').should('be.visible')
-    cy.contains('button', 'Create Project')
-      .should('be.visible')
-      .click()
-    cy.get('input[placeholder="Enter project name"]').type('Sample project')
-    cy.get('textarea[placeholder="Enter project description"]').type('Sample project description')
-    cy.contains('button', 'Create Project').click()
-    cy.contains('.project-card', 'Sample project')
+    cy.contains('.project-card', 'Sample Project')
       .should('be.visible')
       .find('.view-tests-button')
       .click()
+  })
+
+  it('creates a project', () => {
+    cy.deleteProjectByName('TAT sample project')
+
+    cy.visit('/')
+    cy.wait('@getProjects')
+
+    cy.contains('button', 'Create Project')
+      .should('be.visible')
+      .click()
+    cy.get('input[placeholder="Enter project name"]').type('TAT sample project')
+    cy.get('textarea[placeholder="Enter project description"]').type('Talking About Testing project.')
+    cy.contains('button', 'Create Project').click()
+
+    cy.contains('.project-card', 'TAT sample project').should('be.visible')
   })
 
   it('createa a new test suite with one test with a few steps', () => {
@@ -87,25 +97,25 @@ describe('El Genio', () => {
     cy.contains('.test-cases', 'asserts h1 is visible').should('be.visible')
   })
 
-  it('runs a just created test suite', () => {
+  it('runs a just created test suite via the projects list', () => {
     cy.request('GET', '/api/projects')
       .then(response => {
-        const sampleProject = response.body.find(project => project.name === 'Sample project');
+        const sampleProject = response.body.find(project => project.name === 'Sample Project');
         cy.createSampleTestSuiteForProject(sampleProject.id);
       });
 
     cy.visit('/')
 
-    cy.contains('.project-card', 'Sample project')
+    cy.contains('.project-card', 'Sample Project')
       .should('be.visible')
       .find('.run-button')
       .click()
 
-    cy.contains('.project-card', 'Sample project')
+    cy.contains('.project-card', 'Sample Project')
       .find('.run-button').should('be.disabled')
-    cy.contains('.project-card', 'Sample project')
+    cy.contains('.project-card', 'Sample Project')
       .find('.delete-button').should('be.disabled')
-    cy.contains('.project-card', 'Sample project')
+    cy.contains('.project-card', 'Sample Project')
       .find('.edit-button').should('be.disabled')
 
     cy.contains(
@@ -122,13 +132,13 @@ describe('El Genio', () => {
     // Create a sample test suite via an API call to save time
     cy.request('GET', '/api/projects')
       .then(response => {
-        const sampleProject = response.body.find(project => project.name === 'Sample project');
+        const sampleProject = response.body.find(project => project.name === 'Sample Project');
         cy.createSampleTestSuiteForProject(sampleProject.id);
       });
 
     // Visit the app to see the newly created test suite
     cy.visit('/')
-    cy.contains('.project-card', 'Sample project')
+    cy.contains('.project-card', 'Sample Project')
       .should('be.visible')
       .find('.view-tests-button')
       .click()
@@ -212,13 +222,13 @@ describe('El Genio', () => {
     // Create a sample test suite via an API call to save time
     cy.request('GET', '/api/projects')
       .then(response => {
-        const sampleProject = response.body.find(project => project.name === 'Sample project');
+        const sampleProject = response.body.find(project => project.name === 'Sample Project');
         cy.createSampleTestSuiteForProject(sampleProject.id);
       });
 
     // Visit the app to see the newly created test suite
     cy.visit('/')
-    cy.contains('.project-card', 'Sample project')
+    cy.contains('.project-card', 'Sample Project')
       .should('be.visible')
       .find('.view-tests-button')
       .click()
@@ -237,25 +247,25 @@ describe('El Genio', () => {
     cy.contains('.test-suite-card', 'walmyr.dev').should('not.exist')
   })
 
-  it('runs and fails a just created test suite', () => {
+  it('runs and fails a just created test suite via the projects list', () => {
     cy.request('GET', '/api/projects')
       .then(response => {
-        const sampleProject = response.body.find(project => project.name === 'Sample project');
+        const sampleProject = response.body.find(project => project.name === 'Sample Project');
         cy.createSampleTestSuiteThatFailsForProject(sampleProject.id)
       });
 
     cy.visit('/')
 
-    cy.contains('.project-card', 'Sample project')
+    cy.contains('.project-card', 'Sample Project')
       .should('be.visible')
       .find('.run-button')
       .click()
 
-    cy.contains('.project-card', 'Sample project')
+    cy.contains('.project-card', 'Sample Project')
       .find('.run-button').should('be.disabled')
-    cy.contains('.project-card', 'Sample project')
+    cy.contains('.project-card', 'Sample Project')
       .find('.delete-button').should('be.disabled')
-    cy.contains('.project-card', 'Sample project')
+    cy.contains('.project-card', 'Sample Project')
       .find('.edit-button').should('be.disabled')
 
     cy.contains(
@@ -278,25 +288,25 @@ describe('El Genio', () => {
       .and('have.attr', 'href', 'http://localhost:3003/cypress/screenshots/download')
   })
 
-  it('creates and runs a test suite with lots of test cases', () => {
+  it('creates and runs a test suite with lots of test cases via the projects list', () => {
     cy.request('GET', '/api/projects')
       .then(response => {
-        const sampleProject = response.body.find(project => project.name === 'Sample project');
+        const sampleProject = response.body.find(project => project.name === 'Sample Project');
         cy.createSampleTestSuiteWithManyTestCasesForProject(sampleProject.id)
       });
 
     cy.visit('/')
 
-    cy.contains('.project-card', 'Sample project')
+    cy.contains('.project-card', 'Sample Project')
       .should('be.visible')
       .find('.run-button')
       .click()
 
-    cy.contains('.project-card', 'Sample project')
+    cy.contains('.project-card', 'Sample Project')
       .find('.run-button').should('be.disabled')
-    cy.contains('.project-card', 'Sample project')
+    cy.contains('.project-card', 'Sample Project')
       .find('.delete-button').should('be.disabled')
-    cy.contains('.project-card', 'Sample project')
+    cy.contains('.project-card', 'Sample Project')
       .find('.edit-button').should('be.disabled')
 
     cy.contains(
@@ -310,17 +320,17 @@ describe('El Genio', () => {
     ).should('be.visible')
   })
 
-  it('runs all tests', () => {
+  it('runs all tests from the test suites view', () => {
     Cypress._.times(3, () => {
       cy.request('GET', '/api/projects')
       .then(response => {
-        const sampleProject = response.body.find(project => project.name === 'Sample project');
+        const sampleProject = response.body.find(project => project.name === 'Sample Project');
         cy.createSampleTestSuiteForProject(sampleProject.id);
       });
     })
 
     cy.visit('/')
-    cy.contains('.project-card', 'Sample project')
+    cy.contains('.project-card', 'Sample Project')
       .should('be.visible')
       .find('.view-tests-button')
       .click()
