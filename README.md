@@ -68,7 +68,7 @@ To build and run the server container:
 
 Run `npm run client` to start the client app.
 
-After the app is started you should be able to access it locally at `http://localhost:5173/`.
+After the app is started, you should be able to access it locally at `http://localhost:5173/`.
 
 ### Tests
 
