@@ -33,11 +33,11 @@ const startServer = async () => {
   try {
     // Create database if it doesn't exist
     await createDbIfNotExists();
-    
+
     // Sync database models
     await sequelize.sync();
     console.log('Database synchronized successfully');
-    
+
     app.listen(PORT, async () => {
       console.log(`Server running on port ${PORT}`);
 

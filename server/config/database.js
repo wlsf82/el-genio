@@ -44,7 +44,7 @@ const createDbIfNotExists = async () => {
     const result = await pool.query(`
       SELECT 1 FROM pg_database WHERE datname='${dbName}'
     `);
-    
+
     // Create database if it doesn't exist
     if (result.rowCount === 0) {
       console.log(`Database ${dbName} does not exist, creating it now...`);
@@ -53,7 +53,7 @@ const createDbIfNotExists = async () => {
     } else {
       console.log(`Database ${dbName} already exists`);
     }
-    
+
     // Close the pool
     await pool.end();
   } catch (err) {

@@ -50,7 +50,7 @@ const runProjectTestSuites = async (req, res) => {
 
     // Create a spec pattern for all test suites in this project
     const testSuiteIds = testSuites.map(suite => suite.id);
-    const specPattern = testSuiteIds.map(id => 
+    const specPattern = testSuiteIds.map(id =>
       path.join(__dirname, '..', 'cypress', 'e2e', `*_${id}.cy.js`)
     );
 

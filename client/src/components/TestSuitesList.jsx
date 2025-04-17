@@ -40,7 +40,7 @@ function TestSuitesList({ testSuites: propTestSuites, resetEditingSuite, forceLi
 
   const fetchTestSuites = async () => {
     if (!projectId) return;
-    
+
     setIsLoading(true);
     setError(null);
 
@@ -115,7 +115,7 @@ function TestSuitesList({ testSuites: propTestSuites, resetEditingSuite, forceLi
 
   const runAllTests = async () => {
     if (!projectId) return;
-    
+
     setIsRunningAll(true);
     setIsAnyTestRunning(true);
     setError(null);
