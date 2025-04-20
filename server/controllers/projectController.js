@@ -81,12 +81,23 @@ const updateProject = async (req, res) => {
 // Delete a project
 const deleteProject = async (req, res) => {
   try {
-    const project = await Project.findByPk(req.params.id);
+    const project = await Project.findByPk(req.params.id, {
+      include: [TestSuite]
+    });
 
     if (!project) {
       return res.status(404).json({ message: 'Project not found' });
     }
 
+    // First, delete all associated test suites individually
+    // This ensures the beforeDestroy hooks are triggered
+    if (project.TestSuites && project.TestSuites.length > 0) {
+      for (const testSuite of project.TestSuites) {
+        await testSuite.destroy();
+      }
+    }
+
+    // Then delete the project itself
     await project.destroy();
     res.status(204).end();
   } catch (error) {
