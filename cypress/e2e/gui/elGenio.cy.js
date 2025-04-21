@@ -1,5 +1,5 @@
-const sampleTestSuiteJSFile = require('../fixtures/sampleTestSuite.js')
-const updatedSampleTestSuiteJSFile = require('../fixtures/updatedTestSuite.js')
+const sampleTestSuiteJSFile = require('../../fixtures/sampleTestSuite.js')
+const updatedSampleTestSuiteJSFile = require('../../fixtures/updatedTestSuite.js')
 
 describe('El Genio', () => {
   beforeEach(() => {

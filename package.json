@@ -10,7 +10,9 @@
     "client": "cd client && npm run dev",
     "install:all": "npm install && cd client && npm install && cd ../server && npm install",
     "cy:open": "cypress open",
-    "test": "cypress run"
+    "test": "npm run test:api && npm run test:gui",
+    "test:api": "cypress run --spec cypress/e2e/api/elGenio.cy.js",
+    "test:gui": "cypress run --spec cypress/e2e/gui/elGenio.cy.js"
   },
   "keywords": [
     "cypress",
