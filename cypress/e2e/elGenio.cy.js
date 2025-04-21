@@ -105,6 +105,7 @@ describe('El Genio', () => {
       });
 
     cy.visit('/')
+    cy.wait('@getProjects')
 
     cy.contains('.project-card', 'Sample Project')
       .should('be.visible')
@@ -138,6 +139,7 @@ describe('El Genio', () => {
 
     // Visit the app to see the newly created test suite
     cy.visit('/')
+    cy.wait('@getProjects')
     cy.contains('.project-card', 'Sample Project')
       .should('be.visible')
       .find('.view-tests-button')
@@ -228,6 +230,7 @@ describe('El Genio', () => {
 
     // Visit the app to see the newly created test suite
     cy.visit('/')
+    cy.wait('@getProjects')
     cy.contains('.project-card', 'Sample Project')
       .should('be.visible')
       .find('.view-tests-button')
@@ -255,6 +258,7 @@ describe('El Genio', () => {
       });
 
     cy.visit('/')
+    cy.wait('@getProjects')
 
     cy.contains('.project-card', 'Sample Project')
       .should('be.visible')
@@ -296,6 +300,7 @@ describe('El Genio', () => {
       });
 
     cy.visit('/')
+    cy.wait('@getProjects')
 
     cy.contains('.project-card', 'Sample Project')
       .should('be.visible')
@@ -330,6 +335,7 @@ describe('El Genio', () => {
     })
 
     cy.visit('/')
+    cy.wait('@getProjects')
     cy.contains('.project-card', 'Sample Project')
       .should('be.visible')
       .find('.view-tests-button')
