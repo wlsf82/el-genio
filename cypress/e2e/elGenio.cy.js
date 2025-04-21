@@ -343,4 +343,64 @@ describe('El Genio', () => {
       { timeout: 60000 }
     ).should('be.visible')
   })
+
+  it('deletes all test suites when deleting the project', () => {
+    Cypress._.times(3, () => {
+      cy.request('GET', '/api/projects')
+      .then(response => {
+        const sampleProject = response.body.find(project => project.name === 'Sample Project');
+        cy.createSampleTestSuiteForProject(sampleProject.id);
+      });
+    })
+
+    cy.visit('/')
+    cy.wait('@getProjects')
+
+    cy.exec('ls server/cypress/e2e/')
+      .its('stdout')
+      .should('contain', 'walmyr.dev')
+
+    cy.contains('.project-card', 'Sample Project')
+      .should('be.visible')
+      .find('.delete-button')
+      .click()
+
+    cy.exec('ls server/cypress/e2e/')
+      .its('stdout')
+      .should('not.contain', 'walmyr.dev')
+  })
+
+  it('deletes the test suite from the test suites view', () => {
+    cy.request('GET', '/api/projects')
+      .then(response => {
+        const sampleProject = response.body.find(project => project.name === 'Sample Project');
+        cy.createSampleTestSuiteForProject(sampleProject.id);
+      });
+
+    cy.visit('/')
+    cy.wait('@getProjects')
+
+    cy.contains('.project-card', 'Sample Project')
+      .should('be.visible')
+      .find('.view-tests-button')
+      .click()
+
+    cy.exec('ls server/cypress/e2e/')
+      .its('stdout')
+      .should('contain', 'walmyr.dev')
+
+    cy.contains('.test-suite-card', 'walmyr.dev')
+      .should('be.visible')
+      .find('.delete-button')
+      .click()
+
+    cy.contains(
+      '.no-test-suites',
+      'No test suites created yet in this project.'
+    ).should('be.visible')
+
+    cy.exec('ls server/cypress/e2e/')
+      .its('stdout')
+      .should('not.contain', 'walmyr.dev')
+  })
 })
