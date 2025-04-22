@@ -7,6 +7,10 @@ describe('El Genio', () => {
     cy.createSampleProject()
     cy.intercept('GET', '/api/projects').as('getProjects')
 
+    cy.window().then((win) => {
+      win.localStorage.setItem('elGenioOnboardingComplete', 'true');
+    });
+
     cy.visit('/')
     cy.wait('@getProjects')
       .its('response.statusCode')

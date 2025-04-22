@@ -1,10 +1,11 @@
-import { useState } from 'react';
-import { Home, Eye, PlusCircle } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import axios from 'axios';
+import { Home, PlusCircle, Eye } from 'lucide-react';
+import './App.css';
+import ProjectsList from './components/ProjectsList';
 import TestSuiteForm from './components/TestSuiteForm';
 import TestSuitesList from './components/TestSuitesList';
-import ProjectsList from './components/ProjectsList';
-import './App.css';
-import axios from 'axios';
+import Onboarding from './components/Onboarding';
 
 function App() {
   const [testSuites, setTestSuites] = useState([]);
@@ -12,6 +13,19 @@ function App() {
   const [editingSuite, setEditingSuite] = useState(null);
   const [forceListView, setForceListView] = useState(false);
   const [selectedProject, setSelectedProject] = useState(null);
+  const [showOnboarding, setShowOnboarding] = useState(false);
+
+  useEffect(() => {
+    const onboardingComplete = localStorage.getItem('elGenioOnboardingComplete') === 'true';
+
+    if (!onboardingComplete) {
+      setShowOnboarding(true);
+    }
+  }, []);
+
+  const handleOnboardingComplete = () => {
+    setShowOnboarding(false);
+  };
 
   const handleTestSuiteCreated = async () => {
     try {
@@ -78,6 +92,8 @@ function App() {
 
   return (
     <div className="app-container">
+      {showOnboarding && <Onboarding onComplete={handleOnboardingComplete} />}
+
       <header>
         <div className="header-left">
           <h1>El Genio 🧞‍♂️</h1>
