@@ -216,7 +216,40 @@ describe('El Genio - Onboarding', () => {
     cy.get('@onboarding').should('be.visible')
   })
 
+  it('reappears the onboarding modal after closing it and reloading the page', () => {
+    cy.get('.onboarding-container')
+      .as('onboarding')
+      .find('h2:contains(Welcome to El Genio 🧞‍♂️)')
+      .should('be.visible')
+    cy.get('@onboarding')
+      .find('.close-button')
+      .click()
+
+    cy.get('@onboarding').should('not.exist')
+
+    cy.reload()
+
+    cy.get('@onboarding').should('be.visible')
+  })
+
   it("does not reappear the onboarding modal after a page reload when checking the don't show again checkbox", () => {
+    cy.get('.onboarding-container')
+      .as('onboarding')
+      .should('be.visible')
+
+    cy.get('#dontShowAgain').check()
+    cy.get('@onboarding')
+      .find('.close-button')
+      .click()
+
+    cy.get('@onboarding').should('not.exist')
+
+    cy.reload()
+
+    cy.get('@onboarding').should('not.exist')
+  })
+
+  it("does not reappear the onboarding modal after a page reload when checking the don't show again checkbox and closing it", () => {
     cy.get('.onboarding-container')
       .as('onboarding')
       .should('be.visible')
