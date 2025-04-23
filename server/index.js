@@ -44,10 +44,6 @@ const startServer = async () => {
       // Create cypress/e2e directory if it doesn't exist
       const cypressE2ePath = path.join(__dirname, 'cypress', 'e2e');
       await fs.mkdir(cypressE2ePath, { recursive: true });
-
-      // Load existing test suites from disk
-      const { loadExistingTestSuites } = require('./controllers/testSuiteController');
-      await loadExistingTestSuites();
     });
   } catch (error) {
     console.error('Unable to start server:', error);

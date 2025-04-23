@@ -1,7 +1,7 @@
 const path = require('path');
 const fs = require('fs').promises;
 const { TestSuite, Project } = require('../models');
-const { generateCypressTestFile, parseCypressTestFile } = require('../utils');
+const { generateCypressTestFile } = require('../utils');
 
 // Get all test suites for a project
 const getAllTestSuites = async (req, res) => {
@@ -141,61 +141,6 @@ const deleteTestSuite = async (req, res) => {
   }
 };
 
-// Load existing test suites from Cypress files
-const loadExistingTestSuites = async () => {
-  try {
-    const cypressE2ePath = path.join(__dirname, '..', 'cypress', 'e2e');
-    const files = await fs.readdir(cypressE2ePath);
-    const testFiles = files.filter(file => file.endsWith('.cy.js'));
-
-    // Create a default project for existing test suites if it doesn't exist
-    let defaultProject = await Project.findOne({ where: { name: 'Default Project' } });
-
-    if (!defaultProject) {
-      defaultProject = await Project.create({
-        name: 'Default Project',
-        description: 'Default project for existing test suites'
-      });
-    }
-
-    for (const file of testFiles) {
-      // Extract ID from filename (assumes format name_id.cy.js)
-      const idMatch = file.match(/_([0-9a-f-]+)\.cy\.js$/);
-      if (idMatch && idMatch[1]) {
-        const id = idMatch[1];
-
-        // Check if this test suite already exists in the database
-        const existingTestSuite = await TestSuite.findByPk(id);
-        if (!existingTestSuite) {
-          const fileContent = await fs.readFile(path.join(cypressE2ePath, file), 'utf8');
-
-          // Extract test suite name from comment or describe block
-          let name = 'Unknown Test Suite';
-          const nameMatch = fileContent.match(/Test Suite: (.*?)$|describe\('(.*?)'/m);
-          if (nameMatch) {
-            name = nameMatch[1] || nameMatch[2];
-          }
-
-          // Parse test cases from file content
-          const testCases = await parseCypressTestFile(fileContent);
-
-          // Create test suite object with parsed test cases
-          await TestSuite.create({
-            id,
-            name,
-            testCases,
-            projectId: defaultProject.id
-          });
-
-          console.log(`Loaded existing test suite: ${name} (${id}) with ${testCases.length} test cases`);
-        }
-      }
-    }
-  } catch (error) {
-    console.error('Error loading existing test suites:', error);
-  }
-};
-
 // Download a specific test file
 const downloadTestFile = async (req, res) => {
   try {
@@ -238,6 +183,5 @@ module.exports = {
   createTestSuite,
   updateTestSuite,
   deleteTestSuite,
-  loadExistingTestSuites,
   downloadTestFile
 };
