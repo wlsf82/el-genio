@@ -3,6 +3,7 @@ const path = require('path');
 const fs = require('fs').promises;
 const cors = require('cors');
 const { sequelize, createDbIfNotExists } = require('./config/database');
+const runMigration = require('./migrations/add_before_each_steps');
 
 // Import routes
 const projectRoutes = require('./routes/projectRoutes');
@@ -50,4 +51,17 @@ const startServer = async () => {
   }
 };
 
-startServer();
+const start = async () => {
+  try {
+    // Run migrations
+    await runMigration();
+
+    // Start the application
+    await startServer();
+  } catch (error) {
+    console.error('Failed to start application:', error);
+    process.exit(1);
+  }
+};
+
+start();

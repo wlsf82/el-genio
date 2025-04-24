@@ -6,6 +6,7 @@
   "scripts": {
     "start": "node index.js",
     "dev": "nodemon index.js",
+    "migrate": "node migrations/add_before_each_steps.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
