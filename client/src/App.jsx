@@ -108,24 +108,28 @@ function App() {
         </div>
         {selectedProject && (
           <nav>
-            <button
-              className={activeView === 'create' ? 'active' : ''}
-              onClick={() => {
-                resetEditingSuite();
-                setActiveView('create');
-              }}
-            >
-              <PlusCircle size={16} /> Create Test Suite
-            </button>
-            <button
-              className={activeView === 'list' ? 'active' : ''}
-              onClick={() => {
-                setForceListView(true);
-                setActiveView('list');
-              }}
-            >
-              <Eye size={16} /> View Test Suites
-            </button>
+            {activeView === 'list' && (
+              <button
+                className={activeView === 'create' ? 'active' : ''}
+                onClick={() => {
+                  resetEditingSuite();
+                  setActiveView('create');
+                }}
+              >
+                <PlusCircle size={16} /> Create Test Suite
+              </button>
+            )}
+            {activeView === 'create' && (
+              <button
+                className={activeView === 'list' ? 'active' : ''}
+                onClick={() => {
+                  setForceListView(true);
+                  setActiveView('list');
+                }}
+              >
+                <Eye size={16} /> View Test Suites
+              </button>
+            )}
           </nav>
         )}
       </header>
