@@ -41,6 +41,28 @@ describe('El Genio', () => {
     cy.contains('.project-card', 'TAT sample project').should('be.visible')
   })
 
+  it('edits a project', () => {
+    cy.visit('/')
+    cy.wait('@getProjects')
+
+    cy.contains('button', 'Edit Project').click()
+
+    cy.get('#projectDescription')
+      .clear()
+      .type('Update sample project description')
+
+    cy.contains('button', 'Save Project').click()
+
+    cy.contains('.project-card', 'Sample Project')
+      .as('editedProject')
+      .find('.toggle-button')
+      .click()
+
+    cy.get('@editedProject')
+      .should('contain', 'Update sample project description')
+      .and('be.visible')
+  })
+
   it('createa a new test suite with one test with a few steps', () => {
     // Intercept test suite creation and give it an alias
     cy.intercept('POST', '/api/test-suites').as('createTestSuite')
