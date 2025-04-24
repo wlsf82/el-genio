@@ -63,6 +63,16 @@ describe('El Genio', () => {
       .and('be.visible')
   })
 
+  it('deletes a project', () => {
+    cy.visit('/')
+    cy.wait('@getProjects')
+
+    cy.contains('button', 'Delete Project').click()
+
+    cy.contains('.project-card', 'Sample Project')
+      .should('not.exist')
+  })
+
   it('createa a new test suite with one test with a few steps', () => {
     // Intercept test suite creation and give it an alias
     cy.intercept('POST', '/api/test-suites').as('createTestSuite')
