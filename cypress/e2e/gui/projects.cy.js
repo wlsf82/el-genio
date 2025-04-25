@@ -4,11 +4,7 @@ describe('CRUD Project', () => {
 
     cy.intercept('GET', '/api/projects').as('getProjects')
 
-    cy.window().then((win) => {
-      win.localStorage.setItem('elGenioOnboardingComplete', 'true');
-    });
-
-    cy.visit('/')
+    cy.sessionLoginSkippingOnboarding()
     cy.wait('@getProjects')
   })
 

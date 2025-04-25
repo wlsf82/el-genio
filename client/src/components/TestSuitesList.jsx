@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
-import axios from 'axios';
-import './TestSuitesList.css';
 import { Play, Trash, X, ChevronDown, ChevronUp, Edit, Download } from 'lucide-react';
+import './TestSuitesList.css';
 import TestSuiteForm from './TestSuiteForm';
+import api from '../services/api'; // Replace axios with api
 
 function TestSuitesList({ testSuites: propTestSuites, resetEditingSuite, forceListView, projectId }) {
   const [testSuites, setTestSuites] = useState(propTestSuites || []);
@@ -45,7 +45,7 @@ function TestSuitesList({ testSuites: propTestSuites, resetEditingSuite, forceLi
     setError(null);
 
     try {
-      const response = await axios.get(`/api/test-suites/project/${projectId}`);
+      const response = await api.get(`/test-suites/project/${projectId}`);
       setTestSuites(response.data);
     } catch (err) {
       setError('Failed to fetch test suites: ' + (err.response?.data?.message || err.message));
@@ -75,7 +75,7 @@ function TestSuitesList({ testSuites: propTestSuites, resetEditingSuite, forceLi
 
     try {
       const selectedTestTitles = selectedTests[testSuiteId] || [];
-      const response = await axios.post(`/api/test-suites/${testSuiteId}/run`, {
+      const response = await api.post(`/test-suites/${testSuiteId}/run`, {
         grepTags: selectedTestTitles,
       });
       setTestResults({
@@ -99,7 +99,7 @@ function TestSuitesList({ testSuites: propTestSuites, resetEditingSuite, forceLi
     setError(null);
 
     try {
-      await axios.delete(`/api/test-suites/${testSuiteId}`);
+      await api.delete(`/test-suites/${testSuiteId}`);
       setTestSuites(testSuites.filter((suite) => suite.id !== testSuiteId));
     } catch (err) {
       setError('Failed to delete test suite: ' + (err.response?.data?.message || err.message));
@@ -122,7 +122,7 @@ function TestSuitesList({ testSuites: propTestSuites, resetEditingSuite, forceLi
     setAllTestsResults(null);
 
     try {
-      const response = await axios.post(`/api/test-run/project/${projectId}`);
+      const response = await api.post(`/test-run/project/${projectId}`);
       setAllTestsResults(response.data);
     } catch (err) {
       setError('Failed to run all tests: ' + (err.response?.data?.message || err.message));

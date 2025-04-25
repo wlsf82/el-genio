@@ -7,11 +7,7 @@ describe('CRUD Test Suites', () => {
     cy.createSampleProject()
     cy.intercept('GET', '/api/projects').as('getProjects')
 
-    cy.window().then((win) => {
-      win.localStorage.setItem('elGenioOnboardingComplete', 'true');
-    });
-
-    cy.visit('/')
+    cy.sessionLoginSkippingOnboarding()
     cy.wait('@getProjects')
       .its('response.statusCode')
       .should('be.oneOf', [200, 304])
@@ -90,11 +86,18 @@ describe('CRUD Test Suites', () => {
     cy.intercept('PUT', '/api/test-suites/*').as('updateTestSuite')
 
     // Create a sample test suite via an API call to save time
-    cy.request('GET', '/api/projects')
-      .then(response => {
-        const sampleProject = response.body.find(project => project.name === 'Sample Project');
-        cy.createSampleTestSuiteForProject(sampleProject.id);
-      });
+    cy.getAuthToken().then(token => {
+      cy.request({
+        method: 'GET',
+        url: '/api/projects',
+        headers: {
+          'Authorization': token
+        }
+      }).then(response => {
+        const sampleProject = response.body.find(project => project.name === 'Sample Project')
+        cy.createSampleTestSuiteForProject(sampleProject.id)
+      })
+    })
 
     // Visit the app to see the newly created test suite
     cy.visit('/')
@@ -180,11 +183,18 @@ describe('CRUD Test Suites', () => {
     // Intercept test suite deletion and give it an alias
     cy.intercept('DELETE', '/api/test-suites/*').as('deleteTestSuite')
 
-    cy.request('GET', '/api/projects')
-      .then(response => {
-        const sampleProject = response.body.find(project => project.name === 'Sample Project');
-        cy.createSampleTestSuiteForProject(sampleProject.id);
-      });
+    cy.getAuthToken().then(token => {
+      cy.request({
+        method: 'GET',
+        url: '/api/projects',
+        headers: {
+          'Authorization': token
+        }
+      }).then(response => {
+        const sampleProject = response.body.find(project => project.name === 'Sample Project')
+        cy.createSampleTestSuiteForProject(sampleProject.id)
+      })
+    })
 
     cy.visit('/')
     cy.wait('@getProjects')
@@ -222,11 +232,18 @@ describe('CRUD Test Suites', () => {
 
   it('deletes all test suites when deleting the project', () => {
     Cypress._.times(3, () => {
-      cy.request('GET', '/api/projects')
-      .then(response => {
-        const sampleProject = response.body.find(project => project.name === 'Sample Project');
-        cy.createSampleTestSuiteForProject(sampleProject.id);
-      });
+      cy.getAuthToken().then(token => {
+        cy.request({
+          method: 'GET',
+          url: '/api/projects',
+          headers: {
+            'Authorization': token
+          }
+        }).then(response => {
+          const sampleProject = response.body.find(project => project.name === 'Sample Project')
+          cy.createSampleTestSuiteForProject(sampleProject.id)
+        })
+      })
     })
 
     cy.visit('/')

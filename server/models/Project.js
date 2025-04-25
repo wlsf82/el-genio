@@ -25,6 +25,10 @@ const Project = sequelize.define('Project', {
     type: DataTypes.DATE,
     allowNull: false,
     defaultValue: DataTypes.NOW
+  },
+  userId: {
+    type: DataTypes.UUID,
+    allowNull: true  // Allow null for existing projects
   }
 });
 

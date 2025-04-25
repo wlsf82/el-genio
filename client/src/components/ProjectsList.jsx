@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
-import axios from 'axios';
 import { Play, Trash, ChevronDown, ChevronUp, Edit, Plus, X, Eye } from 'lucide-react';
 import './ProjectsList.css';
 import ProjectForm from './ProjectForm';
+import api from '../services/api'; // Replace axios with api
 
 function ProjectsList({ onSelectProject }) {
   const [projects, setProjects] = useState([]);
@@ -24,7 +24,7 @@ function ProjectsList({ onSelectProject }) {
     setError(null);
 
     try {
-      const response = await axios.get('/api/projects');
+      const response = await api.get('/projects');
       setProjects(response.data);
     } catch (err) {
       setError('Failed to fetch projects: ' + (err.response?.data?.message || err.message));
@@ -54,7 +54,7 @@ function ProjectsList({ onSelectProject }) {
     setError(null);
 
     try {
-      await axios.delete(`/api/projects/${projectId}`);
+      await api.delete(`/projects/${projectId}`);
       setProjects(projects.filter((project) => project.id !== projectId));
     } catch (err) {
       setError('Failed to delete project: ' + (err.response?.data?.message || err.message));
@@ -89,7 +89,7 @@ function ProjectsList({ onSelectProject }) {
     setError(null);
 
     try {
-      const response = await axios.post(`/api/test-run/project/${projectId}`);
+      const response = await api.post(`/test-run/project/${projectId}`);
       setProjectResults({
         ...projectResults,
         [projectId]: response.data,

@@ -1,6 +1,6 @@
 describe('El Genio - Onboarding', () => {
   beforeEach(() => {
-    cy.visit('/')
+    cy.sessionLogin()
   })
 
   it('shows the onboarding modal in its first step', () => {

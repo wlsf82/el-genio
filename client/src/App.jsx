@@ -1,13 +1,17 @@
-import { useState, useEffect } from 'react';
-import axios from 'axios';
-import { Home, PlusCircle, Eye } from 'lucide-react';
+import { useEffect, useState } from 'react';
+import Register from './components/Register';
+import Login from './components/Login';
+import { Home, PlusCircle, Eye, LogOut } from 'lucide-react';
 import './App.css';
 import ProjectsList from './components/ProjectsList';
 import TestSuiteForm from './components/TestSuiteForm';
 import TestSuitesList from './components/TestSuitesList';
 import Onboarding from './components/Onboarding';
+import api from './services/api'; // Replace axios with api
 
 function App() {
+  const [user, setUser] = useState(localStorage.getItem('token') ? 'user' : null);
+  const [showRegister, setShowRegister] = useState(false);
   const [testSuites, setTestSuites] = useState([]);
   const [activeView, setActiveView] = useState('projects');
   const [editingSuite, setEditingSuite] = useState(null);
@@ -30,7 +34,7 @@ function App() {
   const handleTestSuiteCreated = async () => {
     try {
       if (selectedProject) {
-        const response = await axios.get(`/api/test-suites/project/${selectedProject}`);
+        const response = await api.get(`/test-suites/project/${selectedProject}`);
         setTestSuites(response.data);
       }
       setActiveView('list');
@@ -49,7 +53,7 @@ function App() {
 
     if (action === 'view') {
       try {
-        const response = await axios.get(`/api/test-suites/project/${projectId}`);
+        const response = await api.get(`/test-suites/project/${projectId}`);
         setTestSuites(response.data);
         setActiveView('list');
       } catch (error) {
@@ -90,6 +94,31 @@ function App() {
     }
   };
 
+  if (!user) {
+    return showRegister
+      ? (
+        <>
+          <Register onRegistered={() => setShowRegister(false)} />
+          <div className="auth-toggle">
+            <button onClick={() => setShowRegister(false)}>Already have an account? Log in</button>
+          </div>
+        </>
+      ) : (
+        <>
+          <Login onLoggedIn={() => setUser('user')} />
+          <div className="auth-toggle">
+            <button onClick={() => setShowRegister(true)}>Don't have an account? Register</button>
+          </div>
+        </>
+      );
+  }
+
+  // Add logout handler function
+  const handleLogout = () => {
+    localStorage.removeItem('token');
+    setUser(null);
+  };
+
   return (
     <div className="app-container">
       {showOnboarding && <Onboarding onComplete={handleOnboardingComplete} />}
@@ -106,6 +135,18 @@ function App() {
             </button>
           )}
         </div>
+
+        <div className="header-right">
+          {user && (
+            <button
+              className="logout-button"
+              onClick={handleLogout}
+            >
+              <LogOut size={16} /> Logout
+            </button>
+          )}
+        </div>
+
         {selectedProject && (
           <nav>
             {activeView === 'list' && (

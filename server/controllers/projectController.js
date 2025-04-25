@@ -4,6 +4,7 @@ const { Project, TestSuite } = require('../models');
 const getAllProjects = async (req, res) => {
   try {
     const projects = await Project.findAll({
+      where: { userId: req.user.id },
       order: [['createdAt', 'DESC']]
     });
     res.json(projects);
@@ -42,7 +43,8 @@ const createProject = async (req, res) => {
 
     const project = await Project.create({
       name,
-      description
+      description,
+      userId: req.user.id
     });
 
     res.status(201).json(project);

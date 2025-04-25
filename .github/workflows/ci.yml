@@ -3,7 +3,7 @@ name: CI
 on: [push]
 
 jobs:
-  cypress-tests:
+  cypress-api-tests:
     runs-on: ubuntu-22.04
     steps:
       - name: Checkout
@@ -32,12 +32,66 @@ jobs:
         run: |
           cd server
           docker run -d -p 3003:3003 --network el-genio-network -v ${{ github.workspace }}/server/cypress/e2e:/usr/src/server/cypress/e2e --name el-genio-server el-genio-server
+          sleep 5
+          # Run the reset script
+          docker exec el-genio-server node scripts/resetRootUser.js
 
       - name: Run Cypress tests 🧪
         uses: cypress-io/github-action@v6
         with:
           start: npm run client
-          command: npm test
+          command: npm run test:api
+        env:
+          CYPRESS_ROOT_USER: ${{ secrets.CYPRESS_ROOT_USER }}
+          CYPRESS_ROOT_PASSWORD: ${{ secrets.CYPRESS_ROOT_PASSWORD }}
+
+      - name: Stop and clean up Docker containers
+        if: always()
+        run: |
+          docker stop el-genio-server postgres || true
+          docker rm el-genio-server postgres || true
+          docker network rm el-genio-network || true
+  cypress-gui-tests:
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Create Docker network
+        run: docker network create el-genio-network
+
+      - name: Install client dependencies
+        run: cd client && npm install
+
+      - name: Build Postgres Docker image
+        run: |
+          cd postgres
+          docker build -t el-genio-db .
+
+      - name: Run Postgres container
+        run: docker run -d -p 5432:5432 --network el-genio-network --name postgres el-genio-db
+
+      - name: Build server Docker image
+        run: |
+          cd server
+          docker build -t el-genio-server .
+
+      - name: Run server container
+        run: |
+          cd server
+          docker run -d -p 3003:3003 --network el-genio-network -v ${{ github.workspace }}/server/cypress/e2e:/usr/src/server/cypress/e2e --name el-genio-server el-genio-server
+          sleep 5
+          # Run the reset script
+          docker exec el-genio-server node scripts/resetRootUser.js
+
+      - name: Run Cypress tests 🧪
+        uses: cypress-io/github-action@v6
+        with:
+          start: npm run client
+          command: npm run test:gui
+        env:
+          CYPRESS_ROOT_USER: ${{ secrets.CYPRESS_ROOT_USER }}
+          CYPRESS_ROOT_PASSWORD: ${{ secrets.CYPRESS_ROOT_PASSWORD }}
 
       - name: Save screenshots in case of failures
         uses: actions/upload-artifact@v4

@@ -66,25 +66,51 @@ main {
 .header-left {
   display: flex;
   align-items: center;
-  gap: 15px;
+  gap: 1rem;
+}
+
+.header-right {
+  margin-left: auto;
+  margin-right: 1rem;
+}
+
+.logout-button {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  background-color: #f8f9fa;
+  color: #6c757d;
+  border: 1px solid #dee2e6;
+  border-radius: 6px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.logout-button:hover {
+  background-color: #e9ecef;
+  color: #495057;
+  border-color: #ced4da;
 }
 
 .back-button {
   display: flex;
   align-items: center;
-  gap: 8px;
-  padding: 8px 14px;
-  background-color: #f0f8ff;
-  color: #2c73d2;
-  border: 1px solid #c6e0ff;
-  border-radius: 4px;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  background-color: #f0f4f8;
+  color: #4a5568;
+  border: 1px solid #e2e8f0;
+  border-radius: 6px;
+  font-size: 0.875rem;
+  font-weight: 500;
   cursor: pointer;
-  font-size: 14px;
-  transition: all 0.2s ease;
+  transition: all 0.2s;
 }
 
 .back-button:hover {
-  background-color: #e6f0ff;
-  color: #1a5cb3;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  background-color: #e2e8f0;
+  color: #2d3748;
+  transform: translateY(-1px);
 }

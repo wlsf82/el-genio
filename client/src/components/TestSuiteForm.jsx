@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import TestCaseForm from './TestCaseForm';
-import axios from 'axios';
 import './TestSuiteForm.css';
+import api from '../services/api'; // Replace axios with api
 
 function TestSuiteForm({ onTestSuiteCreated, initialData = null, isEditing = false, projectId }) {
   const [suiteName, setSuiteName] = useState(initialData?.name || '');
@@ -54,10 +54,10 @@ function TestSuiteForm({ onTestSuiteCreated, initialData = null, isEditing = fal
       };
 
       if (isEditing) {
-        const response = await axios.put(`/api/test-suites/${initialData.id}`, testSuite);
+        const response = await api.put(`/test-suites/${initialData.id}`, testSuite);
         onTestSuiteCreated(response.data);
       } else {
-        const response = await axios.post('/api/test-suites', testSuite);
+        const response = await api.post('/test-suites', testSuite);
         onTestSuiteCreated({
           id: response.data.id,
           ...testSuite

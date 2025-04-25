@@ -30,6 +30,13 @@ ENV DB_PASSWORD=postgres
 ENV DB_HOST=postgres
 ENV DB_PORT=5432
 
+# Set root credentials
+ENV ROOT_USER=root
+ENV ROOT_PASSWORD=root
+
+# Set JWT secret for the authentication feature
+ENV JWT_SECRET=3aeba9f8ed3441a0099dd5980f4fd27f012deb85795eb33ee174748c90c06996
+
 # Your app binds to port 3003, so use the EXPOSE instruction to have it mapped by the docker daemon
 EXPOSE 3003
 

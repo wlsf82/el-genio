@@ -4,17 +4,22 @@ describe('Run Test Suites', () => {
     cy.createSampleProject()
     cy.intercept('GET', '/api/projects').as('getProjects')
 
-    cy.window().then((win) => {
-      win.localStorage.setItem('elGenioOnboardingComplete', 'true');
-    });
+    cy.sessionLoginSkippingOnboarding()
   })
 
   it('runs a just created test suite via the projects list', () => {
-    cy.request('GET', '/api/projects')
-      .then(response => {
-        const sampleProject = response.body.find(project => project.name === 'Sample Project');
-        cy.createSampleTestSuiteForProject(sampleProject.id);
-      });
+    cy.getAuthToken().then(token => {
+      cy.request({
+        method: 'GET',
+        url: '/api/projects',
+        headers: {
+          'Authorization': token
+        }
+      }).then(response => {
+        const sampleProject = response.body.find(project => project.name === 'Sample Project')
+        cy.createSampleTestSuiteForProject(sampleProject.id)
+      })
+    })
 
     cy.visit('/')
     cy.wait('@getProjects')
@@ -39,11 +44,18 @@ describe('Run Test Suites', () => {
   })
 
   it('runs and fails a just created test suite via the projects list', () => {
-    cy.request('GET', '/api/projects')
-      .then(response => {
-        const sampleProject = response.body.find(project => project.name === 'Sample Project');
+    cy.getAuthToken().then(token => {
+      cy.request({
+        method: 'GET',
+        url: '/api/projects',
+        headers: {
+          'Authorization': token
+        }
+      }).then(response => {
+        const sampleProject = response.body.find(project => project.name === 'Sample Project')
         cy.createSampleTestSuiteThatFailsForProject(sampleProject.id)
-      });
+      })
+    })
 
     cy.visit('/')
     cy.wait('@getProjects')
@@ -82,11 +94,18 @@ describe('Run Test Suites', () => {
 
   it('runs all tests from the test suites view', () => {
     Cypress._.times(3, () => {
-      cy.request('GET', '/api/projects')
-      .then(response => {
-        const sampleProject = response.body.find(project => project.name === 'Sample Project');
-        cy.createSampleTestSuiteForProject(sampleProject.id);
-      });
+      cy.getAuthToken().then(token => {
+        cy.request({
+          method: 'GET',
+          url: '/api/projects',
+          headers: {
+            'Authorization': token
+          }
+        }).then(response => {
+          const sampleProject = response.body.find(project => project.name === 'Sample Project')
+          cy.createSampleTestSuiteForProject(sampleProject.id)
+        })
+      })
     })
 
     cy.visit('/')
@@ -107,11 +126,18 @@ describe('Run Test Suites', () => {
 
 
   it('creates and runs a test suite with lots of test cases via the projects list', () => {
-    cy.request('GET', '/api/projects')
-      .then(response => {
-        const sampleProject = response.body.find(project => project.name === 'Sample Project');
+    cy.getAuthToken().then(token => {
+      cy.request({
+        method: 'GET',
+        url: '/api/projects',
+        headers: {
+          'Authorization': token
+        }
+      }).then(response => {
+        const sampleProject = response.body.find(project => project.name === 'Sample Project')
         cy.createSampleTestSuiteWithManyTestCasesForProject(sampleProject.id)
-      });
+      })
+    })
 
     cy.visit('/')
     cy.wait('@getProjects')

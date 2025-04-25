@@ -1,6 +1,6 @@
 import { useState } from 'react';
-import axios from 'axios';
 import './ProjectForm.css';
+import api from '../services/api'; // Replace axios with api
 
 function ProjectForm({ onProjectCreated, initialData = null, isEditing = false, onCancel }) {
   const [name, setName] = useState(initialData?.name || '');
@@ -21,13 +21,13 @@ function ProjectForm({ onProjectCreated, initialData = null, isEditing = false, 
 
     try {
       if (isEditing) {
-        const response = await axios.put(`/api/projects/${initialData.id}`, {
+        const response = await api.put(`/projects/${initialData.id}`, {
           name,
           description
         });
         onProjectCreated(response.data);
       } else {
-        const response = await axios.post('/api/projects', {
+        const response = await api.post('/projects', {
           name,
           description
         });
