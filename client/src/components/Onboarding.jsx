@@ -45,6 +45,12 @@ function Onboarding({ onComplete }) {
             <li><strong>Actions</strong>: User interactions like clicking buttons or typing text</li>
             <li><strong>Assertions</strong>: Checking that elements exist, are visible, contain specific text, etc.</li>
           </ul>
+          <p>Additionally, test suites can have <strong>Setup Steps</strong> that run before each test case:</p>
+          <ul>
+            <li>These steps establish common preconditions for all test cases in the suite</li>
+            <li>Setup Steps are defined once but executed before each test case automatically</li>
+            <li>They're perfect for repetitive actions like logging in or navigating to a specific page</li>
+          </ul>
         </>
       )
     },
