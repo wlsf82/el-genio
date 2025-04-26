@@ -18,6 +18,11 @@ const TestSuite = sequelize.define('TestSuite', {
     type: DataTypes.JSONB,
     allowNull: false
   },
+  beforeEachSteps: {
+    type: DataTypes.JSONB,
+    allowNull: true,
+    defaultValue: []
+  },
   createdAt: {
     type: DataTypes.DATE,
     allowNull: false,

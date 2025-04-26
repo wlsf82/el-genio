@@ -49,7 +49,7 @@ const getTestSuite = async (req, res) => {
 // Create a test suite
 const createTestSuite = async (req, res) => {
   try {
-    const { name, testCases, projectId } = req.body;
+    const { name, testCases, projectId, beforeEachSteps } = req.body;
 
     if (!name || !testCases || !Array.isArray(testCases) || testCases.length === 0) {
       return res.status(400).json({ message: 'Invalid test suite data' });
@@ -68,7 +68,8 @@ const createTestSuite = async (req, res) => {
     const testSuite = await TestSuite.create({
       name,
       testCases,
-      projectId
+      projectId,
+      beforeEachSteps
     });
 
     // Generate Cypress test file
@@ -85,7 +86,7 @@ const createTestSuite = async (req, res) => {
 const updateTestSuite = async (req, res) => {
   try {
     const { id } = req.params;
-    const { name, testCases } = req.body;
+    const { name, testCases, beforeEachSteps } = req.body;
 
     if (!name || !testCases || !Array.isArray(testCases) || testCases.length === 0) {
       return res.status(400).json({ message: 'Invalid test suite data' });
@@ -99,6 +100,7 @@ const updateTestSuite = async (req, res) => {
     // Update the test suite
     testSuite.name = name;
     testSuite.testCases = testCases;
+    testSuite.beforeEachSteps = beforeEachSteps;
     await testSuite.save();
 
     // Regenerate the Cypress test file

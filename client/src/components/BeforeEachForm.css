@@ -1,0 +1,55 @@
+/* BeforeEachForm styles - based on TestCaseForm.css */
+.before-each-form {
+  background-color: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  padding: 24px;
+  max-width: 800px;
+  margin: 0 auto;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+}
+
+.before-each-form h3 {
+  color: #1a1a1a;
+  font-size: 1.5rem;
+  margin-top: 0;
+  margin-bottom: 10px;
+  font-weight: 600;
+  border-bottom: 2px solid #f0f0f0;
+  padding-bottom: 12px;
+}
+
+.before-each-form h4 {
+  color: #333;
+  font-size: 1.2rem;
+  margin: 20px 0 16px;
+  font-weight: 500;
+}
+
+.info-text {
+  color: #666;
+  font-size: 0.9rem;
+  margin: 0 0 20px 0;
+  padding: 8px;
+  background-color: #f8f9fa;
+  border-left: 3px solid #4a90e2;
+  border-radius: 4px;
+}
+
+.save-before-each-button {
+  background-color: #38a169;
+  color: white;
+  padding: 12px 20px;
+  width: 100%;
+  font-size: 16px;
+  margin-top: 10px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-weight: 500;
+}
+
+.save-before-each-button:hover:not(:disabled) {
+  background-color: #2f855a;
+}

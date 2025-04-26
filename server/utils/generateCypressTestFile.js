@@ -3,7 +3,7 @@ const fs = require('fs').promises;
 
 // Function to generate Cypress test file with filtering capability
 async function generateCypressTestFile(testSuite) {
-  const { id, name, testCases } = testSuite;
+  const { id, name, testCases, beforeEachSteps } = testSuite;
 
   let testFileContent = `
 // Auto-generated Cypress test file
@@ -11,82 +11,25 @@ async function generateCypressTestFile(testSuite) {
 
 describe("${name.replace(/"/g, '\\"')}", () => {`;
 
+  // Add beforeEach block if steps exist
+  if (beforeEachSteps && beforeEachSteps.length > 0) {
+    testFileContent += `\n  beforeEach(() => {`;
+
+    // Fix: Capture the returned value from processStep
+    beforeEachSteps.forEach((step) => {
+      testFileContent = processStep(step, testFileContent);
+    });
+
+    testFileContent += `\n  });\n`;
+  }
+
   testCases.forEach((testCase, index) => {
     testFileContent += `
   it("${testCase.description.replace(/"/g, '\\"')}", () => {`;
 
+    // Fix: Also update here to be consistent
     testCase.steps.forEach((step) => {
-      switch (step.command) {
-        case 'visit':
-          testFileContent += `
-    cy.visit(\`${step.value}\`)`;
-          break;
-        case 'get':
-          testFileContent += `
-    cy.get(\`${step.selector}\`)`;
-          if (step.chainOption === 'first') {
-            testFileContent = testFileContent.trimEnd();
-            testFileContent += `.first()`;
-          } else if (step.chainOption === 'last') {
-            testFileContent = testFileContent.trimEnd();
-            testFileContent += `.last()`;
-          }
-          break;
-        case 'contains':
-          testFileContent += `
-    cy.contains(\`${step.selector}\`, \`${step.value}\`)`;
-          break;
-        case 'click':
-          testFileContent = testFileContent.trimEnd();
-          testFileContent += `.click()`;
-          break;
-        case 'type':
-          testFileContent = testFileContent.trimEnd();
-          testFileContent += `.type(\`${step.value}\`)`;
-          break;
-        case 'check':
-          testFileContent = testFileContent.trimEnd();
-          testFileContent += `.check()`;
-          break;
-        case 'uncheck':
-          testFileContent = testFileContent.trimEnd();
-          testFileContent += `.uncheck()`;
-          break;
-        case 'select':
-          testFileContent = testFileContent.trimEnd();
-          testFileContent += `.select(\`${step.value}\`)`;
-          break;
-        case 'should':
-          if (step.value === 'have.length') {
-            testFileContent = testFileContent.trimEnd();
-            testFileContent += `.should('${step.value}', ${step.lengthValue})`;
-          } else if (step.value === 'contain') {
-            testFileContent = testFileContent.trimEnd();
-            testFileContent += `.should('${step.value}', '${step.containedText}')`;
-          } else {
-            testFileContent = testFileContent.trimEnd();
-            testFileContent += `.should('${step.value}')`;
-          }
-          break;
-        case 'and':
-          if (step.value === 'have.length') {
-            testFileContent = testFileContent.trimEnd();
-            testFileContent += `.and('${step.value}', ${step.lengthValue})`;
-          } else if (step.value === 'contain') {
-            testFileContent = testFileContent.trimEnd();
-            testFileContent += `.and('${step.value}', '${step.containedText}')`;
-          } else {
-            testFileContent = testFileContent.trimEnd();
-            testFileContent += `.and('${step.value}')`;
-          }
-          break;
-        case 'blur':
-          testFileContent = testFileContent.trimEnd();
-          testFileContent += `.blur()`;
-          break;
-        default:
-          console.warn(`Unknown command: ${step.command}`);
-      }
+      testFileContent = processStep(step, testFileContent);
     });
 
     testFileContent += `
@@ -111,6 +54,82 @@ describe("${name.replace(/"/g, '\\"')}", () => {`;
   await fs.writeFile(filePath, testFileContent);
 
   return filename;
+}
+
+// Helper function to process a step and add it to the test content
+function processStep(step, testFileContent) {
+  switch (step.command) {
+    case 'visit':
+      testFileContent += `
+    cy.visit(\`${step.value}\`)`;
+      break;
+    case 'get':
+      testFileContent += `
+    cy.get(\`${step.selector}\`)`;
+      if (step.chainOption === 'first') {
+        testFileContent = testFileContent.trimEnd();
+        testFileContent += `.first()`;
+      } else if (step.chainOption === 'last') {
+        testFileContent = testFileContent.trimEnd();
+        testFileContent += `.last()`;
+      }
+      break;
+    case 'contains':
+      testFileContent += `
+    cy.contains(\`${step.selector}\`, \`${step.value}\`)`;
+      break;
+    case 'click':
+      testFileContent = testFileContent.trimEnd();
+      testFileContent += `.click()`;
+      break;
+    case 'type':
+      testFileContent = testFileContent.trimEnd();
+      testFileContent += `.type(\`${step.value}\`)`;
+      break;
+    case 'check':
+      testFileContent = testFileContent.trimEnd();
+      testFileContent += `.check()`;
+      break;
+    case 'uncheck':
+      testFileContent = testFileContent.trimEnd();
+      testFileContent += `.uncheck()`;
+      break;
+    case 'select':
+      testFileContent = testFileContent.trimEnd();
+      testFileContent += `.select(\`${step.value}\`)`;
+      break;
+    case 'should':
+      if (step.value === 'have.length') {
+        testFileContent = testFileContent.trimEnd();
+        testFileContent += `.should('${step.value}', ${step.lengthValue})`;
+      } else if (step.value === 'contain') {
+        testFileContent = testFileContent.trimEnd();
+        testFileContent += `.should('${step.value}', '${step.containedText}')`;
+      } else {
+        testFileContent = testFileContent.trimEnd();
+        testFileContent += `.should('${step.value}')`;
+      }
+      break;
+    case 'and':
+      if (step.value === 'have.length') {
+        testFileContent = testFileContent.trimEnd();
+        testFileContent += `.and('${step.value}', ${step.lengthValue})`;
+      } else if (step.value === 'contain') {
+        testFileContent = testFileContent.trimEnd();
+        testFileContent += `.and('${step.value}', '${step.containedText}')`;
+      } else {
+        testFileContent = testFileContent.trimEnd();
+        testFileContent += `.and('${step.value}')`;
+      }
+      break;
+    case 'blur':
+      testFileContent = testFileContent.trimEnd();
+      testFileContent += `.blur()`;
+      break;
+    default:
+      console.warn(`Unknown command: ${step.command}`);
+  }
+  return testFileContent;
 }
 
 module.exports = {

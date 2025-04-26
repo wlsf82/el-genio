@@ -171,6 +171,32 @@
   cursor: not-allowed;
 }
 
+/* Add these tab styles to existing CSS */
+.test-suite-tabs {
+  display: flex;
+  margin-bottom: 1.5rem;
+  border-bottom: 2px solid var(--gray-200);
+}
+
+.test-suite-tab {
+  padding: 0.75rem 1.5rem;
+  cursor: pointer;
+  font-weight: 500;
+  color: var(--gray-600);
+  transition: var(--transition);
+  border-bottom: 2px solid transparent;
+  margin-bottom: -2px;
+}
+
+.test-suite-tab.active {
+  color: var(--primary-color);
+  border-color: var(--primary-color);
+}
+
+.test-suite-tab:hover:not(.active) {
+  color: var(--primary-hover);
+}
+
 /* Responsive adjustments */
 @media (max-width: 768px) {
   .test-suite-form {
