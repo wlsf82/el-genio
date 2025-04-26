@@ -10,6 +10,22 @@ const testSuiteRoutes = require('./routes/testSuiteRoutes');
 const testRunRoutes = require('./routes/testRunRoutes');
 const { downloadScreenshots } = require('./controllers/testRunController');
 
+// Import migration
+const runBeforeEachStepsMigration = async () => {
+  try {
+    console.log('Running migration: Adding beforeEachSteps column to TestSuite table...');
+    await sequelize.query(`
+      ALTER TABLE "TestSuites"
+      ADD COLUMN IF NOT EXISTS "beforeEachSteps" JSONB DEFAULT '[]'::jsonb;
+    `);
+    console.log('Migration completed successfully!');
+    return true;
+  } catch (error) {
+    console.error('Migration failed:', error);
+    return false;
+  }
+};
+
 const app = express();
 const PORT = process.env.PORT || 3003;
 
@@ -33,6 +49,12 @@ const startServer = async () => {
   try {
     // Create database if it doesn't exist
     await createDbIfNotExists();
+
+    // Run migrations before syncing models
+    const migrationSuccessful = await runBeforeEachStepsMigration();
+    if (!migrationSuccessful) {
+      console.warn('Warning: Migration had issues but will continue server startup');
+    }
 
     // Sync database models
     await sequelize.sync();

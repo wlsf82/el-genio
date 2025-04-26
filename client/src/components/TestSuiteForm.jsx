@@ -1,15 +1,18 @@
 import { useState, useEffect } from 'react';
 import TestCaseForm from './TestCaseForm';
+import BeforeEachForm from './BeforeEachForm';
 import axios from 'axios';
 import './TestSuiteForm.css';
 
 function TestSuiteForm({ onTestSuiteCreated, initialData = null, isEditing = false, projectId }) {
   const [suiteName, setSuiteName] = useState(initialData?.name || '');
   const [testCases, setTestCases] = useState(initialData?.testCases || []);
+  const [beforeEachSteps, setBeforeEachSteps] = useState(initialData?.beforeEachSteps || []);
   const [editingTestCase, setEditingTestCase] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
   const [isFormValid, setIsFormValid] = useState(false);
+  const [activeTab, setActiveTab] = useState('beforeEach');
 
   useEffect(() => {
     setIsFormValid(suiteName.trim() !== '' && testCases.length > 0);
@@ -24,6 +27,10 @@ function TestSuiteForm({ onTestSuiteCreated, initialData = null, isEditing = fal
     } else {
       setTestCases([...testCases, testCase]);
     }
+  };
+
+  const handleAddBeforeEachSteps = (steps) => {
+    setBeforeEachSteps(steps);
   };
 
   const handleEditTestCase = (index) => {
@@ -50,6 +57,7 @@ function TestSuiteForm({ onTestSuiteCreated, initialData = null, isEditing = fal
       const testSuite = {
         name: suiteName,
         testCases,
+        beforeEachSteps,
         projectId
       };
 
@@ -66,6 +74,7 @@ function TestSuiteForm({ onTestSuiteCreated, initialData = null, isEditing = fal
 
       setSuiteName('');
       setTestCases([]);
+      setBeforeEachSteps([]);
 
     } catch (err) {
       setError('Failed to save test suite: ' + (err.response?.data?.message || err.message));
@@ -132,44 +141,87 @@ function TestSuiteForm({ onTestSuiteCreated, initialData = null, isEditing = fal
           />
         </div>
 
-        <h3>Test cases</h3>
-        {testCases.length > 0 ? (
-          <div className="test-cases-list">
-            {testCases.map((testCase, index) => (
-              <div key={index} className="test-case-item">
-                <h4>{testCase.description}</h4>
-                <ul>
-                  {testCase.steps.map((step, stepIndex) => (
-                    <li key={stepIndex}>
-                      {getStepDescription(step)}
-                    </li>
-                  ))}
-                </ul>
-                <button
-                  type="button"
-                  className="edit-button"
-                  onClick={() => handleEditTestCase(index)}
-                >
-                  Edit
-                </button>
-                <button
-                  type="button"
-                  className="remove-button"
-                  onClick={() => handleRemoveTestCase(index)}
-                >
-                  Remove
-                </button>
-              </div>
-            ))}
+        <div className="test-suite-tabs">
+          <div
+            className={`test-suite-tab ${activeTab === 'beforeEach' ? 'active' : ''}`}
+            onClick={() => setActiveTab('beforeEach')}
+          >
+            Setup Steps
           </div>
-        ) : (
-          <p className="no-test-cases">No test cases added yet.</p>
+          <div
+            className={`test-suite-tab ${activeTab === 'testCases' ? 'active' : ''}`}
+            onClick={() => setActiveTab('testCases')}
+          >
+            Test Cases
+          </div>
+        </div>
+
+        {activeTab === 'beforeEach' && (
+          <>
+            {beforeEachSteps.length > 0 && (
+              <div className="setup-steps-preview">
+                <h3>Current Setup Steps</h3>
+                <div className="test-case-item">
+                  <h4>beforeEach</h4>
+                  <ul>
+                    {beforeEachSteps.map((step, index) => (
+                      <li key={index}>
+                        {getStepDescription(step)}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
+            )}
+            <BeforeEachForm
+              onAddBeforeEachSteps={handleAddBeforeEachSteps}
+              initialSteps={beforeEachSteps}
+            />
+          </>
         )}
 
-        <TestCaseForm
-          onAddTestCase={handleAddTestCase}
-          initialData={editingTestCase !== null ? testCases[editingTestCase] : null}
-        />
+        {activeTab === 'testCases' && (
+          <>
+            <h3>Test cases</h3>
+            {testCases.length > 0 ? (
+              <div className="test-cases-list">
+                {testCases.map((testCase, index) => (
+                  <div key={index} className="test-case-item">
+                    <h4>{testCase.description}</h4>
+                    <ul>
+                      {testCase.steps.map((step, stepIndex) => (
+                        <li key={stepIndex}>
+                          {getStepDescription(step)}
+                        </li>
+                      ))}
+                    </ul>
+                    <button
+                      type="button"
+                      className="edit-button"
+                      onClick={() => handleEditTestCase(index)}
+                    >
+                      Edit
+                    </button>
+                    <button
+                      type="button"
+                      className="remove-button"
+                      onClick={() => handleRemoveTestCase(index)}
+                    >
+                      Remove
+                    </button>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <p className="no-test-cases">No test cases added yet.</p>
+            )}
+
+            <TestCaseForm
+              onAddTestCase={handleAddTestCase}
+              initialData={editingTestCase !== null ? testCases[editingTestCase] : null}
+            />
+          </>
+        )}
 
         <div className="form-controls">
           <button
