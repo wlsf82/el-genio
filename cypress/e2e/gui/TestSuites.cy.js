@@ -32,6 +32,9 @@ describe('CRUD Test Suites', () => {
     // Access the create test suite form
     cy.contains('header nav button', 'Create Test Suite').click()
 
+    // Go to the Test Cases tab
+    cy.contains('.test-suite-tab', 'Test Cases').click()
+
     // Add test suite name
     cy.get('input[placeholder="Enter test suite name"]').type('walmyr.dev')
     // Add test case description
@@ -109,6 +112,9 @@ describe('CRUD Test Suites', () => {
       .should('be.visible')
       .find('button.edit-button')
       .click()
+
+    // Go to the Test Cases tab
+    cy.contains('.test-suite-tab', 'Test Cases').click()
 
     // Go to edition mode
     cy.get('.test-case-item')
