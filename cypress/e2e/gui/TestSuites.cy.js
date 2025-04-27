@@ -28,7 +28,7 @@ describe('CRUD Test Suites', () => {
   })
 
   context('Without Setup Steps', () => {
-    it('createa a new test suite with one test with a few steps', () => {
+    it('creates a new test suite with one test with a few steps', () => {
       // Intercept test suite creation and give it an alias
       cy.intercept('POST', '/api/test-suites').as('createTestSuite')
 
