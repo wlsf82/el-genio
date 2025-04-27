@@ -9,11 +9,12 @@
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
 }
 
+/* Headings */
 .before-each-form h3 {
   color: #1a1a1a;
   font-size: 1.5rem;
   margin-top: 0;
-  margin-bottom: 10px;
+  margin-bottom: 20px;
   font-weight: 600;
   border-bottom: 2px solid #f0f0f0;
   padding-bottom: 12px;
@@ -26,14 +27,178 @@
   font-weight: 500;
 }
 
-.info-text {
-  color: #666;
-  font-size: 0.9rem;
+/* Form groups */
+.before-each-form .form-group {
+  margin-bottom: 20px;
+}
+
+.before-each-form .form-group label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 500;
+  color: #555;
+}
+
+/* Input styling - match TestCaseForm */
+.before-each-form input[type="text"],
+.before-each-form input[type="number"],
+.before-each-form select {
+  width: 100%;
+  padding: 10px 14px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-size: 14px;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  background-color: #fcfcfc;
+}
+
+.before-each-form input[type="text"]:focus,
+.before-each-form input[type="number"]:focus,
+.before-each-form select:focus {
+  outline: none;
+  border-color: #4a90e2;
+  box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.1);
+}
+
+/* Steps list */
+.before-each-form .steps-list {
+  list-style: none;
+  padding: 0;
   margin: 0 0 20px 0;
-  padding: 8px;
+}
+
+.before-each-form .step-item {
   background-color: #f8f9fa;
+  border-radius: 6px;
+  padding: 12px 16px;
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  font-family: 'Monaco', 'Consolas', monospace;
+  font-size: 14px;
+  color: #333;
   border-left: 3px solid #4a90e2;
+}
+
+.before-each-form .step-item span {
+  flex: 1;
+  margin-right: 4px;
+}
+
+.before-each-form .no-steps {
+  color: #888;
+  font-style: italic;
+  margin: 12px 0;
+  padding: 12px;
+  background-color: #f8f9fa;
+  border-radius: 6px;
+  text-align: center;
+}
+
+/* Step form */
+.before-each-form .step-form {
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  padding: 16px;
+  margin-bottom: 20px;
+}
+
+/* Match the TestCaseForm layout but with flexbox for better dynamic behavior */
+.before-each-form .step-input-group {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+@media (min-width: 768px) {
+  .before-each-form .step-input-group {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 12px;
+    align-items: flex-start;
+  }
+
+  .before-each-form .step-input-group > * {
+    flex-grow: 1;
+    flex-basis: 180px;
+    max-width: calc(33% - 8px);
+  }
+
+  /* Make sure the add button doesn't grow too big */
+  .before-each-form .add-step-button {
+    flex-grow: 0;
+    flex-basis: auto;
+    max-width: none;
+    white-space: nowrap;
+  }
+}
+
+/* Fix specific inputs when they appear conditionally */
+.before-each-form .step-input-group input[type="number"],
+.before-each-form .step-input-group input[placeholder="Enter text to contain"] {
+  flex-basis: 100%;
+  max-width: 100%;
+}
+
+/* Fix select elements sizing */
+.before-each-form select {
+  max-width: 100%;
+}
+
+/* Buttons */
+.before-each-form button {
+  cursor: pointer;
+  transition: all 0.2s;
+  font-weight: 500;
+  border: none;
+  border-radius: 6px;
+}
+
+.before-each-form .add-step-button {
+  background-color: #5a67d8;
+  color: white;
+  padding: 10px 16px;
+}
+
+.before-each-form .add-step-button:hover:not(:disabled) {
+  background-color: #4c56c5;
+}
+
+/* Fix edit button styling to match TestCaseForm */
+.before-each-form .edit-step-button {
+  background-color: transparent;
+  color: #4a5568;
+  border: 1px solid #cbd5e0;
+  padding: 4px 8px;
+  font-size: 12px;
+  margin: 0 8px;
   border-radius: 4px;
+  transition: all 0.2s;
+}
+
+.before-each-form .edit-step-button:hover {
+  background-color: #edf2f7;
+  color: #2d3748;
+}
+
+.before-each-form .remove-step-button {
+  background-color: transparent;
+  color: #e53e3e;
+  padding: 4px;
+  margin-left: auto;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.2s;
+}
+
+.before-each-form .remove-step-button:hover {
+  color: #c53030;
+  background-color: rgba(229, 62, 62, 0.1);
 }
 
 .save-before-each-button {
@@ -52,4 +217,39 @@
 
 .save-before-each-button:hover:not(:disabled) {
   background-color: #2f855a;
+}
+
+/* Disabled state */
+.before-each-form button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  background-color: #a0aec0;
+}
+
+/* Helper classes for transitions */
+.before-each-form .fade-in {
+  animation: fadeIn 0.3s ease-in;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* Save confirmation */
+.save-actions {
+  position: relative;
+}
+
+.save-confirmation {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #38a169;
+  margin-top: 8px;
+  padding: 8px;
+  background-color: #f0fff4;
+  border: 1px solid #c6f6d5;
+  border-radius: 6px;
+  animation: fadeIn 0.3s ease-out;
 }
