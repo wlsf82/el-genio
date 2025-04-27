@@ -8,6 +8,7 @@ function TestSuiteForm({ onTestSuiteCreated, initialData = null, isEditing = fal
   const [suiteName, setSuiteName] = useState(initialData?.name || '');
   const [testCases, setTestCases] = useState(initialData?.testCases || []);
   const [beforeEachSteps, setBeforeEachSteps] = useState(initialData?.beforeEachSteps || []);
+  const [commandTimeout, setCommandTimeout] = useState(initialData?.commandTimeout || '');
   const [editingTestCase, setEditingTestCase] = useState(null);
   const [editingBeforeEach, setEditingBeforeEach] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -33,7 +34,7 @@ function TestSuiteForm({ onTestSuiteCreated, initialData = null, isEditing = fal
   const handleEditBeforeEach = () => {
     setEditingBeforeEach(true);
     setActiveTab('beforeEach');
-    
+
     setTimeout(() => {
       document.querySelector('.before-each-form').scrollIntoView({
         behavior: 'smooth',
@@ -76,6 +77,7 @@ function TestSuiteForm({ onTestSuiteCreated, initialData = null, isEditing = fal
         name: suiteName,
         testCases,
         beforeEachSteps,
+        commandTimeout: commandTimeout ? parseInt(commandTimeout) : null,
         projectId
       };
 
@@ -157,6 +159,19 @@ function TestSuiteForm({ onTestSuiteCreated, initialData = null, isEditing = fal
             placeholder="Enter test suite name"
             required
           />
+        </div>
+
+        <div className="form-group">
+          <label htmlFor="commandTimeout">Command Timeout (ms):</label>
+          <input
+            type="number"
+            id="commandTimeout"
+            value={commandTimeout}
+            onChange={(e) => setCommandTimeout(e.target.value)}
+            placeholder="Default is 4000ms"
+            min="0"
+          />
+          <small className="help-text">Custom command timeout in milliseconds (leave empty to use the default)</small>
         </div>
 
         <div className="test-suite-tabs">

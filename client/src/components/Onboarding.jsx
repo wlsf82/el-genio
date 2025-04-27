@@ -31,6 +31,7 @@ function Onboarding({ onComplete }) {
         <>
           <p>Each project can contain multiple <strong>test suites</strong>.</p>
           <p>A test suite is a collection of related test cases that test a specific feature or area of your application.</p>
+          <p>Every test suite can have its own <strong>command timeout</strong> setting, which controls how long El Genio waits for elements before failing a test. The default timeout is <strong>4000ms</strong> (4 seconds), but you can customize this per test suite to handle slower applications.</p>
         </>
       )
     },

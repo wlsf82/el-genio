@@ -49,27 +49,22 @@ const getTestSuite = async (req, res) => {
 // Create a test suite
 const createTestSuite = async (req, res) => {
   try {
-    const { name, testCases, projectId, beforeEachSteps } = req.body;
+    const { name, testCases, beforeEachSteps, commandTimeout, projectId } = req.body;
 
+    // Validate input
     if (!name || !testCases || !Array.isArray(testCases) || testCases.length === 0) {
-      return res.status(400).json({ message: 'Invalid test suite data' });
+      return res.status(400).json({
+        message: 'Test suite must have a name and at least one test case'
+      });
     }
 
-    if (!projectId) {
-      return res.status(400).json({ message: 'Project ID is required' });
-    }
-
-    // Check if project exists
-    const project = await Project.findByPk(projectId);
-    if (!project) {
-      return res.status(404).json({ message: 'Project not found' });
-    }
-
+    // Create the test suite
     const testSuite = await TestSuite.create({
       name,
       testCases,
-      projectId,
-      beforeEachSteps
+      beforeEachSteps: beforeEachSteps || [],
+      commandTimeout: commandTimeout ? parseInt(commandTimeout) : null,
+      projectId
     });
 
     // Generate Cypress test file
@@ -86,12 +81,9 @@ const createTestSuite = async (req, res) => {
 const updateTestSuite = async (req, res) => {
   try {
     const { id } = req.params;
-    const { name, testCases, beforeEachSteps } = req.body;
+    const { name, testCases, beforeEachSteps, commandTimeout } = req.body;
 
-    if (!name || !testCases || !Array.isArray(testCases) || testCases.length === 0) {
-      return res.status(400).json({ message: 'Invalid test suite data' });
-    }
-
+    // Find the test suite
     const testSuite = await TestSuite.findByPk(id);
     if (!testSuite) {
       return res.status(404).json({ message: 'Test suite not found' });
@@ -100,7 +92,8 @@ const updateTestSuite = async (req, res) => {
     // Update the test suite
     testSuite.name = name;
     testSuite.testCases = testCases;
-    testSuite.beforeEachSteps = beforeEachSteps;
+    testSuite.beforeEachSteps = beforeEachSteps || [];
+    testSuite.commandTimeout = commandTimeout ? parseInt(commandTimeout) : null;
     await testSuite.save();
 
     // Regenerate the Cypress test file

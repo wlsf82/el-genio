@@ -207,3 +207,10 @@
     justify-content: center;
   }
 }
+
+.form-group .help-text {
+  display: block;
+  color: var(--gray-600);
+  font-size: 0.85rem;
+  margin-top: 0.25rem;
+}

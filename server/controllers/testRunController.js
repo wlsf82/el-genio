@@ -109,6 +109,18 @@ const runTestSuite = async (req, res) => {
       },
     };
 
+    // Apply custom timeout if specified for this test suite
+    if (testSuite.commandTimeout) {
+      cypressOptions.config = {
+        ...(cypressOptions.config || {}),
+        e2e: {
+          ...(cypressOptions.config?.e2e || {}),
+          defaultCommandTimeout: testSuite.commandTimeout
+        }
+      };
+      console.log(`Using custom command timeout for test suite ${id}: ${testSuite.commandTimeout}ms`);
+    }
+
     console.log(`Running Cypress test with spec: ${specFilePath}`);
     const results = await cypress.run(cypressOptions);
 

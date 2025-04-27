@@ -23,6 +23,10 @@ const TestSuite = sequelize.define('TestSuite', {
     allowNull: true,
     defaultValue: []
   },
+  commandTimeout: {
+    type: DataTypes.INTEGER,
+    allowNull: true
+  },
   createdAt: {
     type: DataTypes.DATE,
     allowNull: false,

@@ -26,6 +26,21 @@ const runBeforeEachStepsMigration = async () => {
   }
 };
 
+const addCommandTimeoutMigration = async () => {
+  try {
+    console.log('Running migration: Adding commandTimeout column to TestSuite table...');
+    await sequelize.query(`
+      ALTER TABLE "TestSuites"
+      ADD COLUMN IF NOT EXISTS "commandTimeout" INTEGER;
+    `);
+    console.log('Migration completed successfully!');
+    return true;
+  } catch (error) {
+    console.error('Migration failed:', error);
+    return false;
+  }
+};
+
 const app = express();
 const PORT = process.env.PORT || 3003;
 
@@ -72,4 +87,24 @@ const startServer = async () => {
   }
 };
 
-startServer();
+const initApp = async () => {
+  try {
+    await createDbIfNotExists();
+    await sequelize.authenticate();
+    await sequelize.sync();
+    await runBeforeEachStepsMigration();
+    await addCommandTimeoutMigration(); // Add this line
+
+    app.listen(PORT, async () => {
+      console.log(`Server running on port ${PORT}`);
+
+      // Create cypress/e2e directory if it doesn't exist
+      const cypressE2ePath = path.join(__dirname, 'cypress', 'e2e');
+      await fs.mkdir(cypressE2ePath, { recursive: true });
+    });
+  } catch (error) {
+    console.error('App initialization error:', error);
+  }
+};
+
+initApp();
