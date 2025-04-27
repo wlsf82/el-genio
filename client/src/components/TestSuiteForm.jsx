@@ -9,6 +9,7 @@ function TestSuiteForm({ onTestSuiteCreated, initialData = null, isEditing = fal
   const [testCases, setTestCases] = useState(initialData?.testCases || []);
   const [beforeEachSteps, setBeforeEachSteps] = useState(initialData?.beforeEachSteps || []);
   const [editingTestCase, setEditingTestCase] = useState(null);
+  const [editingBeforeEach, setEditingBeforeEach] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
   const [isFormValid, setIsFormValid] = useState(false);
@@ -29,8 +30,25 @@ function TestSuiteForm({ onTestSuiteCreated, initialData = null, isEditing = fal
     }
   };
 
+  const handleEditBeforeEach = () => {
+    setEditingBeforeEach(true);
+    setActiveTab('beforeEach');
+    
+    setTimeout(() => {
+      document.querySelector('.before-each-form').scrollIntoView({
+        behavior: 'smooth',
+        block: 'center'
+      });
+    }, 100);
+  };
+
+  const handleRemoveBeforeEach = () => {
+    setBeforeEachSteps([]);
+  };
+
   const handleAddBeforeEachSteps = (steps) => {
     setBeforeEachSteps(steps);
+    setEditingBeforeEach(false);
   };
 
   const handleEditTestCase = (index) => {
@@ -170,12 +188,29 @@ function TestSuiteForm({ onTestSuiteCreated, initialData = null, isEditing = fal
                       </li>
                     ))}
                   </ul>
+                  <div className="test-case-actions">
+                    <button
+                      type="button"
+                      className="edit-button"
+                      onClick={handleEditBeforeEach}
+                    >
+                      Edit
+                    </button>
+                    <button
+                      type="button"
+                      className="remove-button"
+                      onClick={handleRemoveBeforeEach}
+                    >
+                      Remove
+                    </button>
+                  </div>
                 </div>
               </div>
             )}
             <BeforeEachForm
               onAddBeforeEachSteps={handleAddBeforeEachSteps}
               initialSteps={beforeEachSteps}
+              isEditing={editingBeforeEach}
             />
           </>
         )}

@@ -2,8 +2,8 @@ import { useState, useEffect } from 'react';
 import { X, Check } from 'lucide-react';
 import './BeforeEachForm.css';
 
-function BeforeEachForm({ onAddBeforeEachSteps, initialSteps = [] }) {
-  const [steps, setSteps] = useState(initialSteps);
+function BeforeEachForm({ onAddBeforeEachSteps, initialSteps = [], isEditing = false }) {
+  const [steps, setSteps] = useState([]);
   const [currentStep, setCurrentStep] = useState({
     command: '',
     selector: '',
@@ -13,10 +13,12 @@ function BeforeEachForm({ onAddBeforeEachSteps, initialSteps = [] }) {
   });
   const [editingStepIndex, setEditingStepIndex] = useState(null);
 
-  // Important: Update steps whenever initialSteps changes
+  // Important: Update steps whenever initialSteps changes or edit mode is activated
   useEffect(() => {
-    setSteps(initialSteps);
-  }, [initialSteps]);
+    if (isEditing) {
+      setSteps(initialSteps);
+    }
+  }, [initialSteps, isEditing]);
 
   const CYPRESS_COMMANDS = [
     { value: 'visit', hasSelector: false, hasValue: true },
@@ -118,6 +120,16 @@ function BeforeEachForm({ onAddBeforeEachSteps, initialSteps = [] }) {
   const handleSave = () => {
     // This is the critical function that updates the parent component
     onAddBeforeEachSteps(steps);
+
+    // Always clear the form after saving, just like TestCaseForm
+    setSteps([]);
+    setCurrentStep({
+      command: '',
+      selector: '',
+      value: '',
+      lengthValue: '',
+      containedText: ''
+    });
   };
 
   const getStepDescription = (step) => {
@@ -163,7 +175,7 @@ function BeforeEachForm({ onAddBeforeEachSteps, initialSteps = [] }) {
 
   return (
     <div className="before-each-form">
-      <h3>Setup Steps</h3>
+      <h3>{isEditing ? 'Edit Setup Steps' : 'Add Setup Steps'}</h3>
       <p>
         These steps will run before each test case.
       </p>
@@ -294,6 +306,7 @@ function BeforeEachForm({ onAddBeforeEachSteps, initialSteps = [] }) {
           type="button"
           className="save-before-each-button"
           onClick={handleSave}
+          disabled={steps.length === 0}
         >
           Save Setup Steps
         </button>
