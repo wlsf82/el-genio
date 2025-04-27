@@ -163,8 +163,8 @@ function BeforeEachForm({ onAddBeforeEachSteps, initialSteps = [] }) {
 
   return (
     <div className="before-each-form">
-      <h3>Setup Steps (beforeEach)</h3>
-      <p className="info-text">
+      <h3>Setup Steps</h3>
+      <p>
         These steps will run before each test case.
       </p>
 
