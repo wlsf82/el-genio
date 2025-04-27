@@ -33,6 +33,19 @@ Cypress.Commands.add('createSampleTestSuiteWithManyTestCasesForProject', project
       })
 })
 
+Cypress.Commands.add('createSampleTestSuiteWithSetupStepsForProject', (projectId) => {
+  cy.fixture('sampleTestSuiteWithSetupSteps.json').then((testSuite) => {
+    cy.request({
+      method: 'POST',
+      url: '/api/test-suites',
+      body: {
+        ...testSuite,
+        projectId
+      }
+    });
+  });
+});
+
 Cypress.Commands.add('deleteProjectByName', name => {
   cy.request('GET', '/api/projects')
     .then(response => {
