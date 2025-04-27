@@ -1,0 +1,48 @@
+{
+   "name":"walmyr.dev with setup",
+   "beforeEachSteps":[
+      {
+         "command":"visit",
+         "selector":"",
+         "value":"https://walmyr.dev",
+         "lengthValue":"",
+         "containedText":""
+      },
+      {
+         "command":"get",
+         "selector":"#login-button",
+         "value":"",
+         "lengthValue":"",
+         "containedText":""
+      },
+      {
+         "command":"click",
+         "selector":"",
+         "value":"",
+         "lengthValue":"",
+         "containedText":""
+      }
+   ],
+   "testCases":[
+      {
+         "description":"asserts dashboard is visible",
+         "steps":[
+            {
+               "command":"get",
+               "selector":".dashboard",
+               "value":"",
+               "lengthValue":"",
+               "containedText":""
+            },
+            {
+               "command":"should",
+               "selector":"",
+               "value":"be.visible",
+               "lengthValue":"",
+               "containedText":"",
+               "isChained":true
+            }
+         ]
+      }
+   ]
+}
