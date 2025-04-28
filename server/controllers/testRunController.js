@@ -9,12 +9,30 @@ const { processTestResults } = require('../utils');
 // Run all test suites
 const runAllTestSuites = async (req, res) => {
   try {
+    // First, get all test suites to find the maximum command timeout
+    const allTestSuites = await TestSuite.findAll();
+
+    // Find the maximum command timeout across all test suites
+    const maxCommandTimeout = findMaxCommandTimeout(allTestSuites);
+
     const specPattern = path.join(__dirname, '..', 'cypress', 'e2e', '**', '*.cy.js');
 
     const cypressOptions = {
       ...defaultCypressOptions,
       spec: specPattern,
     };
+
+    // Apply the maximum command timeout if it's greater than the default
+    if (maxCommandTimeout) {
+      cypressOptions.config = {
+        ...(cypressOptions.config || {}),
+        e2e: {
+          ...(cypressOptions.config?.e2e || {}),
+          defaultCommandTimeout: maxCommandTimeout
+        }
+      };
+      console.log(`Using maximum command timeout across all test suites: ${maxCommandTimeout}ms`);
+    }
 
     console.log('Running all Cypress tests');
     const results = await cypress.run(cypressOptions);
@@ -48,6 +66,9 @@ const runProjectTestSuites = async (req, res) => {
       });
     }
 
+    // Find the maximum command timeout for this project's test suites
+    const maxCommandTimeout = findMaxCommandTimeout(testSuites);
+
     // Create a spec pattern for all test suites in this project
     const testSuiteIds = testSuites.map(suite => suite.id);
     const specPattern = testSuiteIds.map(id =>
@@ -58,6 +79,18 @@ const runProjectTestSuites = async (req, res) => {
       ...defaultCypressOptions,
       spec: specPattern,
     };
+
+    // Apply the maximum command timeout if it's greater than the default
+    if (maxCommandTimeout) {
+      cypressOptions.config = {
+        ...(cypressOptions.config || {}),
+        e2e: {
+          ...(cypressOptions.config?.e2e || {}),
+          defaultCommandTimeout: maxCommandTimeout
+        }
+      };
+      console.log(`Using maximum command timeout for project ${projectId}: ${maxCommandTimeout}ms`);
+    }
 
     console.log(`Running all Cypress tests for project ${projectId}`);
     const results = await cypress.run(cypressOptions);
@@ -72,6 +105,20 @@ const runProjectTestSuites = async (req, res) => {
       success: false
     });
   }
+};
+
+// Helper function to find the maximum command timeout in a list of test suites
+const findMaxCommandTimeout = (testSuites) => {
+  // Get all defined command timeouts (filter out nulls and undefined)
+  const timeouts = testSuites
+    .map(suite => suite.commandTimeout)
+    .filter(timeout => timeout != null);
+
+  // If no custom timeouts are defined, return null (use default)
+  if (timeouts.length === 0) return null;
+
+  // Find and return the maximum timeout
+  return Math.max(...timeouts);
 };
 
 // Run a specific test suite
