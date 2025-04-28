@@ -195,7 +195,7 @@ function TestSuiteForm({ onTestSuiteCreated, initialData = null, isEditing = fal
               <div className="setup-steps-preview">
                 <h3>Current Setup Steps</h3>
                 <div className="test-case-item">
-                  <h4>Before each test case, run:</h4>
+                  <h4>Before each test case:</h4>
                   <ul>
                     {beforeEachSteps.map((step, index) => (
                       <li key={index}>
