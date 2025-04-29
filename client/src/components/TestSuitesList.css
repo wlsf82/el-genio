@@ -16,7 +16,7 @@
 /* Status messages */
 .loading, .error-message, .no-test-suites {
   text-align: center;
-  padding: 2rem;
+  padding: 1.5rem;
   border-radius: 8px;
   background-color: #f8f9fa;
   margin: 1rem 0;

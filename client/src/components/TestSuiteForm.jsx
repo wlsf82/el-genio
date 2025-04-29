@@ -15,10 +15,27 @@ function TestSuiteForm({ onTestSuiteCreated, initialData = null, isEditing = fal
   const [error, setError] = useState(null);
   const [isFormValid, setIsFormValid] = useState(false);
   const [activeTab, setActiveTab] = useState('beforeEach');
+  const [nameError, setNameError] = useState('');
 
   useEffect(() => {
     setIsFormValid(suiteName.trim() !== '' && testCases.length > 0);
   }, [suiteName, testCases]);
+
+  const validateTestSuiteName = (name) => {
+    const invalidChars = /[\/\\:*?"<>|]/g;
+    const isValid = !invalidChars.test(name);
+
+    if (!isValid) {
+      setNameError('Name cannot contain any of these characters: / \\ : * ? " < > |');
+      setIsFormValid(false);
+    } else {
+      setNameError('');
+      // Only set form as valid if name is not empty and has no invalid chars
+      setIsFormValid(name.trim() !== '');
+    }
+
+    return isValid;
+  };
 
   const handleAddTestCase = (testCase) => {
     if (editingTestCase !== null) {
@@ -68,6 +85,10 @@ function TestSuiteForm({ onTestSuiteCreated, initialData = null, isEditing = fal
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    if (!validateTestSuiteName(suiteName)) {
+      return; // Prevent submission
+    }
 
     setIsLoading(true);
     setError(null);
@@ -155,10 +176,15 @@ function TestSuiteForm({ onTestSuiteCreated, initialData = null, isEditing = fal
             type="text"
             id="suiteName"
             value={suiteName}
-            onChange={(e) => setSuiteName(e.target.value)}
+            onChange={(e) => {
+              const newName = e.target.value;
+              setSuiteName(newName);
+              validateTestSuiteName(newName);
+            }}
             placeholder="Enter test suite name"
             required
           />
+          {nameError && <div className="error-message">{nameError}</div>}
         </div>
 
         <div className="form-group">
@@ -277,7 +303,7 @@ function TestSuiteForm({ onTestSuiteCreated, initialData = null, isEditing = fal
           <button
             type="submit"
             className="submit-button"
-            disabled={!isFormValid || isLoading}
+            disabled={!isFormValid || nameError || isLoading}
           >
             {isLoading ? 'Saving...' : isEditing ? 'Save test suite' : 'Create test suite'}
           </button>
