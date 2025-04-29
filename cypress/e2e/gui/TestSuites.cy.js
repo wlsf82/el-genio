@@ -390,4 +390,25 @@ describe('CRUD Test Suites', () => {
       cy.contains('h2', 'Test Suites').should('be.visible')
     })
   })
+
+  context('Error scenarios', () => {
+    it('does not allow test suites with special characters', () => {
+      const specialChars = ['/', '\\', ':', '*', '?', '"', '<', '>', '|']
+
+      cy.contains('button', 'Create Test Suite').click()
+
+      specialChars.forEach(char => {
+        cy.get('input[placeholder="Enter test suite name"]')
+          .as('TestSuiteNameField')
+          .type(char)
+
+        cy.contains(
+          '.error-message',
+          'Name cannot contain any of these characters: / \\ : * ? " < > |'
+        ).should('be.visible')
+
+        cy.get('@TestSuiteNameField').clear()
+      })
+    })
+  })
 })
