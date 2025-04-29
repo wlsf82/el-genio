@@ -6,49 +6,6 @@ const { TestSuite } = require('../models');
 const { defaultCypressOptions } = require('../config/cypressConfig');
 const { processTestResults } = require('../utils');
 
-// Run all test suites
-const runAllTestSuites = async (req, res) => {
-  try {
-    // First, get all test suites to find the maximum command timeout
-    const allTestSuites = await TestSuite.findAll();
-
-    // Find the maximum command timeout across all test suites
-    const maxCommandTimeout = findMaxCommandTimeout(allTestSuites);
-
-    const specPattern = path.join(__dirname, '..', 'cypress', 'e2e', '**', '*.cy.js');
-
-    const cypressOptions = {
-      ...defaultCypressOptions,
-      spec: specPattern,
-    };
-
-    // Apply the maximum command timeout if it's greater than the default
-    if (maxCommandTimeout) {
-      cypressOptions.config = {
-        ...(cypressOptions.config || {}),
-        e2e: {
-          ...(cypressOptions.config?.e2e || {}),
-          defaultCommandTimeout: maxCommandTimeout
-        }
-      };
-      console.log(`Using maximum command timeout across all test suites: ${maxCommandTimeout}ms`);
-    }
-
-    console.log('Running all Cypress tests');
-    const results = await cypress.run(cypressOptions);
-
-    // Process results and send response
-    res.json(processTestResults(results, req));
-  } catch (error) {
-    console.error('Error running all test suites:', error);
-    res.status(500).json({
-      message: 'Failed to run test suites',
-      error: error.message,
-      success: false
-    });
-  }
-};
-
 // Run all test suites for a project
 const runProjectTestSuites = async (req, res) => {
   try {
@@ -210,7 +167,6 @@ const downloadScreenshots = async (req, res) => {
 };
 
 module.exports = {
-  runAllTestSuites,
   runProjectTestSuites,
   runTestSuite,
   downloadScreenshots
