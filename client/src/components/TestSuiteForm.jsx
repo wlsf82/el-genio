@@ -172,6 +172,8 @@ function TestSuiteForm({ onTestSuiteCreated, initialData = null, isEditing = fal
         return `and asserts it should "${step.value}"`;
       case 'title':
         return 'get the current title of the page';
+      case 'url':
+        return 'get the current URL';
       default:
         return step.command;
     }

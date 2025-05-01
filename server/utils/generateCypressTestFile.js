@@ -148,6 +148,10 @@ function processStep(step, testFileContent) {
       testFileContent += `
     cy.title()`;
       break;
+    case 'url':
+      testFileContent += `
+    cy.url()`;
+      break;
     default:
       console.warn(`Unknown command: ${step.command}`);
   }

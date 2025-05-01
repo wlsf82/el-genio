@@ -27,7 +27,8 @@ function TestCaseForm({ onAddTestCase, initialData = null }) {
     { value: 'blur', hasSelector: false, hasValue: false },
     { value: 'should', hasSelector: false, hasValue: true, hasShouldOptions: true },
     { value: 'and', hasSelector: false, hasValue: true, hasShouldOptions: true },
-    { value: 'title', hasSelector: false, hasValue: false }
+    { value: 'title', hasSelector: false, hasValue: false },
+    { value: 'url', hasSelector: false, hasValue: false } // <-- Added
   ];
 
   const SHOULD_OPTIONS = [
@@ -162,6 +163,10 @@ function TestCaseForm({ onAddTestCase, initialData = null }) {
         return 'blur';
       case 'type':
         return `type "${step.value}"`;
+      case 'title':
+        return 'get the current title of the page';
+      case 'url':
+        return 'get the current URL';
       case 'should':
         if (step.value === 'have.length') {
           return `asserts it should "${step.value}" with value "${step.lengthValue}"`;
@@ -188,8 +193,6 @@ function TestCaseForm({ onAddTestCase, initialData = null }) {
           return `and asserts it should "not be equal" to "${step.equalText}"`;
         }
         return `and asserts it should "${step.value}"`;
-      case 'title':
-        return 'get the current title of the page';
       default:
         return step.command;
     }
