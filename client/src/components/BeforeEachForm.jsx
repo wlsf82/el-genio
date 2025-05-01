@@ -50,7 +50,9 @@ function BeforeEachForm({ onAddBeforeEachSteps, initialSteps = [], isEditing = f
     'be.checked',
     'not.be.checked',
     'contain',
-    'not.contain'
+    'not.contain',
+    'be.equal',
+    'not.be.equal'
   ];
 
   const CHAIN_OPTIONS = ['first', 'last'];
@@ -72,6 +74,10 @@ function BeforeEachForm({ onAddBeforeEachSteps, initialSteps = [], isEditing = f
 
     const newStep = { ...currentStep };
 
+    if (newStep.value === 'be.equal' || newStep.value === 'not.be.equal') {
+      newStep.equalText = currentStep.equalText;
+    }
+
     if (newStep.command === 'should') {
       newStep.isChained = true;
     }
@@ -90,7 +96,8 @@ function BeforeEachForm({ onAddBeforeEachSteps, initialSteps = [], isEditing = f
       selector: '',
       value: '',
       lengthValue: '',
-      containedText: ''
+      containedText: '',
+      equalText: ''
     });
   };
 
@@ -161,6 +168,10 @@ function BeforeEachForm({ onAddBeforeEachSteps, initialSteps = [], isEditing = f
           return `asserts it should "contain" text "${step.containedText}"`;
         } else if (step.value === 'not.contain') {
           return `asserts it should "not contain" text "${step.containedText}"`;
+        } else if (step.value === 'be.equal') {
+          return `asserts it should "be equal" to "${step.equalText}"`;
+        } else if (step.value === 'not.be.equal') {
+          return `asserts it should "not be equal" to "${step.equalText}"`;
         }
         return `asserts it should "${step.value}"`;
       case 'and':
@@ -170,6 +181,10 @@ function BeforeEachForm({ onAddBeforeEachSteps, initialSteps = [], isEditing = f
           return `and asserts it should "contain" text "${step.containedText}"`;
         } else if (step.value === 'not.contain') {
           return `and asserts it should "not contain" text "${step.containedText}"`;
+        } else if (step.value === 'be.equal') {
+          return `and asserts it should "be equal" to "${step.equalText}"`;
+        } else if (step.value === 'not.be.equal') {
+          return `and asserts it should "not be equal" to "${step.equalText}"`;
         }
         return `and asserts it should "${step.value}"`;
       case 'title':
@@ -272,6 +287,19 @@ function BeforeEachForm({ onAddBeforeEachSteps, initialSteps = [], isEditing = f
                       currentStep.value === 'not.contain'
                         ? 'Enter text not to contain'
                         : 'Enter text to contain'
+                    }
+                  />
+                )}
+
+                {(currentStep.value === 'be.equal' || currentStep.value === 'not.be.equal') && (
+                  <input
+                    type="text"
+                    value={currentStep.equalText || ''}
+                    onChange={(e) => setCurrentStep({ ...currentStep, equalText: e.target.value })}
+                    placeholder={
+                      currentStep.value === 'not.be.equal'
+                        ? 'Enter text not to be equal'
+                        : 'Enter text to be equal'
                     }
                   />
                 )}

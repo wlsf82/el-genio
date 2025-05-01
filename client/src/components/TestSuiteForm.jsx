@@ -151,6 +151,10 @@ function TestSuiteForm({ onTestSuiteCreated, initialData = null, isEditing = fal
           return `asserts it should "contain" text "${step.containedText}"`;
         } else if (step.value === 'not.contain') {
           return `asserts it should "not contain" text "${step.containedText}"`;
+        } else if (step.value === 'be.equal') {
+          return `asserts it should "be equal" to "${step.equalText}"`;
+        } else if (step.value === 'not.be.equal') {
+          return `asserts it should "not be equal" to "${step.equalText}"`;
         }
         return `asserts it should "${step.value}"`;
       case 'and':
@@ -160,6 +164,10 @@ function TestSuiteForm({ onTestSuiteCreated, initialData = null, isEditing = fal
           return `and asserts it should "contain" text "${step.containedText}"`;
         } else if (step.value === 'not.contain') {
           return `and asserts it should "not contain" text "${step.containedText}"`;
+        } else if (step.value === 'be.equal') {
+          return `and asserts it should "be equal" to "${step.equalText}"`;
+        } else if (step.value === 'not.be.equal') {
+          return `and asserts it should "not be equal" to "${step.equalText}"`;
         }
         return `and asserts it should "${step.value}"`;
       case 'title':

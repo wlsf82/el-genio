@@ -108,6 +108,12 @@ function processStep(step, testFileContent) {
       } else if (step.value === 'not.contain') {
         testFileContent = testFileContent.trimEnd();
         testFileContent += `.should('not.contain', '${step.containedText}')`;
+      } else if (step.value === 'be.equal') {
+        testFileContent = testFileContent.trimEnd();
+        testFileContent += `.should('be.equal', '${step.equalText}')`;
+      } else if (step.value === 'not.be.equal') {
+        testFileContent = testFileContent.trimEnd();
+        testFileContent += `.should('not.be.equal', '${step.equalText}')`;
       } else {
         testFileContent = testFileContent.trimEnd();
         testFileContent += `.should('${step.value}')`;
@@ -123,6 +129,12 @@ function processStep(step, testFileContent) {
       } else if (step.value === 'not.contain') {
         testFileContent = testFileContent.trimEnd();
         testFileContent += `.and('not.contain', '${step.containedText}')`;
+      } else if (step.value === 'be.equal') {
+        testFileContent = testFileContent.trimEnd();
+        testFileContent += `.and('be.equal', '${step.equalText}')`;
+      } else if (step.value === 'not.be.equal') {
+        testFileContent = testFileContent.trimEnd();
+        testFileContent += `.and('not.be.equal', '${step.equalText}')`;
       } else {
         testFileContent = testFileContent.trimEnd();
         testFileContent += `.and('${step.value}')`;
