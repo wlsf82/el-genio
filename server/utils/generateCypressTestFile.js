@@ -132,6 +132,10 @@ function processStep(step, testFileContent) {
       testFileContent = testFileContent.trimEnd();
       testFileContent += `.blur()`;
       break;
+    case 'title':
+      testFileContent += `
+    cy.title()`;
+      break;
     default:
       console.warn(`Unknown command: ${step.command}`);
   }

@@ -31,7 +31,8 @@ function BeforeEachForm({ onAddBeforeEachSteps, initialSteps = [], isEditing = f
     { value: 'select', hasSelector: false, hasValue: true },
     { value: 'blur', hasSelector: false, hasValue: false },
     { value: 'should', hasSelector: false, hasValue: true, hasShouldOptions: true },
-    { value: 'and', hasSelector: false, hasValue: true, hasShouldOptions: true }
+    { value: 'and', hasSelector: false, hasValue: true, hasShouldOptions: true },
+    { value: 'title', hasSelector: false, hasValue: false }
   ];
 
   const SHOULD_OPTIONS = [
@@ -171,6 +172,8 @@ function BeforeEachForm({ onAddBeforeEachSteps, initialSteps = [], isEditing = f
           return `and asserts it should "not contain" text "${step.containedText}"`;
         }
         return `and asserts it should "${step.value}"`;
+      case 'title':
+        return 'get the current title of the page';
       default:
         return step.command;
     }

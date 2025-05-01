@@ -162,6 +162,8 @@ function TestSuiteForm({ onTestSuiteCreated, initialData = null, isEditing = fal
           return `and asserts it should "not contain" text "${step.containedText}"`;
         }
         return `and asserts it should "${step.value}"`;
+      case 'title':
+        return 'get the current title of the page';
       default:
         return step.command;
     }
