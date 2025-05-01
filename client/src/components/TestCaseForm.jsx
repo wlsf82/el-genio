@@ -25,10 +25,10 @@ function TestCaseForm({ onAddTestCase, initialData = null }) {
     { value: 'uncheck', hasSelector: false, hasValue: false },
     { value: 'select', hasSelector: false, hasValue: true },
     { value: 'blur', hasSelector: false, hasValue: false },
+    { value: 'title', hasSelector: false, hasValue: false },
+    { value: 'url', hasSelector: false, hasValue: false },
     { value: 'should', hasSelector: false, hasValue: true, hasShouldOptions: true },
     { value: 'and', hasSelector: false, hasValue: true, hasShouldOptions: true },
-    { value: 'title', hasSelector: false, hasValue: false },
-    { value: 'url', hasSelector: false, hasValue: false } // <-- Added
   ];
 
   const SHOULD_OPTIONS = [
