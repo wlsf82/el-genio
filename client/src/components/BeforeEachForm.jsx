@@ -48,7 +48,8 @@ function BeforeEachForm({ onAddBeforeEachSteps, initialSteps = [], isEditing = f
     'have.length',
     'be.checked',
     'not.be.checked',
-    'contain'
+    'contain',
+    'not.contain'
   ];
 
   const CHAIN_OPTIONS = ['first', 'last'];
@@ -156,14 +157,18 @@ function BeforeEachForm({ onAddBeforeEachSteps, initialSteps = [], isEditing = f
         if (step.value === 'have.length') {
           return `asserts it should "${step.value}" with value "${step.lengthValue}"`;
         } else if (step.value === 'contain') {
-          return `asserts it should "${step.value}" text "${step.containedText}"`;
+          return `asserts it should "contain" text "${step.containedText}"`;
+        } else if (step.value === 'not.contain') {
+          return `asserts it should "not contain" text "${step.containedText}"`;
         }
         return `asserts it should "${step.value}"`;
       case 'and':
         if (step.value === 'have.length') {
           return `and asserts it should "${step.value}" with value "${step.lengthValue}"`;
         } else if (step.value === 'contain') {
-          return `and asserts it should "${step.value}" text "${step.containedText}"`;
+          return `and asserts it should "contain" text "${step.containedText}"`;
+        } else if (step.value === 'not.contain') {
+          return `and asserts it should "not contain" text "${step.containedText}"`;
         }
         return `and asserts it should "${step.value}"`;
       default:
@@ -255,12 +260,16 @@ function BeforeEachForm({ onAddBeforeEachSteps, initialSteps = [], isEditing = f
                   />
                 )}
 
-                {currentStep.value === 'contain' && (
+                {(currentStep.value === 'contain' || currentStep.value === 'not.contain') && (
                   <input
                     type="text"
                     value={currentStep.containedText || ''}
                     onChange={(e) => setCurrentStep({ ...currentStep, containedText: e.target.value })}
-                    placeholder="Enter text to contain"
+                    placeholder={
+                      currentStep.value === 'not.contain'
+                        ? 'Enter text not to contain'
+                        : 'Enter text to contain'
+                    }
                   />
                 )}
               </>

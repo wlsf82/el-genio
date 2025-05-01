@@ -105,6 +105,9 @@ function processStep(step, testFileContent) {
       } else if (step.value === 'contain') {
         testFileContent = testFileContent.trimEnd();
         testFileContent += `.should('${step.value}', '${step.containedText}')`;
+      } else if (step.value === 'not.contain') {
+        testFileContent = testFileContent.trimEnd();
+        testFileContent += `.should('not.contain', '${step.containedText}')`;
       } else {
         testFileContent = testFileContent.trimEnd();
         testFileContent += `.should('${step.value}')`;
@@ -117,6 +120,9 @@ function processStep(step, testFileContent) {
       } else if (step.value === 'contain') {
         testFileContent = testFileContent.trimEnd();
         testFileContent += `.and('${step.value}', '${step.containedText}')`;
+      } else if (step.value === 'not.contain') {
+        testFileContent = testFileContent.trimEnd();
+        testFileContent += `.and('not.contain', '${step.containedText}')`;
       } else {
         testFileContent = testFileContent.trimEnd();
         testFileContent += `.and('${step.value}')`;

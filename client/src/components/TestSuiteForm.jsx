@@ -148,14 +148,18 @@ function TestSuiteForm({ onTestSuiteCreated, initialData = null, isEditing = fal
         if (step.value === 'have.length') {
           return `asserts it should "${step.value}" with value "${step.lengthValue}"`;
         } else if (step.value === 'contain') {
-          return `asserts it should "${step.value}" text "${step.containedText}"`;
+          return `asserts it should "contain" text "${step.containedText}"`;
+        } else if (step.value === 'not.contain') {
+          return `asserts it should "not contain" text "${step.containedText}"`;
         }
         return `asserts it should "${step.value}"`;
       case 'and':
         if (step.value === 'have.length') {
           return `and asserts it should "${step.value}" with value "${step.lengthValue}"`;
         } else if (step.value === 'contain') {
-          return `and asserts it should "${step.value}" text "${step.containedText}"`;
+          return `and asserts it should "contain" text "${step.containedText}"`;
+        } else if (step.value === 'not.contain') {
+          return `and asserts it should "not contain" text "${step.containedText}"`;
         }
         return `and asserts it should "${step.value}"`;
       default:
