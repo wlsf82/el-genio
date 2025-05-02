@@ -52,7 +52,7 @@ function TestCaseForm({ onAddTestCase, initialData = null }) {
     'not.be.equal'
   ];
 
-  const CHAIN_OPTIONS = ['first', 'last'];
+  const CHAIN_OPTIONS = ['first', 'second', 'third', 'last'];
 
   useEffect(() => {
     if (initialData) {
@@ -149,7 +149,16 @@ function TestCaseForm({ onAddTestCase, initialData = null }) {
       case 'visit':
         return `visit "${step.value}"`;
       case 'get':
-        return `get ${step.chainOption ? `${step.chainOption}` : ''} element with selector "${step.selector}"`;
+        if (step.chainOption === 'first') {
+          return `get the first element with the selector "${step.selector}"`;
+        } else if (step.chainOption === 'second') {
+          return `get the second element with the selector "${step.selector}"`;
+        } else if (step.chainOption === 'third') {
+          return `get the third element with the selector "${step.selector}"`;
+        } else if (step.chainOption === 'last') {
+          return `get the last element with the selector "${step.selector}"`;
+        }
+        return `get element with selector "${step.selector}"`;
       case 'contains':
         return `get element with selector "${step.selector}" which contains "${step.value}"`;
       case 'click':

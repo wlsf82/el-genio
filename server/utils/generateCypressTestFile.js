@@ -72,6 +72,12 @@ function processStep(step, testFileContent) {
       } else if (step.chainOption === 'last') {
         testFileContent = testFileContent.trimEnd();
         testFileContent += `.last()`;
+      } else if (step.chainOption === 'second') {
+        testFileContent = testFileContent.trimEnd();
+        testFileContent += `.eq(1)`;
+      } else if (step.chainOption === 'third') {
+        testFileContent = testFileContent.trimEnd();
+        testFileContent += `.eq(2)`;
       }
       break;
     case 'contains':
