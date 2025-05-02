@@ -32,6 +32,7 @@ function BeforeEachForm({ onAddBeforeEachSteps, initialSteps = [], isEditing = f
     { value: 'blur', hasSelector: false, hasValue: false },
     { value: 'title', hasSelector: false, hasValue: false },
     { value: 'url', hasSelector: false, hasValue: false },
+    { value: 'reload', hasSelector: false, hasValue: false },
     { value: 'should', hasSelector: false, hasValue: true, hasShouldOptions: true },
     { value: 'and', hasSelector: false, hasValue: true, hasShouldOptions: true },
   ];
@@ -192,6 +193,8 @@ function BeforeEachForm({ onAddBeforeEachSteps, initialSteps = [], isEditing = f
           return `and asserts it should "not be equal" to "${step.equalText}"`;
         }
         return `and asserts it should "${step.value}"`;
+      case 'reload':
+        return 'reload the page';
       default:
         return step.command;
     }

@@ -174,6 +174,8 @@ function TestSuiteForm({ onTestSuiteCreated, initialData = null, isEditing = fal
         return 'get the current title of the page';
       case 'url':
         return 'get the current URL';
+      case 'reload':
+        return 'reload the page';
       default:
         return step.command;
     }

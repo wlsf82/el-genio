@@ -152,6 +152,10 @@ function processStep(step, testFileContent) {
       testFileContent += `
     cy.url()`;
       break;
+    case 'reload':
+      testFileContent += `
+    cy.reload()`;
+      break;
     default:
       console.warn(`Unknown command: ${step.command}`);
   }
