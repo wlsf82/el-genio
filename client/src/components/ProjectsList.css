@@ -35,6 +35,13 @@
   background-color: #2980b9;
 }
 
+.create-project-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  background-color: #b3d6f2;
+  color: #e5eaf1;
+}
+
 .no-projects {
   text-align: center;
   padding: 3rem;
