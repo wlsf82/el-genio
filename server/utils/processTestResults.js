@@ -1,3 +1,6 @@
+const fs = require('fs');
+const path = require('path');
+
 // Helper function to process test results and create standardized response
 const processTestResults = (results, req) => {
   // Extract failed tests (handling both single run and multiple runs cases)
@@ -26,8 +29,16 @@ const processTestResults = (results, req) => {
     failedTests
   };
 
-  // Include screenshots link if tests failed
-  if (results.totalFailed > 0) {
+  // Always check if screenshots exist for this run
+  const screenshotsDir = path.join(__dirname, '..', 'cypress', 'screenshots');
+  let screenshotsExist = false;
+  try {
+    screenshotsExist = fs.existsSync(screenshotsDir) && fs.readdirSync(screenshotsDir).length > 0;
+  } catch (e) {
+    screenshotsExist = false;
+  }
+
+  if (screenshotsExist) {
     response.screenshotsLink = `${req.protocol}://${req.get('host')}/cypress/screenshots/download`;
   }
 

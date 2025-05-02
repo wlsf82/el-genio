@@ -143,6 +143,15 @@ function TestSuitesList({ testSuites: propTestSuites, resetEditingSuite, forceLi
     document.body.removeChild(a);
   };
 
+  function suiteHasScreenshot(suite) {
+    // Check beforeEachSteps and all testCases for a screenshot command
+    const hasInBeforeEach = suite.beforeEachSteps?.some(step => step.command === 'screenshot');
+    const hasInTestCases = suite.testCases?.some(tc =>
+      tc.steps?.some(step => step.command === 'screenshot')
+    );
+    return hasInBeforeEach || hasInTestCases;
+  }
+
   if (editingSuite) {
     return (
       <TestSuiteForm
@@ -295,7 +304,7 @@ function TestSuitesList({ testSuites: propTestSuites, resetEditingSuite, forceLi
                     </ul>
                   </div>
                 )}
-                {testResults[suite.id].screenshotsLink && (
+                {testResults[suite.id].screenshotsLink && suiteHasScreenshot(suite) && (
                   <div className="screenshots-link">
                     <a
                       href={testResults[suite.id].screenshotsLink}

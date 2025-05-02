@@ -162,6 +162,10 @@ function processStep(step, testFileContent) {
       testFileContent += `
     cy.reload()`;
       break;
+    case 'screenshot':
+      testFileContent += `
+    cy.screenshot(\`${step.value}\`)`;
+      break;
     default:
       console.warn(`Unknown command: ${step.command}`);
   }

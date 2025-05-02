@@ -185,6 +185,8 @@ function TestSuiteForm({ onTestSuiteCreated, initialData = null, isEditing = fal
         return 'get the current URL';
       case 'reload':
         return 'reload the page';
+      case 'screenshot':
+        return `take a screenshot and name it as '${step.value}'`;
       default:
         return step.command;
     }

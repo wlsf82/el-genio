@@ -33,6 +33,7 @@ function BeforeEachForm({ onAddBeforeEachSteps, initialSteps = [], isEditing = f
     { value: 'title', hasSelector: false, hasValue: false },
     { value: 'url', hasSelector: false, hasValue: false },
     { value: 'reload', hasSelector: false, hasValue: false },
+    { value: 'screenshot', hasSelector: false, hasValue: true },
     { value: 'should', hasSelector: false, hasValue: true, hasShouldOptions: true },
     { value: 'and', hasSelector: false, hasValue: true, hasShouldOptions: true },
   ];
@@ -204,6 +205,8 @@ function BeforeEachForm({ onAddBeforeEachSteps, initialSteps = [], isEditing = f
         return `and asserts it should "${step.value}"`;
       case 'reload':
         return 'reload the page';
+      case 'screenshot':
+        return `take a screenshot and name it as '${step.value}'`;
       default:
         return step.command;
     }
@@ -340,7 +343,7 @@ function BeforeEachForm({ onAddBeforeEachSteps, initialSteps = [], isEditing = f
                 type="text"
                 value={currentStep.value}
                 onChange={(e) => setCurrentStep({ ...currentStep, value: e.target.value })}
-                placeholder="Value"
+                placeholder={selectedCommand?.value === 'screenshot' ? "Screenshot filename" : "Value"}
               />
             )}
 
