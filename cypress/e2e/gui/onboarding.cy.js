@@ -138,7 +138,7 @@ describe('El Genio - Onboarding', () => {
       .first()
       .should(
         'contain',
-        'Although El Genio is a no-code tool, some basic knowledge of HTML and CSS selectors is required to identify elements on a web page. Here are some common techniques:'
+        'Although El Genio is a no-code testing tool, some basic knowledge of HTML and CSS selectors is required to identify elements on a web page. Here are some common techniques:'
       ).and('be.visible')
       cy.get('@CSSSection')
       .find('p')

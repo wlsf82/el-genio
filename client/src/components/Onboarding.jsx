@@ -55,7 +55,7 @@ function Onboarding({ onComplete }) {
           <div className="onboarding-css-selectors">
             <h3>🔎 CSS Selectors Basics</h3>
             <p>
-              Although El Genio is a no-code tool, some basic knowledge of HTML and CSS selectors is required to identify elements on a web page. Here are some common techniques:
+              Although El Genio is a no-code testing tool, some basic knowledge of HTML and CSS selectors is required to identify elements on a web page. Here are some common techniques:
             </p>
             <ul>
               <li>
