@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { X, ArrowRight, ArrowLeft } from 'lucide-react';
 import './Onboarding.css';
 
