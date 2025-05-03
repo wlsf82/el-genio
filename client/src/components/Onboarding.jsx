@@ -32,6 +32,12 @@ function Onboarding({ onComplete }) {
           <p>Each project can contain multiple <strong>test suites</strong>.</p>
           <p>A test suite is a collection of related test cases that test a specific feature or area of your application.</p>
           <p>Every test suite can have its own <strong>command timeout</strong> setting, which controls how long El Genio waits for elements before failing a test. The default timeout is <strong>4000ms</strong> (4 seconds), but you can customize this per test suite to handle slower applications.</p>
+          <p>Additionally, test suites can have <strong>Setup Steps</strong> that run before each test case:</p>
+          <ul>
+            <li>These steps establish common preconditions for all test cases in the suite</li>
+            <li>Setup Steps are defined once but executed before each test case automatically</li>
+            <li>They're perfect for repetitive actions like logging in or navigating to a specific page</li>
+          </ul>
         </>
       )
     },
@@ -45,12 +51,6 @@ function Onboarding({ onComplete }) {
             <li><strong>Pre-conditions</strong>: Setup steps like visiting URLs</li>
             <li><strong>Actions</strong>: User interactions like clicking buttons or typing text</li>
             <li><strong>Assertions</strong>: Checking that elements exist, are visible, contain specific text, etc.</li>
-          </ul>
-          <p>Additionally, test suites can have <strong>Setup Steps</strong> that run before each test case:</p>
-          <ul>
-            <li>These steps establish common preconditions for all test cases in the suite</li>
-            <li>Setup Steps are defined once but executed before each test case automatically</li>
-            <li>They're perfect for repetitive actions like logging in or navigating to a specific page</li>
           </ul>
         </>
       )
