@@ -206,7 +206,7 @@ function BeforeEachForm({ onAddBeforeEachSteps, initialSteps = [], isEditing = f
       case 'reload':
         return 'reload the page';
       case 'screenshot':
-        return `take a screenshot and name it as '${step.value}'`;
+        return `take a screenshot and name it as "${step.value}"`;
       default:
         return step.command;
     }

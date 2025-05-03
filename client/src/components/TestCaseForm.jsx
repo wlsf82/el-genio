@@ -207,7 +207,7 @@ function TestCaseForm({ onAddTestCase, initialData = null }) {
       case 'reload':
         return 'reload the page';
       case 'screenshot':
-        return `take a screenshot and name it as '${step.value}'`;
+        return `take a screenshot and name it as "${step.value}"`;
       default:
         return step.command;
     }
