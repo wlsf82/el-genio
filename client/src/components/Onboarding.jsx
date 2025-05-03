@@ -52,6 +52,75 @@ function Onboarding({ onComplete }) {
             <li><strong>Actions</strong>: User interactions like clicking buttons or typing text</li>
             <li><strong>Assertions</strong>: Checking that elements exist, are visible, contain specific text, etc.</li>
           </ul>
+          <div className="onboarding-css-selectors">
+            <h3>🔎 CSS Selectors Basics</h3>
+            <p>
+              Although El Genio is a no-code tool, some basic knowledge of HTML and CSS selectors is required to identify elements on a web page. Here are some common techniques:
+            </p>
+            <ul>
+              <li>
+                <strong>Selection via ID</strong>
+                <div className="css-selector-example">
+                  <span>HTML:</span>
+                  <pre>
+                    {`<input id="username" />`}
+                  </pre>
+                  <span>Selector:</span>
+                  <code>#username</code>
+                </div>
+              </li>
+              <li>
+                <strong>Selection via class</strong>
+                <div className="css-selector-example">
+                  <span>HTML:</span>
+                  <pre>
+                    {`<button class="btn-primary">Submit</button>`}
+                  </pre>
+                  <span>Selector:</span>
+                  <code>.btn-primary</code>
+                </div>
+              </li>
+              <li>
+                <strong>Selection via HTML tag</strong>
+                <div className="css-selector-example">
+                  <span>HTML:</span>
+                  <pre>
+                    {`<button>Click me</button>`}
+                  </pre>
+                  <span>Selector:</span>
+                  <code>button</code>
+                </div>
+              </li>
+              <li>
+                <strong>Selection via HTML tag inside another HTML tag</strong>
+                <div className="css-selector-example">
+                  <span>HTML:</span>
+                  <pre>
+                    {`<ul>
+  <li>Item 1</li>
+  <li>Item 2</li>
+</ul>`}
+                  </pre>
+                  <span>Selector:</span>
+                  <code>ul li</code>
+                </div>
+              </li>
+              <li>
+                <strong>Selection via HTML property</strong>
+                <div className="css-selector-example">
+                  <span>HTML:</span>
+                  <pre>
+                    {`<a href="http://example.com">Example</a>`}
+                  </pre>
+                  <span>Selector:</span>
+                  <code>{`a[href="http://example.com"]`}</code>
+                </div>
+              </li>
+            </ul>
+            <p>
+              For more complex selections, you may need to combine these techniques. If you need help, check the <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_selectors" target="_blank" rel="noopener noreferrer">MDN CSS selectors guide</a>.
+            </p>
+          </div>
         </>
       )
     },

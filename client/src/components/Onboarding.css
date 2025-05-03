@@ -171,6 +171,58 @@
   background-color: #27ae60;
 }
 
+.onboarding-css-selectors {
+  background: #f8fafc;
+  border-radius: 8px;
+  padding: 1rem 1.5rem;
+  margin-top: 2rem;
+  margin-bottom: 1rem;
+  border-left: 4px solid #5a67d8;
+}
+
+.onboarding-css-selectors h3 {
+  margin-top: 0;
+  color: #5a67d8;
+  font-size: 1.2rem;
+  margin-bottom: 0.7rem;
+}
+
+.onboarding-css-selectors ul {
+  margin-bottom: 0.5rem;
+}
+
+.css-selector-example {
+  background: #f0f4f8;
+  border-radius: 6px;
+  padding: 0.5rem 1rem;
+  margin: 0.5rem 0 1rem 0;
+  font-size: 0.98rem;
+  color: #34495e;
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.css-selector-example pre {
+  background: #e8eaf6;
+  border-radius: 4px;
+  padding: 0.3rem 0.6rem;
+  margin: 0.2rem 0;
+  font-size: 0.97rem;
+  font-family: 'Fira Mono', 'Consolas', monospace;
+  color: #2c3e50;
+  white-space: pre-wrap;
+}
+
+.css-selector-example code {
+  background: #e0e7ff;
+  border-radius: 3px;
+  padding: 0.1rem 0.4rem;
+  font-size: 0.97rem;
+  color: #3b4252;
+  font-family: 'Fira Mono', 'Consolas', monospace;
+}
+
 @media (max-width: 768px) {
   .onboarding-container {
     padding: 1.5rem;
