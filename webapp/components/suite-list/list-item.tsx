@@ -1,45 +1,38 @@
-import React from "react";
-import { SuiteListItemProvider, useSuiteListItem } from "./root";
-import { Input } from "@/components/ui/input";
+"use client";
+
+import React, { createContext, useContext } from "react";
 import type { TestSuite } from "@/types/test-suites";
 
-export function SuiteListItem({
+export interface SuiteListItemContextType {
+  suite: TestSuite;
+}
+
+const SuiteListItemContext = createContext<SuiteListItemContextType | null>(
+  null
+);
+
+export function useSuiteListItem() {
+  const ctx = useContext(SuiteListItemContext);
+  if (!ctx) throw new Error("Must be used within <SuiteList.Item>");
+  return ctx;
+}
+
+export function SuiteListItemRoot({
   suite,
   children,
   className = "",
-  ...props
-}: React.HTMLAttributes<HTMLDivElement> & { suite: TestSuite }) {
+}: {
+  suite: TestSuite;
+  children: React.ReactNode;
+  className?: string;
+}) {
   return (
-    <SuiteListItemProvider suite={suite}>
-      <SuiteListItemRow className={className} {...props}>
-        {children}
-      </SuiteListItemRow>
-    </SuiteListItemProvider>
-  );
-}
-
-function SuiteListItemRow({
-  children,
-  className = "",
-  ...props
-}: React.HTMLAttributes<HTMLDivElement>) {
-  const { selected, setSelected } = useSuiteListItem();
-  return (
-    <div
-      className={`flex items-center justify-between rounded-md border bg-card px-4 py-3 hover:bg-accent transition-colors group ${className}`}
-      {...props}
-    >
-      <div className="flex items-center gap-4 flex-1 min-w-0">
-        <Input
-          type="checkbox"
-          checked={selected}
-          onChange={(e) => setSelected(e.target.checked)}
-          className={`size-4 transition-opacity ${
-            selected ? "opacity-100" : "opacity-0 group-hover:opacity-100"
-          }`}
-        />
+    <SuiteListItemContext.Provider value={{ suite }}>
+      <div
+        className={`flex items-center justify-between rounded-md border bg-card px-4 py-3 hover:bg-accent transition-colors group ${className}`}
+      >
         {children}
       </div>
-    </div>
+    </SuiteListItemContext.Provider>
   );
 }

@@ -1,4 +1,8 @@
+"use client";
+
 import React from "react";
+import { Button } from "@/components/ui/button";
+import { PlayIcon, DownloadIcon, EyeIcon } from "lucide-react";
 
 export function SuiteListActions({
   children,
@@ -7,7 +11,15 @@ export function SuiteListActions({
 }: React.HTMLAttributes<HTMLDivElement>) {
   return (
     <div className={`flex items-center gap-1 ml-4 ${className}`} {...props}>
-      {children}
+      <Button size="icon" variant="ghost" aria-label="Run Test Suite">
+        <PlayIcon className="w-4 h-4" />
+      </Button>
+      <Button size="icon" variant="ghost" aria-label="Download">
+        <DownloadIcon className="w-4 h-4" />
+      </Button>
+      <Button size="icon" variant="ghost" aria-label="View">
+        <EyeIcon className="w-4 h-4" />
+      </Button>
     </div>
   );
 }

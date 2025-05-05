@@ -1,9 +1,11 @@
-import { SuiteListItem } from "./list-item";
 import { SuiteListActions } from "./actions";
+import { SuiteListItemRoot } from "./list-item";
+import { SuiteListRoot } from "./root";
 import { SuiteListTitle } from "./title";
 
 export const SuiteList = {
-  Item: SuiteListItem,
+  Root: SuiteListRoot,
+  Item: SuiteListItemRoot,
   Actions: SuiteListActions,
   Title: SuiteListTitle,
 };

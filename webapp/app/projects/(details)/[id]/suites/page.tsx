@@ -1,9 +1,7 @@
-"use client";
 import { Button } from "@/components/ui/button";
 import { EmptyState } from "@/components/empty-state";
 import Link from "next/link";
 import { fetchTestSuites } from "@/services/suites";
-import { PlayIcon, DownloadIcon, EyeIcon } from "lucide-react";
 import { PageTitle } from "@/components/page-title";
 import { SuiteList } from "@/components/suite-list";
 
@@ -36,28 +34,14 @@ export default async function SuitesPage({
         </Link>
       </div>
 
-      <div className="flex flex-col gap-2">
+      <SuiteList.Root>
         {suites.map((suite) => (
           <SuiteList.Item key={suite.id} suite={suite}>
-            <Link href={`/projects/${params.id}/suites/${suite.id}`}>
-              <SuiteList.Title />
-            </Link>
-            <SuiteList.Actions>
-              <Button size="icon" variant="ghost" aria-label="Run Test Suite">
-                <PlayIcon className="w-4 h-4" />
-              </Button>
-              <Button size="icon" variant="ghost" aria-label="Download">
-                <DownloadIcon className="w-4 h-4" />
-              </Button>
-              <Link href={`/projects/${params.id}/suites/${suite.id}`}>
-                <Button size="icon" variant="ghost" aria-label="View">
-                  <EyeIcon className="w-4 h-4" />
-                </Button>
-              </Link>
-            </SuiteList.Actions>
+            <SuiteList.Title />
+            <SuiteList.Actions />
           </SuiteList.Item>
         ))}
-      </div>
+      </SuiteList.Root>
     </div>
   );
 }
