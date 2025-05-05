@@ -8,6 +8,8 @@ import { RecentExecutions } from "@/components/recent-executions";
 import Link from "next/link";
 import { fetchProjects } from "@/services/projects";
 import { Project } from "@/types/projects";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 
 export default function ProjectsPage() {
   const [projects, setProjects] = React.useState<Project[]>([]);
@@ -25,17 +27,16 @@ export default function ProjectsPage() {
     fetchProjectsData();
   }, []);
 
-  console.log(projects);
-
   return (
-    <div className="flex flex-col h-screen bg-accent">
-      <AppHeader.Root>
-        <AppHeader.Logo />
-        <div className="flex-1" />
-        <AppHeader.ProfileMenu />
-      </AppHeader.Root>
+    <div className="p-4 flex flex-col gap-4">
+      <div className="flex flex-row gap-3 py-4">
+        <Input placeholder="Search" className="w-full bg-white" />
+        <Link href="/projects/new">
+          <Button>Create project</Button>
+        </Link>
+      </div>
 
-      <div className="flex p-4 gap-12 overflow-hidden">
+      <div className="flex gap-12">
         <div className="flex flex-col flex-1 gap-3 w-1/3 min-w-[320px] max-w-sm">
           <PageTitle>Recent runnings</PageTitle>
           <RecentExecutions.Root>
