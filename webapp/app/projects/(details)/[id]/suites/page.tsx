@@ -3,15 +3,9 @@ import { Button } from "@/components/ui/button";
 import { EmptyState } from "@/components/empty-state";
 import Link from "next/link";
 import { fetchTestSuites } from "@/services/suites";
-import {
-  Table,
-  TableHeader,
-  TableBody,
-  TableRow,
-  TableHead,
-} from "@/components/ui/table";
+import { PlayIcon, DownloadIcon, EyeIcon } from "lucide-react";
 import { PageTitle } from "@/components/page-title";
-import { SuiteTableRow } from "@/components/suite-table-row";
+import { SuiteList } from "@/components/suite-list";
 
 export default async function SuitesPage({
   params,
@@ -42,21 +36,28 @@ export default async function SuitesPage({
         </Link>
       </div>
 
-      <Table>
-        <TableHeader>
-          <TableRow>
-            <TableHead>Name</TableHead>
-            <TableHead>Test Cases</TableHead>
-            <TableHead>Created At</TableHead>
-            <TableHead>Actions</TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {suites.map((suite) => (
-            <SuiteTableRow key={suite.id} suite={suite} projectId={params.id} />
-          ))}
-        </TableBody>
-      </Table>
+      <div className="flex flex-col gap-2">
+        {suites.map((suite) => (
+          <SuiteList.Item key={suite.id} suite={suite}>
+            <Link href={`/projects/${params.id}/suites/${suite.id}`}>
+              <SuiteList.Title />
+            </Link>
+            <SuiteList.Actions>
+              <Button size="icon" variant="ghost" aria-label="Run Test Suite">
+                <PlayIcon className="w-4 h-4" />
+              </Button>
+              <Button size="icon" variant="ghost" aria-label="Download">
+                <DownloadIcon className="w-4 h-4" />
+              </Button>
+              <Link href={`/projects/${params.id}/suites/${suite.id}`}>
+                <Button size="icon" variant="ghost" aria-label="View">
+                  <EyeIcon className="w-4 h-4" />
+                </Button>
+              </Link>
+            </SuiteList.Actions>
+          </SuiteList.Item>
+        ))}
+      </div>
     </div>
   );
 }
