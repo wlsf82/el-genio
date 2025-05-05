@@ -5,14 +5,26 @@ import { useForm, Controller } from "react-hook-form";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { PageTitle } from "@/components/page-title";
+import { createTestSuite } from "@/services/suites";
+import { useParams } from "next/navigation";
+import { toast } from "sonner";
 
 type FormData = {
   name: string;
   commandTimeout: string;
+  testCases: Array<{
+    name: string;
+    steps: Array<{
+      command: string;
+      target: string;
+    }>;
+  }>;
 };
 
 export default function NewSuitePage() {
   const router = useRouter();
+  const params = useParams();
+  const projectId = params.id as string;
   const {
     control,
     handleSubmit,
@@ -20,14 +32,37 @@ export default function NewSuitePage() {
   } = useForm<FormData>({
     defaultValues: {
       name: "",
-      commandTimeout: "",
+      commandTimeout: "400",
+      testCases: [
+        {
+          name: "Uma description do test case",
+          steps: [
+            {
+              command: "get",
+              target: "#button",
+            },
+          ],
+        },
+      ],
     },
   });
 
   const onSubmit = async (data: FormData) => {
-    // TODO: Add API call to create suite
-    console.log(data);
-    router.back();
+    try {
+      await createTestSuite({
+        name: data.name,
+        projectId,
+        commandTimeout: data.commandTimeout
+          ? parseInt(data.commandTimeout)
+          : undefined,
+        testCases: data.testCases,
+      });
+      toast.success("Suite created successfully");
+      router.back();
+    } catch (error) {
+      console.error("Error creating suite:", error);
+      toast.error("Failed to create suite");
+    }
   };
 
   return (
