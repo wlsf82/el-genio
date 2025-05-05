@@ -1,8 +1,17 @@
+"use client";
 import { Button } from "@/components/ui/button";
 import { EmptyState } from "@/components/empty-state";
 import Link from "next/link";
 import { fetchTestSuites } from "@/services/suites";
-import { Card, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Table,
+  TableHeader,
+  TableBody,
+  TableRow,
+  TableHead,
+} from "@/components/ui/table";
+import { PageTitle } from "@/components/page-title";
+import { SuiteTableRow } from "@/components/suite-table-row";
 
 export default async function SuitesPage({
   params,
@@ -25,29 +34,29 @@ export default async function SuitesPage({
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 px-4 py-6">
       <div className="flex justify-between items-center">
-        <h1 className="text-2xl font-bold">Test Suites</h1>
+        <PageTitle>Test Suites</PageTitle>
         <Link href={`/projects/${params.id}/suites/new`}>
           <Button>Create Test Suite</Button>
         </Link>
       </div>
 
-      <div className="grid gap-4">
-        {suites.map((suite) => (
-          <Link
-            key={suite.id}
-            href={`/projects/${params.id}/suites/${suite.id}`}
-            className="block"
-          >
-            <Card className="hover:bg-accent/50 transition-colors">
-              <CardHeader>
-                <CardTitle>{suite.name}</CardTitle>
-              </CardHeader>
-            </Card>
-          </Link>
-        ))}
-      </div>
+      <Table>
+        <TableHeader>
+          <TableRow>
+            <TableHead>Name</TableHead>
+            <TableHead>Test Cases</TableHead>
+            <TableHead>Created At</TableHead>
+            <TableHead>Actions</TableHead>
+          </TableRow>
+        </TableHeader>
+        <TableBody>
+          {suites.map((suite) => (
+            <SuiteTableRow key={suite.id} suite={suite} projectId={params.id} />
+          ))}
+        </TableBody>
+      </Table>
     </div>
   );
 }
