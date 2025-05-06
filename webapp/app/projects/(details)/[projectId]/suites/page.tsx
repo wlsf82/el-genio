@@ -37,10 +37,15 @@ export default async function SuitesPage({
 
       <SuiteList.Root>
         {suites.map((suite) => (
-          <SuiteList.Item key={suite.id} suite={suite}>
-            <SuiteList.Title />
-            <SuiteList.Actions />
-          </SuiteList.Item>
+          <Link
+            href={`/projects/${projectId}/suites/${suite.id}`}
+            key={suite.id}
+          >
+            <SuiteList.Item suite={suite}>
+              <SuiteList.Title />
+              <SuiteList.Actions />
+            </SuiteList.Item>
+          </Link>
         ))}
       </SuiteList.Root>
     </div>

@@ -2,61 +2,46 @@
 
 import { useForm, FormProvider } from "react-hook-form";
 import { useRouter } from "next/navigation";
-import { useParams } from "next/navigation";
 import { toast } from "sonner";
 import { createTestSuite } from "@/services/suites";
-
-export type FormData = {
-  name: string;
-  commandTimeout: string;
-  testCases: Array<{
-    name: string;
-    steps: Array<{
-      command: string;
-      target: string;
-    }>;
-  }>;
-};
+import type { FormData } from "./types";
 
 interface SuiteFormProps {
   children: React.ReactNode;
+  projectId: string;
 }
 
-export const SuiteFormRoot = ({ children }: SuiteFormProps) => {
-  const router = useRouter();
-  const params = useParams();
-  const projectId = params.id as string;
-
-  const methods = useForm<FormData>({
-    defaultValues: {
+const DEFAULT_VALUES: FormData = {
+  name: "",
+  command_timeout: "400",
+  test_cases: [
+    {
       name: "",
-      commandTimeout: "400",
-      testCases: [
+      steps: [
         {
-          name: "Uma description do test case",
-          steps: [
-            {
-              command: "get",
-              target: "#button",
-            },
-          ],
+          command: "",
+          target: "",
         },
       ],
     },
-  });
+  ],
+};
+
+export const SuiteFormRoot = ({ children, projectId }: SuiteFormProps) => {
+  const methods = useForm<FormData>({ defaultValues: DEFAULT_VALUES });
 
   const onSubmit = async (data: FormData) => {
     try {
       await createTestSuite({
         name: data.name,
         projectId,
-        commandTimeout: data.commandTimeout
-          ? parseInt(data.commandTimeout)
+        command_timeout: data.command_timeout
+          ? parseInt(data.command_timeout)
           : undefined,
-        testCases: data.testCases,
+        test_cases: data.test_cases,
       });
+
       toast.success("Suite created successfully");
-      router.back();
     } catch (error) {
       console.error("Error creating suite:", error);
       toast.error("Failed to create suite");

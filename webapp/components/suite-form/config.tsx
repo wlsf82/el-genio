@@ -3,8 +3,7 @@
 import { useFormContext, Controller } from "react-hook-form";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Alert, AlertDescription } from "@/components/ui/alert";
-import type { FormData } from "./root";
+import type { FormData } from "./types";
 
 export function SuiteFormConfig() {
   const {
@@ -41,9 +40,9 @@ export function SuiteFormConfig() {
       </div>
 
       <div className="flex flex-col gap-2">
-        <Label htmlFor="commandTimeout">Command Timeout (ms)</Label>
+        <Label htmlFor="command_timeout">Command Timeout (ms)</Label>
         <Controller
-          name="commandTimeout"
+          name="command_timeout"
           control={control}
           rules={{
             pattern: {
@@ -55,15 +54,15 @@ export function SuiteFormConfig() {
             <div className="flex flex-col gap-2">
               <Input
                 {...field}
-                id="commandTimeout"
+                id="command_timeout"
                 className={`w-full bg-white ${
-                  errors.commandTimeout ? "border-red-500" : ""
+                  errors.command_timeout ? "border-red-500" : ""
                 }`}
                 placeholder="Enter timeout in milliseconds"
               />
-              {errors.commandTimeout && (
+              {errors.command_timeout && (
                 <p className="text-sm text-red-500">
-                  {errors.commandTimeout.message}
+                  {errors.command_timeout.message}
                 </p>
               )}
             </div>
