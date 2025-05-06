@@ -3,6 +3,7 @@ import axios from 'axios';
 import { Play, Trash, ChevronDown, ChevronUp, Edit, Plus, X, Eye } from 'lucide-react';
 import './ProjectsList.css';
 import ProjectForm from './ProjectForm';
+import React from 'react';
 
 function ProjectsList({ onSelectProject }) {
   const [projects, setProjects] = useState([]);
@@ -100,6 +101,16 @@ function ProjectsList({ onSelectProject }) {
       setIsRunningProject({ ...isRunningProject, [projectId]: false });
       setIsAnyProjectRunning(false);
     }
+  };
+
+  const downloadVideos = () => {
+    const downloadUrl = '/api/test-run/videos/download';
+    const a = document.createElement('a');
+    a.href = downloadUrl;
+    a.download = true;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
   };
 
   // If we're creating or editing a project, show the form
@@ -227,6 +238,21 @@ function ProjectsList({ onSelectProject }) {
                       rel="noopener noreferrer"
                     >
                       Download screenshots
+                    </a>
+                  </div>
+                )}
+                {projectResults[project.id].videosLink && (
+                  <div className="videos-link">
+                    <a
+                      href={projectResults[project.id].videosLink}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      onClick={e => {
+                        e.preventDefault();
+                        downloadVideos();
+                      }}
+                    >
+                      Download videos
                     </a>
                   </div>
                 )}

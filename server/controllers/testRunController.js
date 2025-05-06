@@ -166,8 +166,29 @@ const downloadScreenshots = async (req, res) => {
   archive.finalize();
 };
 
+// Download videos as zip
+const downloadVideos = async (req, res) => {
+  const videosDir = path.join(__dirname, '..', 'cypress', 'videos');
+
+  // Check if the videos directory exists
+  try {
+    await fs.access(videosDir);
+  } catch (err) {
+    return res.status(404).json({ message: 'Videos directory not found' });
+  }
+
+  res.setHeader('Content-Type', 'application/zip');
+  res.setHeader('Content-Disposition', 'attachment; filename=videos.zip');
+
+  const archive = archiver('zip', { zlib: { level: 9 } });
+  archive.pipe(res);
+  archive.directory(videosDir, false);
+  archive.finalize();
+};
+
 module.exports = {
   runProjectTestSuites,
   runTestSuite,
-  downloadScreenshots
+  downloadScreenshots,
+  downloadVideos,
 };

@@ -6,6 +6,7 @@ module.exports = defineConfig({
     fixturesFolder: false,
     viewportHeight: 1280,
     viewportWidth: 1800,
+    video: true,
     setupNodeEvents(on, config) {
       require('@cypress/grep/src/plugin')(config);
       return config;

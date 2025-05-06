@@ -8,4 +8,7 @@ router.post('/project/:projectId', testRunController.runProjectTestSuites);
 // GET download screenshots as zip
 router.get('/screenshots/download', testRunController.downloadScreenshots);
 
+// GET download videos as zip
+router.get('/videos/download', testRunController.downloadVideos);
+
 module.exports = router;

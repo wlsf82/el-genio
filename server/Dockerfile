@@ -17,7 +17,7 @@ RUN apt-get update && \
   rm -rf /var/lib/apt/lists/*
 
 # Create cypress directories with proper permissions
-RUN mkdir -p cypress/e2e cypress/screenshots cypress/downloads && \
+RUN mkdir -p cypress/e2e cypress/screenshots cypress/downloads cypress/videos && \
   chmod -R 777 cypress
 
 # Bundle your app's source code inside the Docker image

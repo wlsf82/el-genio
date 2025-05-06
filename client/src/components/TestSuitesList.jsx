@@ -143,6 +143,16 @@ function TestSuitesList({ testSuites: propTestSuites, resetEditingSuite, forceLi
     document.body.removeChild(a);
   };
 
+  const downloadVideos = () => {
+    const downloadUrl = '/api/test-run/videos/download';
+    const a = document.createElement('a');
+    a.href = downloadUrl;
+    a.download = true;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+  };
+
   function suiteHasScreenshot(suite) {
     // Check beforeEachSteps and all testCases for a screenshot command
     const hasInBeforeEach = suite.beforeEachSteps?.some(step => step.command === 'screenshot');
@@ -231,6 +241,21 @@ function TestSuitesList({ testSuites: propTestSuites, resetEditingSuite, forceLi
               </a>
             </div>
           )}
+          {allTestsResults.videosLink && (
+            <div className="videos-link">
+              <a
+                href={allTestsResults.videosLink}
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={e => {
+                  e.preventDefault();
+                  downloadVideos();
+                }}
+              >
+                Download videos
+              </a>
+            </div>
+          )}
         </div>
       )}
 
@@ -312,6 +337,21 @@ function TestSuitesList({ testSuites: propTestSuites, resetEditingSuite, forceLi
                       rel="noopener noreferrer"
                     >
                       Download screenshots
+                    </a>
+                  </div>
+                )}
+                {testResults[suite.id].videosLink && (
+                  <div className="videos-link">
+                    <a
+                      href={testResults[suite.id].videosLink}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      onClick={e => {
+                        e.preventDefault();
+                        downloadVideos();
+                      }}
+                    >
+                      Download videos
                     </a>
                   </div>
                 )}

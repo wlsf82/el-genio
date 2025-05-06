@@ -42,6 +42,19 @@ const processTestResults = (results, req) => {
     response.screenshotsLink = `${req.protocol}://${req.get('host')}/cypress/screenshots/download`;
   }
 
+  // Check if videos exist for this run
+  const videosDir = path.join(__dirname, '..', 'cypress', 'videos');
+  let videosExist = false;
+  try {
+    videosExist = fs.existsSync(videosDir) && fs.readdirSync(videosDir).length > 0;
+  } catch (e) {
+    videosExist = false;
+  }
+
+  if (videosExist) {
+    response.videosLink = `${req.protocol}://${req.get('host')}/cypress/videos/download`;
+  }
+
   return response;
 };
 
