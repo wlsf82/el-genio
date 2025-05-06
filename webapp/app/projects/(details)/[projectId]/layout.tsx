@@ -1,14 +1,18 @@
 import { AppHeaderComposed } from "@/components/app-header";
 import { AppSidebar } from "@/components/app-sidebar";
 
-export default function ProjectLayout({
+export default async function ProjectLayout({
   children,
+  params,
 }: Readonly<{
   children: React.ReactNode;
+  params: Promise<{ projectId: string }>;
 }>) {
+  const { projectId } = await params;
+
   return (
     <div className="flex flex-col h-screen">
-      <AppHeaderComposed />
+      <AppHeaderComposed projectId={projectId} />
 
       <div className="flex flex-1 overflow-hidden">
         <AppSidebar.Root>

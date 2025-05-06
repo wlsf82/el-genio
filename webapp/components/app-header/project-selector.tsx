@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { useRouter, useParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import {
   Select,
   SelectContent,
@@ -13,18 +13,16 @@ import {
 import { fetchProjects } from "@/services/projects";
 import { Project } from "@/types/projects";
 
-export function ProjectSelector() {
+export function ProjectSelector({ projectId }: { projectId: string }) {
   const router = useRouter();
-  const params = useParams();
   const [projects, setProjects] = React.useState<Project[]>([]);
   const [defaultValue, setDefaultValue] = React.useState<string>("");
 
   React.useEffect(() => {
-    const projectId = params?.id as string;
-    if (projectId) {
-      setDefaultValue(projectId);
-    }
-  }, [params]);
+    if (!projectId) return;
+
+    setDefaultValue(projectId);
+  }, [projectId]);
 
   React.useEffect(() => {
     const loadProjects = async () => {

@@ -8,9 +8,10 @@ import { SuiteList } from "@/components/suite-list";
 export default async function SuitesPage({
   params,
 }: {
-  params: { id: string };
+  params: Promise<{ projectId: string }>;
 }) {
-  const suites = await fetchTestSuites(params.id);
+  const { projectId } = await params;
+  const suites = await fetchTestSuites(projectId);
 
   if (suites.length === 0) {
     return (
@@ -18,7 +19,7 @@ export default async function SuitesPage({
         title="Start testing your project"
         description="Create your first test suite to ensure your project's reliability and maintain high quality standards."
       >
-        <Link href={`/projects/${params.id}/suites/new`}>
+        <Link href={`/projects/${projectId}/suites/new`}>
           <Button>Create Test Suite</Button>
         </Link>
       </EmptyState>
@@ -29,7 +30,7 @@ export default async function SuitesPage({
     <div className="space-y-6 px-4 py-6">
       <div className="flex justify-between items-center">
         <PageTitle>Test Suites</PageTitle>
-        <Link href={`/projects/${params.id}/suites/new`}>
+        <Link href={`/projects/${projectId}/suites/new`}>
           <Button>Create Test Suite</Button>
         </Link>
       </div>
