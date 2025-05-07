@@ -13,7 +13,7 @@ export interface TestCase {
   steps: TestCaseStep[]
 }
 
-export interface FormData {
+export interface TestCaseFormData {
   name: string
   commandTimeout: number | null
   testCases: TestCase[]

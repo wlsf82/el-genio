@@ -1,9 +1,11 @@
+import { TestCase, TestCaseStep } from './test-case'
+
 export interface TestSuite {
   id: string
   name: string
   projectId: string
-  testCases: any[] // TODO: Define proper test case type
-  beforeEachSteps: any[] // TODO: Define proper step type
+  testCases: TestCase[]
+  beforeEachSteps: TestCaseStep[]
   commandTimeout: number | null
   createdAt: string
   updatedAt: string

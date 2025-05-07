@@ -1,3 +1,4 @@
+import { TestCase, TestCaseStep } from '@/types/test-case'
 import { TestSuite } from '@/types/test-suites'
 
 export const fetchTestSuites = async (projectId: string): Promise<TestSuite[]> => {
@@ -36,8 +37,8 @@ export const updateTestSuite = async (
   data: {
     name: string
     description?: string
-    testCases?: any[]
-    beforeEachSteps?: any[]
+    testCases?: TestCase[]
+    beforeEachSteps?: TestCaseStep[]
     commandTimeout?: number | null
   },
 ): Promise<TestSuite> => {
@@ -65,10 +66,7 @@ export const createTestSuite = async (data: {
   name: string
   projectId: string
   commandTimeout?: number | null
-  testCases: {
-    description: string
-    steps: { command: string; target: string }[]
-  }[]
+  testCases: TestCase[]
 }): Promise<TestSuite> => {
   try {
     const response = await fetch(`http://localhost:3003/api/test-suites`, {
