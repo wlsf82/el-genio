@@ -1,16 +1,20 @@
+'use client'
+
+import Link from 'next/link'
+import { usePathname } from 'next/navigation'
+
 interface AppSidebarMenuItemProps {
-  label: string;
-  active?: boolean;
+  label: string
+  href: string
 }
 
-export function AppSidebarMenuItem({ label, active }: AppSidebarMenuItemProps) {
+export function AppSidebarMenuItem({ label, href }: AppSidebarMenuItemProps) {
+  const pathname = usePathname()
+  const isActive = pathname === href
+
   return (
-    <div
-      className={`px-4 py-2 flex ${
-        active ? "bg-gray-100" : "hover:bg-gray-50"
-      }`}
-    >
+    <Link href={href} className={`px-4 py-2 flex rounded-md ${isActive ? 'bg-gray-200' : 'hover:bg-gray-50'}`}>
       <span className="text-sm">{label}</span>
-    </div>
-  );
+    </Link>
+  )
 }

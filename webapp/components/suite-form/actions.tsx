@@ -1,29 +1,25 @@
-"use client";
+'use client'
 
-import { useFormContext } from "react-hook-form";
-import { useRouter } from "next/navigation";
-import { Button } from "@/components/ui/button";
-import type { FormData } from "./root";
+import { Button } from '@/components/ui/button'
+import { cn } from '@/lib/utils'
+import { useRouter } from 'next/navigation'
+import { useFormContext } from 'react-hook-form'
+import type { FormData } from './types'
 
-export function SuiteFormActions() {
-  const router = useRouter();
+export function SuiteFormActions({ className }: { className?: string }) {
+  const router = useRouter()
   const {
     formState: { isSubmitting },
-  } = useFormContext<FormData>();
+  } = useFormContext<FormData>()
 
   return (
-    <div className="flex justify-end gap-2">
-      <Button
-        type="button"
-        variant="outline"
-        onClick={() => router.back()}
-        disabled={isSubmitting}
-      >
+    <div className={cn('flex justify-end gap-2', className)}>
+      <Button type="button" variant="outline" onClick={() => router.back()} disabled={isSubmitting}>
         Cancel
       </Button>
       <Button type="submit" disabled={isSubmitting}>
-        {isSubmitting ? "Creating..." : "Create Suite"}
+        {isSubmitting ? 'Creating...' : 'Create Suite'}
       </Button>
     </div>
-  );
+  )
 }
