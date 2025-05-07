@@ -1,4 +1,4 @@
-import { TestCaseStep } from './types'
+import { TestCaseStep } from '@/types/test-case'
 
 export const DEFAULT_TEST_CASE_STEP: TestCaseStep = {
   command: '',

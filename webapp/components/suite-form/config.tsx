@@ -3,13 +3,13 @@
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Controller, useFormContext } from 'react-hook-form'
-import type { FormData } from './types'
+import { SuiteFormData } from './root'
 
 export function SuiteFormConfig() {
   const {
     control,
     formState: { errors },
-  } = useFormContext<FormData>()
+  } = useFormContext<SuiteFormData>()
 
   return (
     <div className="flex flex-col gap-4">
@@ -51,6 +51,7 @@ export function SuiteFormConfig() {
               <Input
                 {...field}
                 id="commandTimeout"
+                type="number"
                 className={`w-full bg-white ${errors.commandTimeout ? 'border-red-500' : ''}`}
                 placeholder="Enter timeout in milliseconds"
               />

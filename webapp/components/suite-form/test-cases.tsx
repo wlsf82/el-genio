@@ -7,11 +7,11 @@ import { Plus, Trash2 } from 'lucide-react'
 import { Controller, useFieldArray, useFormContext } from 'react-hook-form'
 import { Card, CardContent, CardHeader } from '../ui/card'
 import { SuiteFormTestCaseSteps } from './test-case-steps'
-import type { FormData } from './types'
 import { DEFAULT_TEST_CASE_STEP } from './utils'
+import { SuiteFormData } from './root'
 
 export function SuiteFormTestCases() {
-  const { control } = useFormContext<FormData>()
+  const { control } = useFormContext<SuiteFormData>()
   const {
     fields: testCaseFields,
     append: appendTestCase,

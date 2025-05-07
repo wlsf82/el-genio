@@ -4,13 +4,13 @@ import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
 import { useRouter } from 'next/navigation'
 import { useFormContext } from 'react-hook-form'
-import type { FormData } from './types'
+import { SuiteFormData } from './root'
 
 export function SuiteFormActions({ className }: { className?: string }) {
   const router = useRouter()
   const {
     formState: { isSubmitting },
-  } = useFormContext<FormData>()
+  } = useFormContext<SuiteFormData>()
 
   return (
     <div className={cn('flex justify-end gap-2', className)}>

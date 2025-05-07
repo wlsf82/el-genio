@@ -12,13 +12,13 @@ interface SuiteFormProps {
   projectId: string
 }
 
-type FormData = {
+export type SuiteFormData = {
   name: string
-  commandTimeout: number | null
+  commandTimeout: number
   testCases: TestCase[]
 }
 
-const DEFAULT_VALUES: FormData = {
+const DEFAULT_VALUES: SuiteFormData = {
   name: '',
   commandTimeout: 4000,
   testCases: [
@@ -30,10 +30,10 @@ const DEFAULT_VALUES: FormData = {
 }
 
 export const SuiteFormRoot = ({ children, projectId }: SuiteFormProps) => {
-  const methods = useForm<FormData>({ defaultValues: DEFAULT_VALUES })
+  const methods = useForm<SuiteFormData>({ defaultValues: DEFAULT_VALUES })
   const router = useRouter()
 
-  const onSubmit = async (data: FormData) => {
+  const onSubmit = async (data: SuiteFormData) => {
     try {
       await createTestSuite({
         name: data.name,
