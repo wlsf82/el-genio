@@ -66,7 +66,7 @@ export const createTestSuite = async (data: {
   projectId: string
   commandTimeout?: number | null
   testCases: {
-    name: string
+    description: string
     steps: { command: string; target: string }[]
   }[]
 }): Promise<TestSuite> => {

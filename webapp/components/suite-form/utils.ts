@@ -1,10 +1,13 @@
-export const DEFAULT_TEST_CASE_STEP = {
+import { TestCaseStep } from './types'
+
+export const DEFAULT_TEST_CASE_STEP: TestCaseStep = {
   command: '',
   selector: '',
   value: '',
   lengthValue: '',
   containedText: '',
   equalText: '',
+  chainOption: '',
 }
 
 export const CYPRESS_COMMANDS = [

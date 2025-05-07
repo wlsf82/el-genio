@@ -15,7 +15,7 @@ export function SuiteFormTestCaseSteps({ testCaseIndex }: { testCaseIndex: numbe
     remove: removeStep,
   } = useFieldArray({
     control,
-    name: `test_cases.${testCaseIndex}.steps`,
+    name: `testCases.${testCaseIndex}.steps`,
   })
 
   return (

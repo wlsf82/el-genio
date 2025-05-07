@@ -4,6 +4,7 @@ import { createTestSuite } from '@/services/suites'
 import { FormProvider, useForm } from 'react-hook-form'
 import { toast } from 'sonner'
 import type { FormData } from './types'
+import { DEFAULT_TEST_CASE_STEP } from './utils'
 
 interface SuiteFormProps {
   children: React.ReactNode
@@ -12,16 +13,11 @@ interface SuiteFormProps {
 
 const DEFAULT_VALUES: FormData = {
   name: '',
-  command_timeout: '400',
-  test_cases: [
+  commandTimeout: 4000,
+  testCases: [
     {
-      name: '',
-      steps: [
-        {
-          command: '',
-          target: '',
-        },
-      ],
+      description: '',
+      steps: [DEFAULT_TEST_CASE_STEP],
     },
   ],
 }
@@ -34,8 +30,19 @@ export const SuiteFormRoot = ({ children, projectId }: SuiteFormProps) => {
       await createTestSuite({
         name: data.name,
         projectId,
-        command_timeout: data.command_timeout ? parseInt(data.command_timeout) : undefined,
-        test_cases: data.test_cases,
+        commandTimeout: data.commandTimeout ?? undefined,
+        testCases: data.testCases.map(testCase => ({
+          description: testCase.description,
+          steps: testCase.steps.map(step => ({
+            command: step.command,
+            target: step.selector,
+            value: step.value,
+            lengthValue: step.lengthValue,
+            containedText: step.containedText,
+            equalText: step.equalText,
+            chainOption: step.chainOption,
+          })),
+        })),
       })
 
       toast.success('Suite created successfully')

@@ -36,9 +36,9 @@ export function SuiteFormConfig() {
       </div>
 
       <div className="flex flex-col gap-2">
-        <Label htmlFor="command_timeout">Command Timeout (ms)</Label>
+        <Label htmlFor="commandTimeout">Command Timeout (ms)</Label>
         <Controller
-          name="command_timeout"
+          name="commandTimeout"
           control={control}
           rules={{
             pattern: {
@@ -50,11 +50,11 @@ export function SuiteFormConfig() {
             <div className="flex flex-col gap-2">
               <Input
                 {...field}
-                id="command_timeout"
-                className={`w-full bg-white ${errors.command_timeout ? 'border-red-500' : ''}`}
+                id="commandTimeout"
+                className={`w-full bg-white ${errors.commandTimeout ? 'border-red-500' : ''}`}
                 placeholder="Enter timeout in milliseconds"
               />
-              {errors.command_timeout && <p className="text-sm text-red-500">{errors.command_timeout.message}</p>}
+              {errors.commandTimeout && <p className="text-sm text-red-500">{errors.commandTimeout.message}</p>}
             </div>
           )}
         />

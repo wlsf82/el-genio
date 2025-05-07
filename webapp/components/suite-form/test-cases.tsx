@@ -18,7 +18,7 @@ export function SuiteFormTestCases() {
     remove: removeTestCase,
   } = useFieldArray({
     control,
-    name: 'test_cases',
+    name: 'testCases',
   })
 
   const addTestCase = () => {
@@ -44,7 +44,7 @@ export function SuiteFormTestCases() {
               <div className="flex flex-col gap-2">
                 <Label htmlFor="name">Description</Label>
                 <Controller
-                  name={`test_cases.${index}.description`}
+                  name={`testCases.${index}.description`}
                   control={control}
                   rules={{
                     required: 'Description is required',

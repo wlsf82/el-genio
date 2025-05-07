@@ -35,7 +35,7 @@ export function TestSteps({ testCaseIndex }: TestStepsProps) {
     remove: removeStep,
   } = useFieldArray({
     control,
-    name: `test_cases.${testCaseIndex}.steps`,
+    name: `testCases.${testCaseIndex}.steps`,
   })
 
   return (
@@ -66,7 +66,7 @@ export function TestSteps({ testCaseIndex }: TestStepsProps) {
           <div key={stepField.id} className="flex gap-2 items-start">
             <div className="flex-1 flex gap-2">
               <Controller
-                name={`test_cases.${testCaseIndex}.steps.${stepIndex}.command`}
+                name={`testCases.${testCaseIndex}.steps.${stepIndex}.command`}
                 control={control}
                 render={({ field }) => (
                   <select {...field} className="flex-1 rounded-md border border-input bg-background px-3 py-2">
@@ -80,12 +80,12 @@ export function TestSteps({ testCaseIndex }: TestStepsProps) {
                 )}
               />
               <Controller
-                name={`test_cases.${testCaseIndex}.steps.${stepIndex}.selector`}
+                name={`testCases.${testCaseIndex}.steps.${stepIndex}.selector`}
                 control={control}
                 render={({ field }) => <Input {...field} placeholder="Selector" className="flex-1" />}
               />
               <Controller
-                name={`test_cases.${testCaseIndex}.steps.${stepIndex}.value`}
+                name={`testCases.${testCaseIndex}.steps.${stepIndex}.value`}
                 control={control}
                 render={({ field }) => <Input {...field} placeholder="Value" className="flex-1" />}
               />

@@ -5,6 +5,7 @@ export interface TestCaseStep {
   lengthValue: string
   containedText: string
   equalText: string
+  chainOption: string
 }
 
 export interface TestCase {
@@ -14,6 +15,6 @@ export interface TestCase {
 
 export interface FormData {
   name: string
-  command_timeout: string
-  test_cases: TestCase[]
+  commandTimeout: number | null
+  testCases: TestCase[]
 }
