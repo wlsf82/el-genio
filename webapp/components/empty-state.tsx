@@ -1,9 +1,9 @@
-import { ReactNode } from "react";
+import { ReactNode } from 'react'
 
 interface EmptyStateProps {
-  title: string;
-  description: string;
-  children?: ReactNode;
+  title: string
+  description: string
+  children?: ReactNode
 }
 
 export function EmptyState({ title, description, children }: EmptyStateProps) {
@@ -15,5 +15,5 @@ export function EmptyState({ title, description, children }: EmptyStateProps) {
         {children}
       </div>
     </div>
-  );
+  )
 }

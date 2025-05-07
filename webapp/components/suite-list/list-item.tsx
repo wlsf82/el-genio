@@ -1,30 +1,28 @@
-"use client";
+'use client'
 
-import React, { createContext, useContext } from "react";
-import type { TestSuite } from "@/types/test-suites";
+import type { TestSuite } from '@/types/test-suites'
+import React, { createContext, useContext } from 'react'
 
 export interface SuiteListItemContextType {
-  suite: TestSuite;
+  suite: TestSuite
 }
 
-const SuiteListItemContext = createContext<SuiteListItemContextType | null>(
-  null
-);
+const SuiteListItemContext = createContext<SuiteListItemContextType | null>(null)
 
 export function useSuiteListItem() {
-  const ctx = useContext(SuiteListItemContext);
-  if (!ctx) throw new Error("Must be used within <SuiteList.Item>");
-  return ctx;
+  const ctx = useContext(SuiteListItemContext)
+  if (!ctx) throw new Error('Must be used within <SuiteList.Item>')
+  return ctx
 }
 
 export function SuiteListItemRoot({
   suite,
   children,
-  className = "",
+  className = '',
 }: {
-  suite: TestSuite;
-  children: React.ReactNode;
-  className?: string;
+  suite: TestSuite
+  children: React.ReactNode
+  className?: string
 }) {
   return (
     <SuiteListItemContext.Provider value={{ suite }}>
@@ -34,5 +32,5 @@ export function SuiteListItemRoot({
         {children}
       </div>
     </SuiteListItemContext.Provider>
-  );
+  )
 }

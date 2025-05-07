@@ -1,5 +1,4 @@
-import type React from "react";
-import { AppHeader } from ".";
+import { AppHeader } from '.'
 
 export function AppHeaderComposed({ projectId }: { projectId: string }) {
   return (
@@ -10,5 +9,5 @@ export function AppHeaderComposed({ projectId }: { projectId: string }) {
       <div className="flex-1" />
       <AppHeader.ProfileMenu />
     </AppHeader.Root>
-  );
+  )
 }

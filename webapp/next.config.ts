@@ -1,4 +1,4 @@
-import type { NextConfig } from "next";
+import type { NextConfig } from 'next'
 
 const nextConfig: NextConfig = {
   async redirects() {
@@ -13,8 +13,8 @@ const nextConfig: NextConfig = {
       //     destination: "/projects/:id/suites",
       //   permanent: true,
       // },
-    ];
+    ]
   },
-};
+}
 
-export default nextConfig;
+export default nextConfig

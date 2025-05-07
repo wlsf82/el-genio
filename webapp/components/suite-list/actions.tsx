@@ -1,14 +1,10 @@
-"use client";
+'use client'
 
-import React from "react";
-import { Button } from "@/components/ui/button";
-import { PlayIcon, DownloadIcon, EyeIcon } from "lucide-react";
+import { Button } from '@/components/ui/button'
+import { DownloadIcon, EyeIcon, PlayIcon } from 'lucide-react'
+import React from 'react'
 
-export function SuiteListActions({
-  children,
-  className = "",
-  ...props
-}: React.HTMLAttributes<HTMLDivElement>) {
+export function SuiteListActions({ children, className = '', ...props }: React.HTMLAttributes<HTMLDivElement>) {
   return (
     <div className={`flex items-center gap-1 ml-4 ${className}`} {...props}>
       <Button size="icon" variant="ghost" aria-label="Run Test Suite">
@@ -21,5 +17,5 @@ export function SuiteListActions({
         <EyeIcon className="w-4 h-4" />
       </Button>
     </div>
-  );
+  )
 }
