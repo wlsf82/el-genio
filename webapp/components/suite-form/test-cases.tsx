@@ -29,7 +29,7 @@ export function SuiteFormTestCases() {
   }
 
   return (
-    <div className="flex flex-col gap-4">
+    <div className="flex flex-col gap-4 mb-4">
       {testCaseFields.map((field, index) => (
         <Card key={field.id}>
           <CardHeader className="flex flex-row justify-between">
