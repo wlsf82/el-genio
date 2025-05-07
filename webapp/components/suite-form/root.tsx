@@ -1,14 +1,21 @@
 'use client'
 
 import { createTestSuite } from '@/services/suites'
+import { TestCase } from '@/types/test-case'
+import { useRouter } from 'next/navigation'
 import { FormProvider, useForm } from 'react-hook-form'
 import { toast } from 'sonner'
-import type { FormData } from './types'
 import { DEFAULT_TEST_CASE_STEP } from './utils'
 
 interface SuiteFormProps {
   children: React.ReactNode
   projectId: string
+}
+
+type FormData = {
+  name: string
+  commandTimeout: number | null
+  testCases: TestCase[]
 }
 
 const DEFAULT_VALUES: FormData = {
@@ -24,6 +31,7 @@ const DEFAULT_VALUES: FormData = {
 
 export const SuiteFormRoot = ({ children, projectId }: SuiteFormProps) => {
   const methods = useForm<FormData>({ defaultValues: DEFAULT_VALUES })
+  const router = useRouter()
 
   const onSubmit = async (data: FormData) => {
     try {
@@ -46,6 +54,7 @@ export const SuiteFormRoot = ({ children, projectId }: SuiteFormProps) => {
       })
 
       toast.success('Suite created successfully')
+      router.push(`/projects/${projectId}/`)
     } catch (error) {
       console.error('Error creating suite:', error)
       toast.error('Failed to create suite')
