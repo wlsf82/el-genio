@@ -14,11 +14,11 @@ export function SuiteFormActions({ className }: { className?: string }) {
 
   return (
     <div className={cn('flex justify-end gap-2', className)}>
-      <Button type="button" variant="outline" onClick={() => router.back()} disabled={isSubmitting}>
+      <Button type="button" variant="ghost" onClick={() => router.back()} disabled={isSubmitting}>
         Cancel
       </Button>
-      <Button type="submit" disabled={isSubmitting}>
-        {isSubmitting ? 'Creating...' : 'Create Suite'}
+      <Button type="submit" variant="outline" disabled={isSubmitting}>
+        {isSubmitting ? 'Creating...' : 'Create'}
       </Button>
     </div>
   )

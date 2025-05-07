@@ -31,7 +31,7 @@ export default async function ProjectLayout({
               <AppSidebar.MenuItem label="Globals" href={`/projects/${projectId}/globals`} />
             </AppSidebar.Root>
 
-            <div className="px-4 flex-1">{children}</div>
+            <div className="px-12 flex-1">{children}</div>
           </div>
         </div>
       </div>

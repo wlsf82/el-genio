@@ -23,6 +23,13 @@ export default async function SuitesPage({ params }: { params: Promise<{ project
         </EmptyState>
       }
     >
+      <div className="flex flex-row gap-4 justify-between items-center mb-4">
+        <span className="text-2xl font-medium">Suites</span>
+        <Link href={`/projects/${projectId}/create-suite`}>
+          <Button variant="outline">New test suite</Button>
+        </Link>
+      </div>
+
       <SuiteList.Root>
         {suites.map(suite => (
           <Link href={`/projects/${projectId}/suites/${suite.id}`} key={suite.id}>
