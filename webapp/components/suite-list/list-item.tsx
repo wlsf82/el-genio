@@ -5,6 +5,7 @@ import React, { createContext, useContext } from 'react'
 
 export interface SuiteListItemContextType {
   suite: TestSuite
+  projectId: string
 }
 
 const SuiteListItemContext = createContext<SuiteListItemContextType | null>(null)
@@ -17,15 +18,17 @@ export function useSuiteListItem() {
 
 export function SuiteListItemRoot({
   suite,
+  projectId,
   children,
   className = '',
 }: {
   suite: TestSuite
+  projectId: string
   children: React.ReactNode
   className?: string
 }) {
   return (
-    <SuiteListItemContext.Provider value={{ suite }}>
+    <SuiteListItemContext.Provider value={{ suite, projectId }}>
       <div
         className={`flex items-center justify-between rounded-md border bg-card px-4 py-3 hover:bg-accent transition-colors group ${className}`}
       >

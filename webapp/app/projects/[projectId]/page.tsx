@@ -32,12 +32,10 @@ export default async function SuitesPage({ params }: { params: Promise<{ project
 
       <SuiteList.Root>
         {suites.map(suite => (
-          <Link href={`/projects/${projectId}/suites/${suite.id}`} key={suite.id}>
-            <SuiteList.Item suite={suite}>
-              <SuiteList.Title />
-              <SuiteList.Actions />
-            </SuiteList.Item>
-          </Link>
+          <SuiteList.Item key={suite.id} suite={suite} projectId={projectId}>
+            <SuiteList.Title />
+            <SuiteList.Actions />
+          </SuiteList.Item>
         ))}
       </SuiteList.Root>
     </Show>
