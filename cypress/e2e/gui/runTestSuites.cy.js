@@ -138,4 +138,57 @@ describe('Run Test Suites', () => {
       '"totalPassed": 10,'
     ).should('be.visible')
   })
+
+  it('runs a few tests from a suite with lots of test cases via the test suites list', () => {
+    cy.request('GET', '/api/projects')
+      .then(response => {
+        const sampleProject = response.body.find(project => project.name === 'Sample Project');
+        cy.createSampleTestSuiteWithManyTestCasesForProject(sampleProject.id)
+      });
+
+    cy.visit('/')
+    cy.wait('@getProjects')
+
+    cy.contains('.project-card', 'Sample Project')
+      .should('be.visible')
+      .find('.view-tests-button')
+      .click()
+    cy.contains('.test-suite-card', 'Cypress Playground')
+      .should('be.visible')
+      .as('testSuite')
+      .find('.toggle-button')
+      .click()
+    cy.get('input[type="checkbox"]')
+      .eq(0)
+      .check()
+    cy.get('input[type="checkbox"]')
+      .eq(1)
+      .check()
+    cy.get('input[type="checkbox"]')
+      .eq(3)
+      .check()
+    cy.get('@testSuite')
+      .find('.run-button')
+      .click()
+
+    cy.get('@testSuite')
+      .find('.run-button')
+      .should('be.disabled')
+    cy.get('@testSuite')
+      .find('.delete-button')
+      .should('be.disabled')
+    cy.get('@testSuite')
+      .find('.edit-button')
+      .should('be.disabled')
+
+    cy.contains(
+      '.test-results.success',
+      'All tests passed! ✅',
+      { timeout: 30000 }
+    ).should('be.visible')
+    cy.contains(
+      '.test-results.success',
+      '"totalPassed": 3,'
+    ).should('be.visible')
+  })
 })
