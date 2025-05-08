@@ -9,7 +9,7 @@ export default async function ProjectsPage() {
   return (
     <div className="container mx-auto">
       <div className="flex flex-row gap-4 py-6 mb-6 border-b border-neutral-200 justify-between items-center">
-        <h2 className="text-4xl font-medium">Projects</h2>
+        <h2 className="text-3xl font-medium">Projects</h2>
         <Link href="/create-project">
           <Button size="sm">Create project</Button>
         </Link>

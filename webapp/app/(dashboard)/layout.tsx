@@ -13,7 +13,9 @@ export default function ProjectLayout({
         <AppHeader.ProfileMenu />
       </AppHeader.Root>
 
-      {children}
+      <div className="flex-1 overflow-auto">
+        <div className="container mx-auto">{children}</div>
+      </div>
     </div>
   )
 }
