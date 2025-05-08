@@ -6,7 +6,7 @@ import { useRouter } from 'next/navigation'
 import { useFormContext } from 'react-hook-form'
 import { SuiteFormData } from './root'
 
-export function SuiteFormActions({ className }: { className?: string }) {
+export function SuiteFormActions({ className, label = 'Create' }: { className?: string; label?: string }) {
   const router = useRouter()
   const {
     formState: { isSubmitting },
@@ -18,7 +18,7 @@ export function SuiteFormActions({ className }: { className?: string }) {
         Cancel
       </Button>
       <Button type="submit" variant="outline" disabled={isSubmitting}>
-        {isSubmitting ? 'Creating...' : 'Create'}
+        {isSubmitting ? 'Saving...' : label}
       </Button>
     </div>
   )

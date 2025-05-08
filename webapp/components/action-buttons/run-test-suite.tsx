@@ -30,7 +30,7 @@ export const RunTestSuiteButton = ({ projectId }: { projectId: string }) => {
           <DialogHeader>
             <DialogTitle>Test Suite Result</DialogTitle>
             <DialogDescription asChild>
-              <pre>{JSON.stringify(result, null, 2)}</pre>
+              <p>{JSON.stringify(result, null, 2)}</p>
             </DialogDescription>
           </DialogHeader>
         </DialogContent>

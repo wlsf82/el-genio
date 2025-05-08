@@ -17,6 +17,11 @@ export const fetchTestSuites = async (projectId: string): Promise<TestSuite[]> =
   }
 }
 
+export const getSuiteById = async (projectId: string, suiteId: string): Promise<TestSuite> => {
+  const response = await fetch(`http://localhost:3003/api/test-suites/${suiteId}`)
+  return response.json()
+}
+
 export const deleteTestSuite = async (suiteId: string): Promise<void> => {
   try {
     const response = await fetch(`http://localhost:3003/api/test-suites/${suiteId}`, {

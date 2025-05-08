@@ -1,6 +1,6 @@
 'use client'
 
-import { createTestSuite } from '@/services/suites'
+import { createTestSuite, updateTestSuite } from '@/services/suites'
 import { TestCase } from '@/types/test-case'
 import { useRouter } from 'next/navigation'
 import { FormProvider, useForm } from 'react-hook-form'
@@ -10,6 +10,8 @@ import { DEFAULT_TEST_CASE_STEP } from './utils'
 interface SuiteFormProps {
   children: React.ReactNode
   projectId: string
+  defaultValues?: SuiteFormData
+  suiteId?: string
 }
 
 export type SuiteFormData = {
@@ -29,35 +31,53 @@ const DEFAULT_VALUES: SuiteFormData = {
   ],
 }
 
-export const SuiteFormRoot = ({ children, projectId }: SuiteFormProps) => {
-  const methods = useForm<SuiteFormData>({ defaultValues: DEFAULT_VALUES })
+export const SuiteFormRoot = ({ children, projectId, defaultValues = DEFAULT_VALUES, suiteId }: SuiteFormProps) => {
+  const methods = useForm<SuiteFormData>({ defaultValues: defaultValues })
   const router = useRouter()
 
-  const onSubmit = async (data: SuiteFormData) => {
-    try {
-      await createTestSuite({
-        name: data.name,
-        projectId,
-        commandTimeout: data.commandTimeout ?? undefined,
-        testCases: data.testCases.map(testCase => ({
-          description: testCase.description,
-          steps: testCase.steps.map(step => ({
-            command: step.command,
-            target: step.selector,
-            value: step.value,
-            lengthValue: step.lengthValue,
-            containedText: step.containedText,
-            equalText: step.equalText,
-            chainOption: step.chainOption,
-          })),
+  const formatPayload = (data: SuiteFormData) => {
+    return {
+      name: data.name,
+      projectId,
+      commandTimeout: data.commandTimeout ?? 4000,
+      testCases: data.testCases.map(testCase => ({
+        description: testCase.description,
+        steps: testCase.steps.map(step => ({
+          command: step.command,
+          selector: step.selector,
+          value: step.value,
+          lengthValue: step.lengthValue,
+          containedText: step.containedText,
+          equalText: step.equalText,
+          chainOption: step.chainOption,
         })),
-      })
+      })),
+    }
+  }
 
-      toast.success('Suite created successfully')
+  const onSubmit = async (data: SuiteFormData) => {
+    const payload = formatPayload(data)
+
+    if (!suiteId) {
+      try {
+        await createTestSuite(payload)
+        toast.success('Suite created successfully')
+        router.push(`/projects/${projectId}/`)
+      } catch (error) {
+        console.error('Error creating suite:', error)
+        toast.error('Failed to create suite')
+      }
+
+      return
+    }
+
+    try {
+      await updateTestSuite(suiteId, payload)
+      toast.success('Suite updated successfully')
       router.push(`/projects/${projectId}/`)
     } catch (error) {
-      console.error('Error creating suite:', error)
-      toast.error('Failed to create suite')
+      console.error('Error updating suite:', error)
+      toast.error('Failed to update suite')
     }
   }
 
