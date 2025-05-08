@@ -29,9 +29,7 @@ export function SuiteListItemRoot({
 }) {
   return (
     <SuiteListItemContext.Provider value={{ suite, projectId }}>
-      <div
-        className={`flex items-center justify-between rounded-md border bg-card px-4 py-3 hover:bg-accent transition-colors group ${className}`}
-      >
+      <div className={`flex items-center justify-between rounded-md border bg-card px-4 py-3 group ${className}`}>
         {children}
       </div>
     </SuiteListItemContext.Provider>
