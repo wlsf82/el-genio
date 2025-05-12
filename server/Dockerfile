@@ -11,9 +11,9 @@ COPY package*.json ./
 # Install any dependencies
 RUN npm install
 
-# Install Chromium for arm64
+# Install Chromium for arm64 and emoji font
 RUN apt-get update && \
-  apt-get install -y chromium --no-install-recommends && \
+  apt-get install -y chromium fonts-noto-color-emoji --no-install-recommends && \
   rm -rf /var/lib/apt/lists/*
 
 # Create cypress directories with proper permissions
