@@ -329,7 +329,7 @@ function TestSuitesList({ testSuites: propTestSuites, resetEditingSuite, forceLi
                     </ul>
                   </div>
                 )}
-                {testResults[suite.id].screenshotsLink && suiteHasScreenshot(suite) && (
+                {testResults[suite.id].screenshotsLink && (
                   <div className="screenshots-link">
                     <a
                       href={testResults[suite.id].screenshotsLink}
