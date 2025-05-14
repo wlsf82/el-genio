@@ -148,6 +148,7 @@ function Onboarding({ onComplete }) {
             <li>Detailed <strong>error messages</strong> for failures</li>
             <li><strong>Stack traces</strong> to help identify issues</li>
             <li>Downloadable <strong>screenshots</strong> captured at the moment of failure</li>
+            <li>Downloadable <strong>videos</strong> captured at every test execution</li>
           </ul>
           <p>These results help you quickly identify and fix issues in your application.</p>
         </>
