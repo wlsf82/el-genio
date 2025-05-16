@@ -1,4 +1,4 @@
-describe('CRUD Project', () => {
+describe('Project', () => {
   beforeEach(() => {
     cy.deleteProjectByName('TAT sample project')
 
