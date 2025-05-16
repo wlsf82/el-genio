@@ -28,7 +28,7 @@ describe('CRUD Test Suites', () => {
   })
 
   context('Without Setup Steps', () => {
-    it('creates a new test suite with one test with a few steps', () => {
+    it('creates a new test suite with one test and a few steps', () => {
       // Intercept test suite creation and give it an alias
       cy.intercept('POST', '/api/test-suites').as('createTestSuite')
 
@@ -185,7 +185,7 @@ describe('CRUD Test Suites', () => {
       cy.contains('.test-cases', 'asserts heading 1 is visible').should('be.visible')
     })
 
-    it('deletes the test suite from the test suites view', () => {
+    it('deletes the test suite', () => {
       // Intercept test suite deletion and give it an alias
       cy.intercept('DELETE', '/api/test-suites/*').as('deleteTestSuite')
 

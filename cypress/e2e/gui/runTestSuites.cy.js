@@ -106,7 +106,7 @@ describe('Run Test Suites', () => {
   })
 
 
-  it('creates and runs a test suite with lots of test cases via the projects list', () => {
+  it('runs a test suite with lots of test cases via the projects list', () => {
     cy.request('GET', '/api/projects')
       .then(response => {
         const sampleProject = response.body.find(project => project.name === 'Sample Project');
