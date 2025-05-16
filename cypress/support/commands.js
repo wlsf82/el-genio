@@ -7,21 +7,21 @@ Cypress.Commands.add('createSampleProject', (project = {
   cy.request('POST', '/api/projects', project)
 })
 
-Cypress.Commands.add('createSampleTestSuiteForProject', projectId => {
+Cypress.Commands.add('createSampleTestSuite', projectId => {
   const testSuiteData = {...require('../fixtures/sampleTestSuite.json')}
   testSuiteData.projectId = projectId
 
   return cy.request('POST', '/api/test-suites', testSuiteData)
 })
 
-Cypress.Commands.add('createSampleTestSuiteThatFailsForProject', projectId => {
+Cypress.Commands.add('createSampleTestSuiteThatFails', projectId => {
   const testSuiteData = {...require('../fixtures/sampleTestSuiteThatFails.json')}
   testSuiteData.projectId = projectId
 
   cy.request('POST', '/api/test-suites', testSuiteData)
 })
 
-Cypress.Commands.add('createSampleTestSuiteWithManyTestCasesForProject', projectId => {
+Cypress.Commands.add('createSampleTestSuiteWithManyTestCases', projectId => {
   const testSuiteData = {...require('../fixtures/sampleTestSuiteWithManyTestCases.json')}
   testSuiteData.projectId = projectId
 
@@ -33,7 +33,7 @@ Cypress.Commands.add('createSampleTestSuiteWithManyTestCasesForProject', project
       })
 })
 
-Cypress.Commands.add('createSampleTestSuiteWithSetupStepsForProject', (projectId) => {
+Cypress.Commands.add('createSampleTestSuiteWithSetupSteps', (projectId) => {
   cy.fixture('sampleTestSuiteWithSetupSteps.json').then((testSuite) => {
     cy.request({
       method: 'POST',

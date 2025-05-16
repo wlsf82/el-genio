@@ -99,7 +99,7 @@ describe('CRUD Test Suites', () => {
       cy.request('GET', '/api/projects')
         .then(response => {
           const sampleProject = response.body.find(project => project.name === 'Sample Project');
-          cy.createSampleTestSuiteForProject(sampleProject.id);
+          cy.createSampleTestSuite(sampleProject.id);
         });
 
       // Visit the app to see the newly created test suite
@@ -192,7 +192,7 @@ describe('CRUD Test Suites', () => {
       cy.request('GET', '/api/projects')
         .then(response => {
           const sampleProject = response.body.find(project => project.name === 'Sample Project');
-          cy.createSampleTestSuiteForProject(sampleProject.id);
+          cy.createSampleTestSuite(sampleProject.id);
         });
 
       cy.visit('/')
@@ -234,7 +234,7 @@ describe('CRUD Test Suites', () => {
         cy.request('GET', '/api/projects')
         .then(response => {
           const sampleProject = response.body.find(project => project.name === 'Sample Project');
-          cy.createSampleTestSuiteForProject(sampleProject.id);
+          cy.createSampleTestSuite(sampleProject.id);
         });
       })
 
@@ -332,7 +332,7 @@ describe('CRUD Test Suites', () => {
       cy.request('GET', '/api/projects')
         .then(response => {
           const sampleProject = response.body.find(project => project.name === 'Sample Project');
-          cy.createSampleTestSuiteWithSetupStepsForProject(sampleProject.id);
+          cy.createSampleTestSuiteWithSetupSteps(sampleProject.id);
         });
 
       // Visit the app to see the newly created test suite

@@ -13,7 +13,7 @@ describe('Run Test Suites', () => {
     cy.request('GET', '/api/projects')
       .then(response => {
         const sampleProject = response.body.find(project => project.name === 'Sample Project');
-        cy.createSampleTestSuiteForProject(sampleProject.id);
+        cy.createSampleTestSuite(sampleProject.id);
       });
 
     cy.visit('/')
@@ -42,7 +42,7 @@ describe('Run Test Suites', () => {
     cy.request('GET', '/api/projects')
       .then(response => {
         const sampleProject = response.body.find(project => project.name === 'Sample Project');
-        cy.createSampleTestSuiteThatFailsForProject(sampleProject.id)
+        cy.createSampleTestSuiteThatFails(sampleProject.id)
       });
 
     cy.visit('/')
@@ -85,7 +85,7 @@ describe('Run Test Suites', () => {
       cy.request('GET', '/api/projects')
       .then(response => {
         const sampleProject = response.body.find(project => project.name === 'Sample Project');
-        cy.createSampleTestSuiteForProject(sampleProject.id);
+        cy.createSampleTestSuite(sampleProject.id);
       });
     })
 
@@ -110,7 +110,7 @@ describe('Run Test Suites', () => {
     cy.request('GET', '/api/projects')
       .then(response => {
         const sampleProject = response.body.find(project => project.name === 'Sample Project');
-        cy.createSampleTestSuiteWithManyTestCasesForProject(sampleProject.id)
+        cy.createSampleTestSuiteWithManyTestCases(sampleProject.id)
       });
 
     cy.visit('/')
@@ -143,7 +143,7 @@ describe('Run Test Suites', () => {
     cy.request('GET', '/api/projects')
       .then(response => {
         const sampleProject = response.body.find(project => project.name === 'Sample Project');
-        cy.createSampleTestSuiteWithManyTestCasesForProject(sampleProject.id)
+        cy.createSampleTestSuiteWithManyTestCases(sampleProject.id)
       });
 
     cy.visit('/')
