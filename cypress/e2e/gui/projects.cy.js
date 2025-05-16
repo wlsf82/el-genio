@@ -12,7 +12,7 @@ describe('CRUD Project', () => {
     cy.wait('@getProjects')
   })
 
-  it('CRUDs a project', () => {
+  it('CRUDs (create, read, update, and delete) a project', () => {
     cy.contains('button', 'Create Project')
       .should('be.visible')
       .click()
