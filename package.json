@@ -23,6 +23,6 @@
   "license": "MIT",
   "devDependencies": {
     "concurrently": "^8.2.0",
-    "cypress": "^14.3.3"
+    "cypress": "^14.4.0"
   }
 }
