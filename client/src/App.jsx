@@ -137,6 +137,10 @@ function App() {
       <main>
         {getViewContent()}
       </main>
+
+      <footer>
+        Powered by <strong>Talking About Testing</strong>
+      </footer>
     </div>
   );
 }

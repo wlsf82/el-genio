@@ -47,6 +47,7 @@ main {
   border-radius: 8px;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
   padding: 30px;
+  padding-bottom: 60px;
 }
 
 .error-message {
@@ -87,4 +88,17 @@ main {
   background-color: #e6f0ff;
   color: #1a5cb3;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+footer {
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  width: 100vw;
+  background: #fff;
+  text-align: center;
+  padding: 24px 0;
+  border-top: 1px solid #e0e0e0;
+  font-size: 16px;
+  z-index: 100;
 }
