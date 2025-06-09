@@ -1,9 +1,8 @@
 import { TestSuite } from '@/types/test-suites'
 
-export const runTestSuite = async (projectId: string): Promise<TestSuite[]> => {
+export const runTestSuiteById = async (testSuiteId: string): Promise<TestSuite[]> => {
   try {
-    // const response = await axios.post(`/api/test-run/project/${projectId}`);
-    const response = await fetch(`http://localhost:3003/api/test-run/project/${projectId}`, {
+    const response = await fetch(`http://localhost:3003/api/test-suites/${testSuiteId}/run`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

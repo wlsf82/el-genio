@@ -18,7 +18,7 @@ export function SuiteListActions({ children, className = '', ...props }: React.H
           <PencilIcon className="w-4 h-4" />
         </Button>
       </Link>
-      <RunTestSuiteButton projectId={projectId} />
+      <RunTestSuiteButton suiteId={suite.id} />
     </div>
   )
 }

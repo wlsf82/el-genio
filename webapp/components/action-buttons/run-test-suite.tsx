@@ -1,10 +1,10 @@
-import { runTestSuite } from '@/services/run-suites'
+import { runTestSuiteById } from '@/services/run-suites'
 import { Loader2, PlayIcon } from 'lucide-react'
 import React from 'react'
 import { Button } from '../ui/button'
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '../ui/dialog'
 
-export const RunTestSuiteButton = ({ projectId }: { projectId: string }) => {
+export const RunTestSuiteButton = ({ suiteId }: { suiteId: string }) => {
   const [open, setOpen] = React.useState(false)
   const [running, setRunning] = React.useState(false)
   const [result, setResult] = React.useState({})
@@ -12,7 +12,7 @@ export const RunTestSuiteButton = ({ projectId }: { projectId: string }) => {
   const onRunTestSuite = async () => {
     setRunning(true)
 
-    const result = await runTestSuite(projectId)
+    const result = await runTestSuiteById(suiteId)
 
     setResult(result)
     setOpen(true)
