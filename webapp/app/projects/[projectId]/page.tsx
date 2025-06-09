@@ -1,8 +1,10 @@
+import { RunAllTestSuitesButton } from '@/components/action-buttons/run-all-test-suite'
 import { EmptyState } from '@/components/empty-state'
 import { Show } from '@/components/show'
 import { SuiteList } from '@/components/suite-list'
 import { Button } from '@/components/ui/button'
 import { fetchTestSuites } from '@/services/suites'
+import { PlusIcon } from 'lucide-react'
 import Link from 'next/link'
 
 export default async function SuitesPage({ params }: { params: Promise<{ projectId: string }> }) {
@@ -25,9 +27,16 @@ export default async function SuitesPage({ params }: { params: Promise<{ project
     >
       <div className="flex flex-row gap-4 justify-between items-center mb-4">
         <span className="text-2xl font-medium">Suites</span>
-        <Link href={`/projects/${projectId}/create-suite`}>
-          <Button variant="outline">New test suite</Button>
-        </Link>
+
+        <div className="flex flex-row gap-2">
+          <RunAllTestSuitesButton projectId={projectId} />
+          <Link href={`/projects/${projectId}/create-suite`}>
+            <Button variant="outline">
+              <PlusIcon className="w-4 h-4" />
+              New test suite
+            </Button>
+          </Link>
+        </div>
       </div>
 
       <SuiteList.Root>
