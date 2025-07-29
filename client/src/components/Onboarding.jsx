@@ -52,6 +52,7 @@ function Onboarding({ onComplete }) {
             <li><strong>Actions</strong>: User interactions like clicking buttons or typing text</li>
             <li><strong>Assertions</strong>: Checking that elements exist, are visible, contain specific text, etc.</li>
           </ul>
+          <p><strong>💡 Pro Tip:</strong> If you forget to add a step in the middle of your test case, don't worry! You can add the missing step at the end and then use the <strong>arrow up/down buttons</strong> (↑↓) next to each step to reorder them into the correct sequence.</p>
           <div className="onboarding-css-selectors">
             <h3>🔎 CSS Selectors Basics</h3>
             <p>
