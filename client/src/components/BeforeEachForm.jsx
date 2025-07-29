@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { X, Check } from 'lucide-react';
+import { X, Check, ChevronUp, ChevronDown } from 'lucide-react';
 import './BeforeEachForm.css';
 
 function BeforeEachForm({ onAddBeforeEachSteps, initialSteps = [], isEditing = false }) {
@@ -106,6 +106,22 @@ function BeforeEachForm({ onAddBeforeEachSteps, initialSteps = [], isEditing = f
 
   const handleRemoveStep = (index) => {
     setSteps(steps.filter((_, i) => i !== index));
+  };
+
+  const handleMoveStepUp = (index) => {
+    if (index === 0) return; // Can't move the first step up
+
+    const newSteps = [...steps];
+    [newSteps[index - 1], newSteps[index]] = [newSteps[index], newSteps[index - 1]];
+    setSteps(newSteps);
+  };
+
+  const handleMoveStepDown = (index) => {
+    if (index === steps.length - 1) return; // Can't move the last step down
+
+    const newSteps = [...steps];
+    [newSteps[index], newSteps[index + 1]] = [newSteps[index + 1], newSteps[index]];
+    setSteps(newSteps);
   };
 
   const handleEditStep = (index) => {
@@ -228,21 +244,41 @@ function BeforeEachForm({ onAddBeforeEachSteps, initialSteps = [], isEditing = f
           <ul className="steps-list">
             {steps.map((step, index) => (
               <li key={index} className="step-item">
-                <span>{getStepDescription(step)}</span>
-                <button
-                  type="button"
-                  className="edit-step-button"
-                  onClick={() => handleEditStep(index)}
-                >
-                  Edit
-                </button>
-                <button
-                  type="button"
-                  className="remove-step-button"
-                  onClick={() => handleRemoveStep(index)}
-                >
-                  <X size={16} />
-                </button>
+                <span className="step-content">{getStepDescription(step)}</span>
+                <div className="step-actions">
+                  <button
+                    type="button"
+                    className="reorder-button"
+                    onClick={() => handleMoveStepUp(index)}
+                    disabled={index === 0}
+                    title="Move step up"
+                  >
+                    <ChevronUp size={16} />
+                  </button>
+                  <button
+                    type="button"
+                    className="reorder-button"
+                    onClick={() => handleMoveStepDown(index)}
+                    disabled={index === steps.length - 1}
+                    title="Move step down"
+                  >
+                    <ChevronDown size={16} />
+                  </button>
+                  <button
+                    type="button"
+                    className="edit-step-button"
+                    onClick={() => handleEditStep(index)}
+                  >
+                    Edit
+                  </button>
+                  <button
+                    type="button"
+                    className="remove-step-button"
+                    onClick={() => handleRemoveStep(index)}
+                  >
+                    <X size={16} />
+                  </button>
+                </div>
               </li>
             ))}
           </ul>

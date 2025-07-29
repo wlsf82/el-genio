@@ -76,10 +76,22 @@
   margin-bottom: 8px;
   display: flex;
   align-items: center;
+  justify-content: space-between;
   font-family: 'Monaco', 'Consolas', monospace;
   font-size: 14px;
   color: #333;
   border-left: 3px solid #4a90e2;
+}
+
+.step-content {
+  flex: 1;
+  margin-right: 12px;
+}
+
+.step-actions {
+  display: flex;
+  align-items: center;
+  gap: 4px;
 }
 
 .step-item span {
@@ -135,11 +147,48 @@
   background-color: #4c56c5;
 }
 
+.reorder-button {
+  background-color: transparent;
+  color: #718096;
+  padding: 4px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+}
+
+.reorder-button:hover:not(:disabled) {
+  color: #4a90e2;
+  background-color: rgba(74, 144, 226, 0.1);
+}
+
+.reorder-button:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+.edit-step-button {
+  background-color: transparent;
+  color: #4a90e2;
+  padding: 4px 8px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 12px;
+  transition: all 0.2s;
+}
+
+.edit-step-button:hover {
+  background-color: rgba(74, 144, 226, 0.1);
+}
+
 .remove-step-button {
   background-color: transparent;
   color: #e53e3e;
   padding: 4px;
-  margin-left: auto;
   border: none;
   border-radius: 4px;
   cursor: pointer;
