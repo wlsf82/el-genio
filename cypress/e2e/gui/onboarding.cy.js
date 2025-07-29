@@ -128,6 +128,10 @@ describe('El Genio - Onboarding', () => {
       .eq(2)
       .should('contain', 'Assertions: Checking that elements exist, are visible, contain specific text, etc.')
       .and('be.visible')
+    cy.get('@onboarding')
+      .find('.onboarding-body p')
+      .should('contain', 'Pro Tip: If you forget to add a step in the middle of your test case, don\'t worry! You can add the missing step at the end and then use the arrow up/down buttons (↑↓) next to each step to reorder them into the correct sequence.')
+      .and('be.visible')
 
     cy.get('.onboarding-css-selectors')
       .as('CSSSection')
