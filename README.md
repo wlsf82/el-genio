@@ -56,9 +56,7 @@ The database will be initialized with the following default settings:
 
 #### Building and running the server
 
-First of all, make a copy of the [`server/.env.example`](./server/.env.example) file and name it as `.env`.
-
-Then, to build and run the server container:
+To build and run the server container:
 
 1. `cd server/`
 2. `docker build -t el-genio-server .`
