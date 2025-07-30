@@ -13,7 +13,7 @@ I've used the following version of the systems mentioned above:
 - git `2.42.1`
 - Node.js `v22.13.1`
 - npm `10.9.2`
-- Docker `28.0.4`
+- Docker `28.3.0`
 
 > There's no need to install npm since it's automatically installed when installing Node.js.
 
