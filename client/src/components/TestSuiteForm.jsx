@@ -4,7 +4,7 @@ import BeforeEachForm from './BeforeEachForm';
 import axios from 'axios';
 import './TestSuiteForm.css';
 
-function TestSuiteForm({ onTestSuiteCreated, initialData = null, isEditing = false, projectId }) {
+function TestSuiteForm({ onTestSuiteCreated, onCancel, initialData = null, isEditing = false, projectId }) {
   const [suiteName, setSuiteName] = useState(initialData?.name || '');
   const [testCases, setTestCases] = useState(initialData?.testCases || []);
   const [beforeEachSteps, setBeforeEachSteps] = useState(initialData?.beforeEachSteps || []);
@@ -329,6 +329,15 @@ function TestSuiteForm({ onTestSuiteCreated, initialData = null, isEditing = fal
         )}
 
         <div className="form-controls">
+          {isEditing && onCancel && (
+            <button
+              type="button"
+              className="cancel-button"
+              onClick={onCancel}
+            >
+              Cancel
+            </button>
+          )}
           <button
             type="submit"
             className="submit-button"

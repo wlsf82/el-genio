@@ -147,6 +147,7 @@
   margin-top: 2rem;
   display: flex;
   justify-content: flex-end;
+  gap: 1rem;
 }
 
 .submit-button {
@@ -169,6 +170,24 @@
 .submit-button:disabled {
   opacity: 0.6;
   cursor: not-allowed;
+}
+
+.cancel-button {
+  background-color: transparent;
+  color: var(--gray-600);
+  border: 1px solid var(--gray-300);
+  padding: 0.75rem 1.5rem;
+  border-radius: var(--radius);
+  cursor: pointer;
+  font-size: 1rem;
+  font-weight: 500;
+  transition: var(--transition);
+}
+
+.cancel-button:hover {
+  background-color: var(--gray-100);
+  color: var(--gray-800);
+  border-color: var(--gray-400);
 }
 
 /* Add these tab styles to existing CSS */

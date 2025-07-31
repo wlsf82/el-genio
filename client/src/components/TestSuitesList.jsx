@@ -172,6 +172,7 @@ function TestSuitesList({ testSuites: propTestSuites, resetEditingSuite, forceLi
           );
           setEditingSuite(null);
         }}
+        onCancel={() => setEditingSuite(null)}
         isEditing={true}
         projectId={projectId}
       />
