@@ -116,9 +116,6 @@ describe('CRUD Test Suites', () => {
         .find('button.edit-button')
         .click()
 
-      // Go to the Test Cases tab
-      cy.contains('.test-suite-tab', 'Test Cases').click()
-
       // Go to edition mode
       cy.get('.test-case-item')
         .as('testCasePreview')
@@ -264,9 +261,6 @@ describe('CRUD Test Suites', () => {
       // Access the create test suite form
       cy.contains('header nav button', 'Create Test Suite').click()
 
-      // First add setup steps
-      cy.contains('.test-suite-tab', 'Setup Steps').click()
-
       // Add visit step to setup
       cy.get('select').select('visit')
       cy.get('input[placeholder="Value"]').type('https://walmyr.dev')
@@ -348,6 +342,9 @@ describe('CRUD Test Suites', () => {
         .should('be.visible')
         .find('button.edit-button')
         .click()
+
+      // Go to the Setup Steps tab
+      cy.contains('.test-suite-tab', 'Setup Steps').click()
 
       // Enter on Setup Steps edition mode
       cy.get('.setup-steps-preview')
