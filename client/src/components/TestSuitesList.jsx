@@ -1,11 +1,12 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import './TestSuitesList.css';
-import { Play, Trash, X, ChevronDown, ChevronUp, Edit, Download } from 'lucide-react';
+import { Play, Trash, X, ChevronDown, ChevronUp, Edit, Download, ChevronRight } from 'lucide-react';
 import TestSuiteForm from './TestSuiteForm';
 
 function TestSuitesList({ testSuites: propTestSuites, resetEditingSuite, forceListView, projectId }) {
   const [testSuites, setTestSuites] = useState(propTestSuites || []);
+  const [project, setProject] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
   const [runningTests, setRunningTests] = useState({});
@@ -24,6 +25,12 @@ function TestSuitesList({ testSuites: propTestSuites, resetEditingSuite, forceLi
       fetchTestSuites();
     }
   }, [propTestSuites, projectId]);
+
+  useEffect(() => {
+    if (projectId) {
+      fetchProject();
+    }
+  }, [projectId]);
 
   useEffect(() => {
     if (forceListView) {
@@ -51,6 +58,17 @@ function TestSuitesList({ testSuites: propTestSuites, resetEditingSuite, forceLi
       setError('Failed to fetch test suites: ' + (err.response?.data?.message || err.message));
     } finally {
       setIsLoading(false);
+    }
+  };
+
+  const fetchProject = async () => {
+    if (!projectId) return;
+
+    try {
+      const response = await axios.get(`/api/projects/${projectId}`);
+      setProject(response.data);
+    } catch (err) {
+      console.error('Failed to fetch project:', err);
     }
   };
 
@@ -193,6 +211,13 @@ function TestSuitesList({ testSuites: propTestSuites, resetEditingSuite, forceLi
 
   return (
     <div className="test-suites-container">
+      {project && (
+        <div className="breadcrumb">
+          <span className="breadcrumb-project">{project.name}</span>
+          <ChevronRight size={16} className="breadcrumb-separator" />
+          <span className="breadcrumb-current">Test Suites</span>
+        </div>
+      )}
       <div className="test-suites-header">
         <h2>Test Suites</h2>
         <button
