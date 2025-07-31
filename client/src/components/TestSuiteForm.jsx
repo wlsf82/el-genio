@@ -14,7 +14,7 @@ function TestSuiteForm({ onTestSuiteCreated, onCancel, initialData = null, isEdi
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
   const [isFormValid, setIsFormValid] = useState(false);
-  const [activeTab, setActiveTab] = useState('beforeEach');
+  const [activeTab, setActiveTab] = useState(isEditing ? 'testCases' : 'beforeEach');
   const [nameError, setNameError] = useState('');
 
   useEffect(() => {
