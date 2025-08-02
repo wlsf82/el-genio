@@ -78,6 +78,20 @@ Run `npm test` to run the tests in headless mode.
 
 Or, run `npm run cy:open` to open the Cypress App and run the tests in interactive mode.
 
+## Contributing
+
+If you want to contribute to this project, follow the below steps.
+
+1. Fork the project;
+2. Clone your fork and make your changes;
+3. Test your changes locally, and move on only when all tests are green;
+   3.1. If adding new features, make sure to add the appropriate tests for it;
+4. Push your changes to GitHub and create a pull request (PR);
+5. After the GitHub Workflow of your PR is green, tag `@wlsf82`, ask for review, and wait for feedback;
+6. If everything goes well, you should have your changes rebased and merged to the main branch. Otherwise, you will receive comments with adjustments needed before merging.
+
+> [This is the commit messaging guidelines you should follow](https://cbea.ms/git-commit/).
+
 ___
 
 Powered by [Talking About Testing](https://talkingabouttesting.com/).
