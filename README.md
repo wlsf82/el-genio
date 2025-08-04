@@ -80,15 +80,33 @@ Or, run `npm run cy:open` to open the Cypress App and run the tests in interacti
 
 ## Contributing
 
-If you want to contribute to this project, follow the below steps.
+There are different ways to contribute to the El Genio project, such as testing it, finding and reporting bugs, suggesting new features, or even fixing bugs and implementing new features yourself.
 
-1. Fork the project;
-2. Clone your fork and make your changes;
-3. Test your changes locally, and move on only when all tests are green;
-   3.1. If adding new features, make sure to add the appropriate tests for it;
-4. Push your changes to GitHub and create a pull request (PR);
-5. After the GitHub Workflow of your PR is green, tag `@wlsf82`, ask for review, and wait for feedback;
-6. If everything goes well, you should have your changes rebased and merged to the main branch. Otherwise, you will receive comments with adjustments needed before merging.
+Below is the process you should follow depending on how you want to contribute.
+
+### Testing El Genio
+
+If you want to test El Genio:
+
+1. Clone the project;
+2. Read [the docs](./README.md) to setup El Genio locally;
+3. Test it out by creating and running your tests using our no-code testing solution;
+4. After playing with El Genio, open issues to report bugs or feature suggestions.
+
+> **Note:** Make sure to look into the [existing issues](https://github.com/wlsf82/el-genio/issues) before opening a new one, and when opening an issue, please provide us with as much details as possible.
+
+### Fixing bugs and implementing new features
+
+If you want to contribute to this project by fixing bugs or implementing new features:
+
+1. Choose an [issue](https://github.com/wlsf82/el-genio/issues) to work on;
+2. Fork the project;
+3. Clone your fork and make the necessary changes;
+4. Test your changes locally, and move on only when all tests are green;
+   4.1. If adding new features, make sure to add the appropriate tests for it;
+5. Push your changes to GitHub and create a pull request (PR);
+6. After the GitHub Workflow of your PR is green, tag `@wlsf82`, ask for review, and wait for feedback;
+7. If everything goes well, you should have your changes rebased and merged to the main branch. Otherwise, you will receive comments with adjustments needed before merging.
 
 > [This is the commit messaging guidelines you should follow](https://cbea.ms/git-commit/).
 
