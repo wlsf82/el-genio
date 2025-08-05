@@ -149,7 +149,7 @@ describe('El Genio - Onboarding', () => {
       .last()
       .should(
         'contain',
-        'For more complex selections, you may need to combine these techniques. If you need help, check the MDN CSS selectors guide.'
+        'For more complex selections, you may need to combine these techniques. If you need help, check the Master CSS Selectors guide.'
       )
 
     cy.get('#dontShowAgain').should('be.visible')

@@ -119,7 +119,7 @@ function Onboarding({ onComplete }) {
               </li>
             </ul>
             <p>
-              For more complex selections, you may need to combine these techniques. If you need help, check the <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_selectors" target="_blank" rel="noopener noreferrer">MDN CSS selectors guide</a>.
+              For more complex selections, you may need to combine these techniques. If you need help, check the <a href="https://css-selector-quest.lovable.app/" target="_blank" rel="noopener noreferrer">Master CSS Selectors guide</a>.
             </p>
           </div>
         </>
