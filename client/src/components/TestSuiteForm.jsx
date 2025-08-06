@@ -329,7 +329,7 @@ function TestSuiteForm({ onTestSuiteCreated, onCancel, initialData = null, isEdi
         )}
 
         <div className="form-controls">
-          {isEditing && onCancel && (
+          {onCancel && (
             <button
               type="button"
               className="cancel-button"

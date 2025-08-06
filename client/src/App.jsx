@@ -73,6 +73,7 @@ function App() {
         return (
           <TestSuiteForm
             onTestSuiteCreated={handleTestSuiteCreated}
+            onCancel={() => setActiveView('list')}
             projectId={selectedProject}
           />
         );
