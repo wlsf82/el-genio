@@ -78,6 +78,87 @@ Run `npm test` to run the tests in headless mode.
 
 Or, run `npm run cy:open` to open the Cypress App and run the tests in interactive mode.
 
+## Features
+
+The El Genio App consists of a React web app that communicates with a PostgreSQL database via an Express.js Web Server API.
+
+### Web App
+
+El Genio provides a user-friendly React-based web interface for creating and managing Cypress tests without writing code. The main features include:
+
+**Project Management:**
+
+- Create, edit, and delete test projects
+- Organize test suites within projects
+- View project details and associated test suites
+
+**No-Code Test Creation:**
+
+- Visual test suite builder with form interfaces
+- Support for multiple test cases within a test suite
+- Before each hooks for common setup steps
+- Wide range of Cypress commands including:
+  - Navigation (`visit`, `reload`)
+  - Element interaction (`get`, `contains`, `click`, `type`)
+  - Form controls (`check`, `uncheck`, `select`)
+  - Assertions (`should`, `and` with various conditions)
+  - Utility commands (`blur`, `title`, `url`, `screenshot`)
+
+**Test Execution:**
+
+- Run individual test suites or entire projects
+- Real-time test execution with results display
+- Download test execution artifacts (screenshots and videos)
+- Command timeout configuration for different test requirements
+
+**User Experience:**
+
+- Onboarding flow for new users
+- Intuitive navigation between projects and test suites
+- Form validation and error handling
+- Desktop design only
+
+### API
+
+El Genio's Express.js REST API provides comprehensive endpoints for managing projects, test suites, and test execution:
+
+**Project Endpoints (`/api/projects`):**
+
+- `GET /` - Retrieve all projects (ordered by creation date)
+- `GET /:id` - Get a specific project with associated test suites
+- `POST /` - Create a new project (requires name, optional description)
+- `PUT /:id` - Update an existing project
+- `DELETE /:id` - Delete a project and all associated test suites
+
+**Test Suite Endpoints (`/api/test-suites`):**
+
+- `GET /project/:projectId` - Get all test suites for a specific project
+- `GET /:id` - Retrieve a specific test suite
+- `POST /` - Create a new test suite with test cases and setup steps
+- `PUT /:id` - Update an existing test suite
+- `DELETE /:id` - Delete a test suite and its generated Cypress file
+- `POST /:id/run` - Execute a specific test suite
+- `GET /:id/download` - Download the generated Cypress test file
+
+**Test Execution Endpoints (`/api/test-runs`):**
+
+- `POST /project/:projectId` - Run all test suites within a project
+- `GET /screenshots/download` - Download test screenshots as ZIP archive
+- `GET /videos/download` - Download test videos as ZIP archive
+
+**Data Models:**
+
+- **Projects**: UUID-based identification, unique names, optional descriptions
+- **Test Suites**: JSON-based test case storage, before each hooks, configurable timeouts
+- **Automatic Cypress File Generation**: Converts visual test configurations into executable Cypress test files
+
+**Database Integration:**
+
+- PostgreSQL database with Sequelize ORM
+- JSONB storage for flexible test case structures
+- Automatic cleanup of generated test files when test suites are deleted
+- Referential integrity between projects and test suites
+
 ## Contributing
 
 There are different ways to contribute to the El Genio project, such as testing it, finding and reporting bugs, suggesting new features, or even fixing bugs and implementing new features yourself.
