@@ -98,11 +98,11 @@ El Genio provides a user-friendly React-based web interface for creating and man
 - Support for multiple test cases within a test suite
 - Before each hooks for common setup steps
 - Wide range of Cypress commands including:
-  - Navigation (`visit`, `reload`)
-  - Element interaction (`get`, `contains`, `click`, `type`)
-  - Form controls (`check`, `uncheck`, `select`)
-  - Assertions (`should`, `and` with various conditions)
-  - Utility commands (`blur`, `title`, `url`, `screenshot`)
+  - Navigation ([`visit`](https://on.cypress.io/visit), [`reload`](https://on.cypress.io/reload))
+  - Element interaction ([`get`](https://on.cypress.io/get), [`contains`](https://on.cypress.io/contains), [`click`](https://on.cypress.io/click), [`type`](https://on.cypress.io/type))
+  - Form controls ([`check`](https://on.cypress.io/check), [`uncheck`](https://on.cypress.io/uncheck), [`select`](https://on.cypress.io/select))
+  - Assertions ([`should`](https://on.cypress.io/should), [`and`](https://on.cypress.io/and) with various conditions)
+  - Utility commands ([`blur`](https://on.cypress.io/blur), [`title`](https://on.cypress.io/title), [`url`](https://on.cypress.io/url), [`screenshot`](https://on.cypress.io/screenshot))
 
 **Test Execution:**
 
