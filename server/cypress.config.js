@@ -8,8 +8,9 @@ module.exports = defineConfig({
     viewportWidth: 1800,
     video: true,
     setupNodeEvents(on, config) {
-      require('@cypress/grep/src/plugin')(config);
-      return config;
+      const { plugin: cypressGrepPlugin } = require('@cypress/grep/plugin')
+      cypressGrepPlugin(config)
+      return config
     },
   },
 });
