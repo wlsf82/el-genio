@@ -15,15 +15,15 @@
     "@cypress/grep": "^5.0.0",
     "archiver": "^7.0.1",
     "cors": "^2.8.5",
-    "cypress": "^15.7.0",
+    "cypress": "^15.7.1",
     "dotenv": "^16.5.0",
-    "express": "^4.18.2",
+    "express": "^4.22.1",
     "pg": "^8.16.3",
     "pg-hstore": "^2.3.4",
     "sequelize": "^6.37.7",
     "uuid": "^9.0.0"
   },
   "devDependencies": {
-    "nodemon": "^3.1.10"
+    "nodemon": "^3.1.11"
   }
 }
