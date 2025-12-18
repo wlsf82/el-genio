@@ -15,7 +15,7 @@
     "@cypress/grep": "^5.0.0",
     "archiver": "^7.0.1",
     "cors": "^2.8.5",
-    "cypress": "^15.8.0",
+    "cypress": "^15.8.1",
     "dotenv": "^16.5.0",
     "express": "^4.22.1",
     "pg": "^8.16.3",
