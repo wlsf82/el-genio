@@ -1,6 +1,12 @@
-const projectsApiUrl = `${Cypress.env('apiUrl')}/projects`
-
 describe('El Genio API', () => {
+  let projectsApiUrl
+
+  beforeEach(() => {
+    cy.env(['apiUrl']).then(({ apiUrl }) => {
+      projectsApiUrl = `${apiUrl}/projects`
+    })
+  })
+
   context('Error scenarios', () => {
     it('returns 404 - Project not found when getting a non-existing project', () => {
       cy.request({
