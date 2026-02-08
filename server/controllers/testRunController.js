@@ -106,7 +106,7 @@ const runTestSuite = async (req, res) => {
     const cypressOptions = {
       ...defaultCypressOptions,
       spec: specFilePath,
-      env: {
+      expose: {
         grepFilterSpecs: true,
         grepOmitFiltered: true,
         ...(grepTags && grepTags.length > 0 ? { grep: grepTags.join(';') } : {}),
